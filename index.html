@@ -3,9 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src data: blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src data: blob:; connect-src 'none'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'" />
   <meta name="referrer" content="no-referrer" />
-  <meta name="theme-color" content="#5b7cfa" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="description" content="CPGSHS SPILL — the student wall of Carlos P. Garcia Senior High School. Spill thoughts, share stories, follow classmates." />
+  <meta property="og:title" content="CPGSHS SPILL" /><meta property="og:description" content="Spill thoughts, share stories, follow classmates." /><meta property="og:type" content="website" />
+  <meta name="apple-mobile-web-app-title" content="SPILL" /><meta name="mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="manifest.webmanifest" /><link rel="icon" type="image/png" href="icon-192.png" /><link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <title>CPGSHS SPILL</title>
@@ -1911,10 +1915,114 @@ button:active,.btn:active,.action:active{transform:scale(.94)}
 .compose-input{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media(max-width:799px){.content-grid{grid-template-columns:minmax(0,1fr)!important}}
 @media(max-width:520px){.brand-text span{display:none}.header-actions{gap:6px}.icon-btn{width:38px!important;height:38px!important}.brand-icon{width:38px;height:38px}.topbar-inner{gap:8px}}
+/* v10 auth gate, swipe carousel, live pill */
+body.gated .app-shell,body.gated .topbar,body.gated .bottom-nav,body.gated #adminFab,body.gated .fab,body.gated #peopleStrip{display:none!important}
+body.gated{background:linear-gradient(150deg,#5b7cfa,#8d72e8,#ff6fae,#ff9a5a)!important;background-size:300% 300%!important;animation:gshift 14s ease infinite}
+@keyframes gshift{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+body.gated #authModal{display:flex!important;flex-direction:column;justify-content:center;align-items:center;gap:16px;overflow:auto;background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+body.gated #authModal .close-btn{display:none}
+.gate-brand{color:#fff;text-align:center;font-weight:900;font-size:30px;letter-spacing:-.5px;text-shadow:0 4px 24px rgba(0,0,0,.18);animation:sheetIn .7s var(--ios)}
+.gate-brand small{display:block;font-size:14px;font-weight:700;opacity:.92;margin-top:6px;letter-spacing:0}
+.gate-brand b{display:grid;place-items:center;width:76px;height:76px;margin:0 auto 12px;border-radius:28px;font-size:36px;background:rgba(255,255,255,.24);border:1px solid rgba(255,255,255,.55);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.carousel-track{overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;transform:none!important;transition:none}
+.carousel-track::-webkit-scrollbar{display:none}
+.carousel-slide{flex:0 0 100%;scroll-snap-align:center;scroll-snap-stop:always}
+.carousel-slide img{max-width:100%;pointer-events:none}
+.carousel-btn{display:none!important}
+.carousel-dot{display:block;width:6px;height:6px;padding:0;border:0;border-radius:99px;background:rgba(255,255,255,.55);transition:width .35s var(--ios),background .25s}
+.carousel-dot.active{width:18px;background:#fff}
+#newPill{position:fixed;left:50%;top:calc(76px + env(safe-area-inset-top));z-index:120;transform:translate(-50%,-30px) scale(.9);opacity:0;pointer-events:none;padding:10px 18px;border-radius:999px;font-weight:900;font-size:13px;color:#fff;background:linear-gradient(135deg,var(--blue),var(--pink));box-shadow:0 10px 30px rgba(91,124,250,.45);transition:transform .5s var(--ios),opacity .3s}
+#newPill.on{transform:translate(-50%,0) scale(1);opacity:1;pointer-events:auto}
+/* v11 instagram x gen-z, mobile first */
+:root{--bg:#fff;--border:#efeff3;--ink:#12131c;--muted:#8b8fa3;--blue-soft:#f2f3fb;--pink-soft:#fff1f7;--glass:rgba(255,255,255,.84);--glassb:rgba(0,0,0,.06);--gsh:none;--g1:#ff9a5a;--g2:#ff3d8b;--g3:#8b5cf6;--ig:linear-gradient(45deg,var(--g1),var(--g2) 55%,var(--g3))}
+[data-theme="dark"]{--bg:#000;--border:#1c1d27;--ink:#f5f6fb;--muted:#8d92a8;--blue-soft:#14162a;--pink-soft:#251527;--glass:rgba(0,0,0,.78);--glassb:rgba(255,255,255,.08)}
+html,body{background:var(--bg)!important}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,system-ui,sans-serif;color:var(--ink);font-size:15px;line-height:1.45;letter-spacing:-.01em}
+.ic{width:1.25em;height:1.25em;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.28em;flex:none;overflow:visible}
+.ic.fill{fill:currentColor}.ic:not(:last-child){margin-right:.3em}.ic:only-child{margin:0}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#c9ccd8;margin-right:6px;vertical-align:1px}.dot.on{background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.18)}
+.topbar{background:var(--glass)!important;border-bottom:1px solid var(--border)!important;box-shadow:none!important}
+.brand-icon,.brand-text span,#headerProfileText,.section-head p,#authModal .hint,#postModal .hint,#composerHint,footer{display:none!important}
+.brand-text strong{font-size:22px;font-weight:900;letter-spacing:-.045em;background:var(--ig);-webkit-background-clip:text;background-clip:text;color:transparent}
+.icon-btn{width:44px;height:44px;border-radius:50%!important;background:transparent!important;border:0!important;box-shadow:none!important;color:var(--ink);display:inline-grid;place-items:center;position:relative}
+.icon-btn .ic{width:25px;height:25px}.profile-btn{width:auto!important;padding:0 4px!important}
+.notif-badge{position:absolute;top:5px;right:4px;min-width:17px;height:17px;padding:0 4px;border-radius:99px;background:#ff3040;color:#fff;font-size:10px;font-weight:800;display:grid;place-items:center;border:2px solid var(--bg)}
+.section-head h2{font-size:20px;font-weight:800;letter-spacing:-.03em}
+.filter{border-radius:999px!important;padding:8px 15px;font-weight:700;font-size:13px;background:var(--blue-soft)!important;color:var(--ink)!important;border:0!important;box-shadow:none!important}
+.filter.active{background:var(--ink)!important;color:var(--bg)!important}
+.btn-primary,.compose-button{background:var(--ig)!important;color:#fff!important;border:0!important;box-shadow:0 6px 18px rgba(255,61,139,.28)}
+.follow-btn{background:#0095f6!important;color:#fff!important;border:0!important}.following-btn{background:var(--blue-soft)!important;color:var(--ink)!important;border:0!important}
+.btn-outline,.btn-soft,.btn-light{background:var(--blue-soft)!important;color:var(--ink)!important;border:0!important}
+.modal-head{border:0!important;padding:8px 18px 0}.modal-head h3{font-size:18px;font-weight:800;letter-spacing:-.03em}
+.close-btn{width:34px;height:34px;background:var(--blue-soft)!important;border:0!important;color:var(--ink);display:inline-grid;place-items:center;padding:0}
+.field label{font-weight:700;font-size:13px}
+input,textarea,select{border:0!important;background:var(--blue-soft)!important;border-radius:16px!important;padding:13px 15px;color:var(--ink)}
+.compose-card{display:flex;align-items:center;gap:10px;margin:12px 14px;padding:8px 8px 8px 10px;border-radius:999px;background:var(--blue-soft);border:0}
+.compose-input{flex:1;min-width:0;color:var(--muted);font-size:15px}.compose-button{padding:9px 18px;border-radius:999px}
+.story-tray{display:flex;gap:14px;padding:12px 14px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border)}.story-tray::-webkit-scrollbar{display:none}
+.story-item{flex:0 0 72px;text-align:center;cursor:pointer}
+.story-ring{width:70px;height:70px;border-radius:50%;padding:3px;background:var(--ig);transition:transform .35s var(--ios)}.story-item:active .story-ring{transform:scale(.92)}
+.story-ring.viewed{background:var(--border)}.story-ring-inner{width:100%;height:100%;border-radius:50%;background:var(--bg);padding:3px}
+.story-avatar{width:100%;height:100%;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:var(--blue-soft);font-weight:800}
+.story-add{position:absolute;right:-2px;bottom:-2px;width:24px;height:24px;border-radius:50%;background:#0095f6;color:#fff;border:2.5px solid var(--bg);display:grid;place-items:center}.story-add .ic{width:12px;height:12px;stroke-width:3.2;margin:0}
+.story-name{display:block;font-size:12px;margin-top:6px;color:var(--ink);max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.trending-bar{border:0!important;background:none!important;padding:8px 14px}.trend-chip{border-radius:999px;background:var(--blue-soft)!important;border:0!important;color:var(--ink)}
+.post-top{display:flex;align-items:center;gap:10px;padding:0 14px 10px}
+.post-avatar{width:42px;height:42px;border-radius:50%;flex:none;overflow:hidden;display:grid;place-items:center;font-weight:800;color:#fff;background:var(--ig);box-shadow:0 0 0 2px var(--bg),0 0 0 4px #ff3d8b55}
+.post-avatar img{width:100%;height:100%;object-fit:cover}
+.post-meta{flex:1;min-width:0}.post-meta strong{font-size:14px;font-weight:700}.post-meta span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.post-top .category{font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--blue-soft);color:var(--muted)}
+.more-btn{width:40px;height:40px;background:transparent!important;border:0!important;box-shadow:none!important;color:var(--ink)}.more-btn .ic{width:22px;height:22px}
+.post-card.text-only .post-text{margin:2px 14px 4px;padding:22px 20px;border-radius:26px;font-size:18px;font-weight:650;line-height:1.45;letter-spacing:-.02em;color:#1e2340;background:linear-gradient(135deg,#fff0f7,#eef0ff)}
+.post-card.text-only.love .post-text{background:linear-gradient(135deg,#ffe3f0,#ffd0e5)}
+[data-theme="dark"] .post-card.text-only .post-text{color:#f5f6fb;background:linear-gradient(135deg,#2a1a2e,#1a2140)}
+.post-card.has-media .post-text{padding:6px 14px 0;font-size:15px}
+.post-actions{display:flex;align-items:center;gap:2px;padding:6px 8px 0}
+.post-actions .action{background:transparent!important;border:0!important;box-shadow:none!important;min-height:44px;min-width:44px;padding:0 10px;font-size:13px;font-weight:700;color:var(--ink);display:inline-flex;align-items:center;justify-content:center;border-radius:999px}
+.post-actions .ic{width:26px;height:26px}.post-actions .ic+span{margin-left:6px}
+.post-actions .hearted{color:#ff3b6b}.post-actions .save-action{margin-left:auto}.post-actions .save-action.hearted{color:var(--ink)}
+.post-actions [data-adel]{font-size:11px;color:#ff3b6b}.post-actions [data-adel] .ic{width:16px;height:16px}
+.view-comments{display:block;padding:0 14px 10px;color:var(--muted);font-size:14px;background:none;border:0;text-align:left}
+.more-menu button{display:flex;align-items:center;gap:8px}
+.bottom-nav{background:rgba(255,255,255,.88)!important}[data-theme="dark"] .bottom-nav{background:rgba(0,0,0,.78)!important}
+.nav-item{font-size:0!important;background:none!important;color:var(--ink)!important;display:grid;place-items:center;border-radius:14px;box-shadow:none!important}
+.nav-item span{font-size:0}.nav-item .ic{width:27px;height:27px;margin:0}.nav-item.active .ic{stroke-width:2.5}.nav-item.active:not(.post) .ic{fill:currentColor}
+.nav-item.post .ic{background:var(--ig);color:#fff;border-radius:10px;padding:3px;box-sizing:content-box;width:24px;height:24px;stroke:#fff}
+#adminFab{background:var(--ink)!important;box-shadow:0 8px 24px rgba(0,0,0,.25)!important;display:none}#adminFab .ic{width:22px;height:22px;margin:0;stroke:var(--bg)}
+@media(max-width:700px){
+ .app-shell{width:100%!important;max-width:none!important;margin:0!important;padding:0 0 calc(96px + env(safe-area-inset-bottom))!important}
+ .hero{display:none!important}.content-grid{display:block!important;margin:0!important}
+ body:not(.tab-profile) .right-column{display:none!important}body.tab-profile .left-column,body.tab-profile .story-tray,body.tab-profile .trending-bar{display:none!important}
+ .section-card{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important;margin:0!important;backdrop-filter:none!important}
+ .section-head{padding:14px 14px 4px}
+ .post-card{border-radius:0!important;border:0!important;border-bottom:1px solid var(--border)!important;box-shadow:none!important;background:var(--bg)!important;margin:0!important;padding:14px 0 4px!important;transform:none!important}
+ .carousel{margin:0 0 8px;border-radius:0}
+ .bottom-nav{left:0!important;right:0!important;bottom:0!important;transform:none!important;width:100%!important;height:calc(58px + env(safe-area-inset-bottom))!important;padding:6px 10px env(safe-area-inset-bottom)!important;border-radius:0!important;border:0!important;border-top:1px solid var(--border)!important;box-shadow:none!important}
+ .modal-backdrop{padding:0!important;align-items:flex-end!important}
+ .modal{width:100%!important;max-height:92dvh!important;border-radius:28px 28px 0 0!important}
+ .modal::before{content:"";display:block;width:38px;height:5px;border-radius:9px;background:var(--border);margin:9px auto 0}
+ #adminFab{left:auto;right:14px;bottom:calc(76px + env(safe-area-inset-bottom))}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+/* v11.1 header/composer/story polish */
+.story-item.yours .story-ring:not(.viewed){background:var(--ig)}
+.compose-input{background:transparent!important;border:0!important;padding:0 4px!important}
+.compose-avatar{border-radius:50%!important;width:40px;height:40px}
+.sort-btn,.shuffle-btn{border-radius:999px!important;padding:7px 13px;font-size:12px;font-weight:700;background:var(--blue-soft)!important;color:var(--muted)!important;border:0!important;white-space:nowrap;box-shadow:none!important}
+.sort-btn.active{background:var(--ink)!important;color:var(--bg)!important}.shuffle-btn{color:#ff3d8b!important}
+.search-box{position:relative;display:flex;align-items:center}.search-box>span{position:absolute;left:14px;color:var(--muted);display:grid;pointer-events:none}.search-box input{padding-left:42px}
+@media(max-width:700px){
+ .section-head{display:flex;flex-direction:column;align-items:stretch!important;gap:10px}
+ .sort-bar{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}.sort-bar::-webkit-scrollbar{display:none}
+ .search-box{margin:0 14px 12px!important}.category-row,.filters{padding-left:14px;padding-right:14px}
+ #peopleStrip{padding:0 14px}.ps-c{box-shadow:none;border:1px solid var(--border);background:var(--bg)}
+ html,body{overflow-x:clip}
+}
 </style>
 </head>
 
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="6"/><path d="M12 8v8M8 12h8"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5s-8-4.9-8-11A4.6 4.6 0 0 1 12 6.6 4.6 4.6 0 0 1 20 9.5c0 6.1-8 11-8 11z"/></symbol><symbol id="i-comment" viewBox="0 0 24 24"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.5L3.5 20.5l1.5-4.4A8.5 8.5 0 1 1 20.5 11.5z"/></symbol><symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3 10.5 13.5M21 3l-7 18-3.5-7.5L3 10z"/></symbol><symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4.5L6 21z"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15zM10 21h4"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol><symbol id="i-more" viewBox="0 0 24 24"><g fill="currentColor" stroke="none"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></g></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol><symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5 5 19"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7"/></symbol><symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></symbol><symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></symbol><symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v12H4z"/><circle cx="12" cy="13.5" r="3.5"/></symbol><symbol id="i-archive" viewBox="0 0 24 24"><path d="M3 5h18v4H3zM5 9v11h14V9M10 13h4"/></symbol><symbol id="i-arrowup" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol><symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol><symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2.5 20h19zM12 10v4M12 17.3v.4"/></symbol></defs></svg>
   <div class="app-shell">
     <header class="topbar">
       <div class="topbar-inner">
@@ -2131,7 +2239,7 @@ button:active,.btn:active,.action:active{transform:scale(.94)}
         </div>
 
         <div style="text-align:center; margin-top:13px; color:var(--muted); font-size:10px;">
-          Prototype mode — Supabase can be connected next.
+          
         </div>
       </div>
     </div>
@@ -3975,35 +4083,22 @@ button:active,.btn:active,.action:active{transform:scale(.94)}
     };
     /* Photo carousel */
     window.carouselHTML = function(post) {
-      const imgs = post.images || [];
+      const imgs = (post.images || []).filter(x => typeof x === "string" && /^data:image\//.test(x));
       if (!imgs.length) return "";
       const multi = imgs.length > 1;
       return `<div class="carousel" id="carousel-${post.id}">
-        <div class="carousel-count">1/${imgs.length}</div>
-        ${multi ? `<button class="carousel-btn prev" onclick="carouselStep('${post.id}',-1)">‹</button><button class="carousel-btn next" onclick="carouselStep('${post.id}',1)">›</button>` : ""}
-        <div class="carousel-track" data-idx="0" style="transform:translateX(0%);">
-          ${imgs.map(src => `<div class="carousel-slide"><img src="${src}" alt="photo" loading="lazy"/></div>`).join("")}
-        </div>
-        ${multi ? `<div class="carousel-dots">${imgs.map((_, i) => `<button class="carousel-dot ${i === 0 ? "active" : ""}" onclick="carouselGoTo('${post.id}',${i})"></button>`).join("")}</div>` : ""}
+        ${multi ? `<div class="carousel-count">1/${imgs.length}</div>` : ""}
+        <div class="carousel-track" onscroll="carouselScroll(this)">${imgs.map(src => `<div class="carousel-slide"><img src="${src}" alt="photo" loading="lazy" draggable="false"/></div>`).join("")}</div>
+        ${multi ? `<div class="carousel-dots">${imgs.map((_, i) => `<i class="carousel-dot ${i === 0 ? "active" : ""}"></i>`).join("")}</div>` : ""}
       </div>`;
     };
-    window.carouselStep = function(postId, dir) {
-      const c = document.getElementById("carousel-" + postId); if (!c) return;
-      const track = c.querySelector(".carousel-track");
-      const count = c.querySelectorAll(".carousel-slide").length;
-      let idx = parseInt(track.dataset.idx || "0", 10);
-      idx = (idx + dir + count) % count;
-      window.carouselGoTo(postId, idx);
+    window.carouselScroll = function(t) {
+      const c = t.parentElement, i = Math.round(t.scrollLeft / (t.clientWidth || 1)), cnt = c.querySelector(".carousel-count");
+      if (cnt) cnt.textContent = `${i + 1}/${t.children.length}`;
+      c.querySelectorAll(".carousel-dot").forEach((d, k) => d.classList.toggle("active", k === i));
     };
-    window.carouselGoTo = function(postId, idx) {
-      const c = document.getElementById("carousel-" + postId); if (!c) return;
-      const track = c.querySelector(".carousel-track");
-      track.dataset.idx = idx;
-      track.style.transform = `translateX(-${idx * 100}%)`;
-      const count = c.querySelectorAll(".carousel-slide").length;
-      const cnt = c.querySelector(".carousel-count"); if (cnt) cnt.textContent = `${idx + 1}/${count}`;
-      c.querySelectorAll(".carousel-dot").forEach((d, i) => d.classList.toggle("active", i === idx));
-    };
+    window.carouselGoTo = function(postId, idx) { const c = document.getElementById("carousel-" + postId); if (c) { const t = c.querySelector(".carousel-track"); t.scrollTo({ left: idx * t.clientWidth, behavior: "smooth" }); } };
+    window.carouselStep = function(postId, dir) { const c = document.getElementById("carousel-" + postId); if (c) { const t = c.querySelector(".carousel-track"); t.scrollBy({ left: dir * t.clientWidth, behavior: "smooth" }); } };
     /* Image compression (keeps localStorage under quota) */
     window.compressImage = function(file) {
       return new Promise(resolve => {
@@ -4478,8 +4573,8 @@ button:active,.btn:active,.action:active{transform:scale(.94)}
       const top = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 3);
       const chips = top.length
         ? top.map(([word, n], i) => `<button class="trend-chip" onclick="filterByHashtag('${word}')"><span class="rank">${i + 1}</span>#${escapeHTML(word)} · ${n}</button>`).join("")
-        : `<span style="font-size:10px;color:var(--muted);">Be the first to use a #hashtag ✨</span>`;
-      bar.innerHTML = `<span class="trending-label">🔥 TRENDING</span>` + chips;
+        : "";
+      bar.style.display = top.length ? "" : "none"; bar.innerHTML = `<span class="trending-label">Trending</span>` + chips;
     };
     let ptrStartY = 0, ptrActive = false;
     document.addEventListener("touchstart", e => { if (window.scrollY <= 0) ptrStartY = e.touches[0].clientY; }, { passive: true });
@@ -4766,35 +4861,25 @@ button:active,.btn:active,.action:active{transform:scale(.94)}
     const author = socialUser(post.userId);
     const profileOpen = !post.anonymous && author && socialCanViewProfile(author.id);
     const authorName = post.anonymous ? "Anonymous" : (post.username || "Student");
-    const authorMarkup = profileOpen
-      ? `<button class="post-author-button" onclick="openPublicProfile('${author.id}')"><strong>${escapeHTML(authorName)}</strong></button>`
-      : `<strong>${escapeHTML(authorName)}</strong>`;
+    const nameHTML = profileOpen ? `<button class="post-author-button" onclick="openPublicProfile('${author.id}')"><strong>${escapeHTML(authorName)}</strong></button>` : `<strong>${escapeHTML(authorName)}</strong>`;
     const school = post.anonymous ? `Anonymous · ${socialSchool(author)}` : socialSchool(author);
-    const emoji = { Love: "💗", Thoughts: "💭", Appreciation: "🫶", Rant: "😭", Funny: "😂", Friendship: "👥", School: "🎓", Other: "✨" }[post.category] || "✨";
-    const isMine = currentUser && post.userId === currentUser.id;
-    return `<article class="post-card ${post.category === "Love" ? "love" : ""}" id="post-${post.id}">
+    const isMine = currentUser && post.userId === currentUser.id, n = (post.comments || []).length, media = (post.images || []).length;
+    return `<article class="post-card ${post.category === "Love" ? "love" : ""} ${media ? "has-media" : "text-only"}" id="post-${post.id}">
       <div class="post-top">
         <div class="post-avatar">${userAvatar(post.userId, authorName)}</div>
-        <div class="post-meta">${authorMarkup}<span>${escapeHTML(school)} · ${formatTime(post.createdAt)}</span></div>
-        <div class="category">${emoji} ${escapeHTML(post.category)}</div>
-        ${isMine ? `<div class="post-more" style="position:relative;">
-          <button class="action" onclick="togglePostMore('${post.id}', this)" style="min-height:35px;padding:0 10px;">⋯</button>
-          <div class="more-menu">
-            <button onclick="archivePost('${post.id}')">📦 Archive</button>
-            <button onclick="openEditPost('${post.id}')">✏️ Edit</button>
-            <button class="danger" onclick="deletePostFromFeed('${post.id}')">🗑️ Delete</button>
-          </div>
-        </div>` : ""}
+        <div class="post-meta">${nameHTML}<span>${escapeHTML(school)} · ${formatTime(post.createdAt)}</span></div>
+        <span class="category">${escapeHTML(post.category)}</span>
+        ${isMine ? `<div class="post-more" style="position:relative;"><button class="action more-btn" aria-label="More" onclick="togglePostMore('${post.id}', this)">⋯</button><div class="more-menu"><button onclick="archivePost('${post.id}')">📦 Archive</button><button onclick="openEditPost('${post.id}')">✏️ Edit</button><button class="danger" onclick="deletePostFromFeed('${post.id}')">🗑️ Delete</button></div></div>` : ""}
       </div>
       ${window.carouselHTML(post)}
       <div class="post-text">${window.renderContent(post.content)}</div>
       <div class="post-actions">
-        <button class="action ${liked ? "hearted" : ""}" onclick="toggleHeart('${post.id}', event)">${liked ? "♥" : "♡"} <span>${post.hearts || 0}</span></button>
-        <button class="action" onclick="sharePost('${post.id}')">↗ Share <span>${post.shares || 0}</span></button>
-        <button class="action" onclick="viewPost('${post.id}')">💬 ${(post.comments || []).length}</button>
-        <button class="action ${saved ? "hearted" : ""}" onclick="toggleSave('${post.id}')">${saved ? "★" : "☆"} Save</button>
-        <button class="action share-action" onclick="openShareSheet('${post.id}')">＋ Story</button>
-      </div></article>`;
+        <button class="action ${liked ? "hearted" : ""}" aria-label="Like" onclick="toggleHeart('${post.id}', event)">${liked ? "♥" : "♡"}<span>${post.hearts || 0}</span></button>
+        <button class="action" aria-label="Comments" onclick="viewPost('${post.id}')">💬<span>${n}</span></button>
+        <button class="action" aria-label="Share" onclick="openShareSheet('${post.id}')">↗<span>${post.shares || 0}</span></button>
+        <button class="action save-action ${saved ? "hearted" : ""}" aria-label="Save" onclick="toggleSave('${post.id}')">${saved ? "★" : "☆"}</button>
+      </div>
+      ${n ? `<button class="view-comments" onclick="viewPost('${post.id}')">${n === 1 ? "View 1 comment" : "View all " + n + " comments"}</button>` : ""}</article>`;
   };
   if (typeof postHTML !== "undefined") postHTML = window.socialPostHTML;
 
@@ -4845,13 +4930,13 @@ button:active,.btn:active,.action:active{transform:scale(.94)}
     x.save(); x.shadowColor = "rgba(70,20,110,.38)"; x.shadowBlur = 80; x.shadowOffsetY = 36; x.fillStyle = "#fff"; roundRect(x, cx0, cy0, cw, ch, 76); x.fill(); x.restore();
     x.save(); roundRect(x, cx0, cy0, cw, ch, 76); x.clip(); const hg = x.createLinearGradient(cx0, 0, cx0 + cw, 0); hg.addColorStop(0, "#5b7cfa"); hg.addColorStop(1, "#ff6fae"); x.fillStyle = hg; x.fillRect(cx0, cy0, cw, 170); x.restore();
     x.fillStyle = "#fff"; x.beginPath(); x.arc(cx0 + 100, cy0 + 85, 52, 0, 7); x.fill();
-    x.textAlign = "center"; x.textBaseline = "middle"; x.font = `44px ${F}`; x.fillText("💙", cx0 + 100, cy0 + 88);
-    x.textAlign = "left"; x.fillStyle = "#fff"; x.font = `900 46px ${F}`; x.fillText("CPGSHS SPILL", cx0 + 180, cy0 + 66); x.font = `700 30px ${F}`; x.globalAlpha = .9; x.fillText(p.anonymous ? "anonymous spill 🤫" : "spilled by @" + p.username, cx0 + 180, cy0 + 112); x.globalAlpha = 1;
+    x.textBaseline = "middle"; x.save(); x.translate(cx0 + 100, cy0 + 92); x.fillStyle = "#ff4f9a"; x.beginPath(); x.moveTo(0, 22); x.bezierCurveTo(-46, -8, -22, -40, 0, -14); x.bezierCurveTo(22, -40, 46, -8, 0, 22); x.fill(); x.restore();
+    x.textAlign = "left"; x.fillStyle = "#fff"; x.font = `900 46px ${F}`; x.fillText("CPGSHS SPILL", cx0 + 180, cy0 + 66); x.font = `700 30px ${F}`; x.globalAlpha = .9; x.fillText(p.anonymous ? "anonymous spill" : "spilled by @" + p.username, cx0 + 180, cy0 + 112); x.globalAlpha = 1;
     x.fillStyle = "#1e2340"; x.font = `800 58px ${F}`; lines.forEach((l, i) => x.fillText(l, cx0 + 60, cy0 + 170 + 90 + i * lh));
     x.fillStyle = "#ff4f9a"; x.font = `800 38px ${F}`; x.fillText("— " + (p.anonymous ? "Anonymous" : p.username), cx0 + 60, cy0 + ch - 70);
     const pill = `♥ ${p.hearts || 0}    ↗ ${p.shares || 0}`; x.font = `800 44px ${F}`; const pw = x.measureText(pill).width + 110, py = cy0 + ch + 60;
     x.fillStyle = "rgba(255,255,255,.26)"; roundRect(x, (W - pw) / 2, py, pw, 96, 48); x.fill(); x.fillStyle = "#fff"; x.textAlign = "center"; x.fillText(pill, W / 2, py + 50);
-    x.font = `900 52px ${F}`; x.fillText("CPGSHS SPILL 💙💗", W / 2, H - 150); x.font = `700 32px ${F}`; x.globalAlpha = .85; x.fillText("spill yours — it's anonymous", W / 2, H - 92); x.globalAlpha = 1;
+    x.font = `900 52px ${F}`; x.fillText("CPGSHS SPILL", W / 2, H - 150); x.font = `700 32px ${F}`; x.globalAlpha = .85; x.fillText("spill yours — it's anonymous", W / 2, H - 92); x.globalAlpha = 1;
     c.toBlob(async b => {
       const f = new File([b], "spill-post.png", { type: "image/png" });
       try { if (matchMedia("(pointer:coarse)").matches && navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f] }); return showToast("Card ready 💗"); } } catch (e) { if (e && e.name === "AbortError") return; }
@@ -4899,10 +4984,10 @@ button:active,.btn:active,.action:active{transform:scale(.94)}
     const viewedByMe = (list) => list.every(s => (s.views || []).includes(currentUser?.id || "guest"));
     let html = "";
     // Your story
-    html += `<div class="story-item yours" onclick="${currentUser ? "openStoryComposer()" : "showAuth('login')"}">
-      <div class="story-ring" style="position:relative;">
+    html += `<div class="story-item yours" onclick="${currentUser ? (myStories.length ? "openStoryViewer('" + currentUser.id + "')" : "openStoryComposer()") : "showAuth('login')"}">
+      <div class="story-ring ${myStories.length ? "" : "viewed"}" style="position:relative;">
         <div class="story-ring-inner"><div class="story-avatar">${currentUser ? userAvatar(currentUser.id) : "＋"}</div></div>
-        ${currentUser ? `<div class="story-add">＋</div>` : ""}
+        ${currentUser ? `<div class="story-add" onclick="event.stopPropagation();openStoryComposer()">＋</div>` : ""}
       </div>
       <span class="story-name">${currentUser ? "Your story" : "Add story"}</span>
     </div>`;
@@ -5685,10 +5770,10 @@ button:active,.btn:active,.action:active{transform:scale(.94)}
       const el = $("leaderboard"); if (!el) return;
       const pts = p => (p.hearts || 0) + (p.shares || 0);
       const best = d => posts.filter(p => !p.archived && todayKey(p.createdAt) === todayKey(d) && pts(p) > 0).sort((a, b) => pts(b) - pts(a) || new Date(a.createdAt) - new Date(b.createdAt)).slice(0, 3);
-      const t = best(new Date()), y = best(new Date(Date.now() - 864e5))[0], M = ["🥇", "🥈", "🥉"];
+      const t = best(new Date()), y = best(new Date(Date.now() - 864e5))[0], M = ["1", "2", "3"];
       el.innerHTML = (t.length ? t.map((p, i) => `<div class="rank-item" onclick="viewPost('${escapeHTML(p.id)}')"><div class="rank-number">${M[i]}</div><div class="rank-info"><strong>${escapeHTML(getVisibleLabel(p))}</strong><span>${escapeHTML(String(p.content || "").slice(0, 90))}</span></div><div class="rank-score">♥${p.hearts || 0} · ↗${p.shares || 0}</div></div>`).join("")
         : `<div class="no-results"><div style="font-size:28px;margin-bottom:7px">🔥</div>No hearts or shares yet today.</div>`)
-        + (y ? `<div class="hint" style="margin-top:8px">🏆 Yesterday: ${escapeHTML(getVisibleLabel(y))} · ${pts(y)} pts</div>` : "");
+        + (y ? `<div class="hint" style="margin-top:8px">Yesterday: ${escapeHTML(getVisibleLabel(y))} · ${pts(y)} pts</div>` : "");
     };
 
     // --- Settings extras: logout, logout everywhere, bug report, admin entry ---
@@ -5824,7 +5909,7 @@ button:active,.btn:active,.action:active{transform:scale(.94)}
       let el = $("peopleStrip"); if (!el) { const f = $("feed"); if (!f) return; el = document.createElement("div"); el.id = "peopleStrip"; f.parentNode.insertBefore(el, f); }
       const m = me(); if (!m) { el.innerHTML = ""; return; }
       const sl = (el.querySelector(".ps-r") || {}).scrollLeft || 0, fol = m.following || [];
-      const L = users.filter(u => !u.noLogin && !u.banned && u.id !== m.id && socialCanViewProfile(u.id)).sort((a, b) => fol.includes(a.id) - fol.includes(b.id)).slice(0, 12);
+      const L = users.filter(u => !u.noLogin && !u.banned && u.role !== "superadmin" && u.id !== m.id && socialCanViewProfile(u.id)).sort((a, b) => fol.includes(a.id) - fol.includes(b.id)).slice(0, 12);
       el.innerHTML = L.length ? `<div class="ps-t">👀 People on SPILL</div><div class="ps-r">${L.map(u => `<div class="ps-c"><button aria-label="Open profile" onclick="openPublicProfile('${E(u.id)}')">${u.avatar && AV.test(u.avatar) ? `<img src="${u.avatar}" alt="">` : E(getInitial(u.username))}</button><b>${E(u.username)}</b><button class="btn ${fol.includes(u.id) ? "following-btn" : "follow-btn"}" onclick="__follow('${E(u.id)}')">${fol.includes(u.id) ? "Following" : "Follow"}</button></div>`).join("")}</div>` : "";
       const r = el.querySelector(".ps-r"); if (r) r.scrollLeft = sl;
     }
@@ -5839,6 +5924,61 @@ button:active,.btn:active,.action:active{transform:scale(.94)}
         const hb = card.querySelector(".post-actions .action"); if (hb && !hb.classList.contains("hearted")) hb.click();
       } else tp = { t: n, x: e.clientX, y: e.clientY };
     });
+    // --- v10: auth-first gate, live feed sync (tabs), idle logout, frame-busting ---
+    try { if (top !== self) top.location = self.location; } catch (e) {}
+    const gate = () => {
+      const g = !currentUser, a = $("authModal"); document.body.classList.toggle("gated", g);
+      if (!g) return;
+      if (!a.querySelector(".gate-brand")) a.insertAdjacentHTML("afterbegin", '<div class="gate-brand"><b>♡</b>CPGSHS SPILL<small>Log in or sign up to see what your school is spilling 💙💗</small></div>');
+      if (!a.classList.contains("open")) showAuth(authMode || "login");
+    };
+    const _cm = closeModal; closeModal = function (id) { if (id === "authModal" && !currentUser) return; return _cm.apply(this, arguments); };
+    $("authModal").addEventListener("click", e => { if (!currentUser && e.target.id === "authModal") e.stopImmediatePropagation(); }, true);
+    addEventListener("keydown", e => { if (e.key === "Escape" && !currentUser) e.stopImmediatePropagation(); }, true);
+    const _u3 = window.updateUI;
+    window.updateUI = function () {
+      const keep = {}; document.querySelectorAll(".carousel").forEach(c => { keep[c.id] = c.querySelector(".carousel-track").scrollLeft; });
+      _u3(); gate();
+      document.querySelectorAll(".carousel").forEach(c => { if (keep[c.id]) c.querySelector(".carousel-track").scrollLeft = keep[c.id]; });
+    }; updateUI = window.updateUI;
+    let fresh = 0;
+    const pill = () => { let p = $("newPill"); if (!p) { p = document.createElement("button"); p.id = "newPill"; p.onclick = () => { fresh = 0; p.classList.remove("on"); updateUI(); scrollTo({ top: 0, behavior: "smooth" }); }; document.body.appendChild(p); } p.textContent = `↑ ${fresh} new post${fresh > 1 ? "s" : ""}`; p.classList.add("on"); };
+    addEventListener("storage", e => {
+      if (!currentUser || ![STORAGE.posts, STORAGE.stories, STORAGE.reports, STORAGE.follows].includes(e.key)) return;
+      if (e.key === STORAGE.posts) { const old = new Set(posts.map(p => p.id)); posts = load(STORAGE.posts, posts); fresh += posts.filter(p => !old.has(p.id) && p.userId !== currentUser.id).length; }
+      else if (e.key === STORAGE.stories) stories = load(STORAGE.stories, stories);
+      else if (e.key === STORAGE.reports) reports = load(STORAGE.reports, reports);
+      else { try { socialFollows = load(STORAGE.follows, socialFollows); } catch (x) {} }
+      if (!fresh || scrollY < 140) { fresh = 0; updateUI(); } else pill();
+    });
+    addEventListener("scroll", () => { if (fresh && scrollY < 60) { fresh = 0; const p = $("newPill"); if (p) p.classList.remove("on"); updateUI(); } }, { passive: true });
+    let idle = Date.now(); ["pointerdown", "keydown", "touchstart", "scroll"].forEach(n => addEventListener(n, () => { idle = Date.now(); }, { passive: true }));
+    setInterval(() => { if (currentUser && Date.now() - idle > 20 * 60000) { logout(); showToast("Logged out after 20 min of inactivity 🔒"); } }, 30000);
+    // --- v11: emoji-free chrome (icons), profile tab, aria ---
+    const IC = { "⌂": "home", "☆": "bookmark", "★": "bookmark fill", "＋": "plus", "⌕": "search", "◉": "user", "♡": "heart", "♥": "heart fill", "↗": "send", "➤": "send", "💬": "comment", "🔗": "link", "🔔": "bell", "🌙": "moon", "☀": "sun", "✏": "pencil", "🗑": "trash", "🚩": "flag", "⚑": "flag", "🛡": "shield", "✕": "x", "✓": "check", "⚙": "gear", "📊": "chart", "📷": "camera", "📸": "camera", "📦": "archive", "⬇": "download", "👁": "eye", "🔒": "lock", "⚠": "alert", "↑": "arrowup", "⋯": "more", "🟢": "dot on", "⚪": "dot" };
+    const EM = /(?:[\u{1F000}-\u{1FAFF}\u2600-\u27BF\u2B00-\u2BFF\u2190-\u21FF\u2300-\u23FF\u25A0-\u25FF\uFF0B\u22EF])\uFE0F?(?:\u200D[\u{1F000}-\u{1FAFF}\u2600-\u27BF]\uFE0F?)*/gu, HAS = /[\u{1F000}-\u{1FAFF}\u2600-\u27BF\u2B00-\u2BFF\u2190-\u21FF\u2300-\u23FF\u25A0-\u25FF\uFF0B\u22EF]/u;
+    const SAFE = ".post-text,.comment-item p,.ig-bio,.ig-bio-xl,.sv-layer,.composer-sticker,.composer-text-el,#composerSubpanel,.story-reaction-bar,.reaction-btn,textarea,input,[contenteditable],script,style";
+    const CHROME = "h1,h2,h3,h4,.eyebrow,.filter,.category,option,#toast,.toast,.hero-stats,.trend-chip,.trending-label,.chip,.rank-number";
+    const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const mk = n => { const [a, f] = n.split(" "); return a === "dot" ? `<i class="dot ${f || ""}"></i>` : `<svg class="ic ${f || ""}" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-${a}"/></svg>`; };
+    function fix(root) {
+      if (root && root.nodeType === 3) root = root.parentElement; if (!root || !root.isConnected) return;
+      const list = [], w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      for (let n; (n = w.nextNode());) { const p = n.parentElement; if (p && HAS.test(n.nodeValue) && !p.closest(SAFE)) list.push(n); }
+      list.forEach(n => {
+        const t = n.nodeValue;
+        if (n.parentElement.closest(CHROME)) { const v = t.replace(EM, "").replace(/\s{2,}/g, " ").replace(/^\s+/, ""); if (v !== t) n.nodeValue = v; return; }
+        let any = false; const h = esc(t).replace(EM, g => { const k = IC[g.replace(/\uFE0F/g, "")]; if (k) { any = true; return mk(k); } return ""; });
+        if (any) { const tp = document.createElement("template"); tp.innerHTML = h; n.replaceWith(tp.content); } else n.nodeValue = t.replace(EM, "").replace(/\s{2,}/g, " ");
+      });
+      if (root.querySelectorAll) root.querySelectorAll("[placeholder],[title],[aria-label]").forEach(e => ["placeholder", "title", "aria-label"].forEach(a => { const v = e.getAttribute(a); if (v && HAS.test(v) && !e.closest(SAFE)) e.setAttribute(a, v.replace(EM, "").trim()); }));
+    }
+    const pendQ = new Set(); let schQ = false;
+    new MutationObserver(ms => { ms.forEach(m => m.addedNodes.forEach(n => { if (n.nodeType === 1 || n.nodeType === 3) pendQ.add(n); })); if (!schQ && pendQ.size) { schQ = true; queueMicrotask(() => { schQ = false; const s = [...pendQ]; pendQ.clear(); s.forEach(fix); }); } }).observe(document.body, { childList: true, subtree: true });
+    [["bottomSavedBtn", "Saved"], ["bottomPostBtn", "New post"], ["bottomSearchBtn", "Search"]].forEach(([id, l]) => $(id) && $(id).setAttribute("aria-label", l));
+    document.querySelector('.nav-item[data-scroll="home"]').setAttribute("aria-label", "Home"); document.querySelector('.nav-item[data-scroll="profileSection"]').setAttribute("aria-label", "Profile");
+    document.addEventListener("click", e => { const b = e.target.closest(".nav-item[data-scroll],#headerProfileBtn"); if (b) document.body.classList.toggle("tab-profile", b.dataset.scroll === "profileSection" || b.id === "headerProfileBtn"); }, true);
+    fix(document.body);
     validateSession();
   } catch (e) { console.error("SPILL v8 patch error:", e); } })();
 
