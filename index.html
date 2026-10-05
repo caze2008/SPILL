@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src data: blob:; connect-src 'none'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src data: blob:; connect-src https://fwafqzoexbhsgjihdsnq.supabase.co wss://fwafqzoexbhsgjihdsnq.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'" />
   <meta name="referrer" content="no-referrer" />
-  <meta name="theme-color" content="#ffffff" />
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <meta name="theme-color" content="#faf9f5" />
   <meta name="description" content="CPGSHS SPILL — the student wall of Carlos P. Garcia Senior High School. Spill thoughts, share stories, follow classmates." />
   <meta property="og:title" content="CPGSHS SPILL" /><meta property="og:description" content="Spill thoughts, share stories, follow classmates." /><meta property="og:type" content="website" />
   <meta name="apple-mobile-web-app-title" content="SPILL" /><meta name="mobile-web-app-capable" content="yes" />
@@ -2018,11 +2020,136 @@ input,textarea,select{border:0!important;background:var(--blue-soft)!important;b
  #peopleStrip{padding:0 14px}.ps-c{box-shadow:none;border:1px solid var(--border);background:var(--bg)}
  html,body{overflow-x:clip}
 }
+/* v12 feed-first mobile, accounts, story reply bar, boot splash */
+body.booting .app-shell,body.booting .topbar,body.booting .bottom-nav,body.booting #authModal{visibility:hidden}
+#splash{position:fixed;inset:0;z-index:700;display:none;place-items:center;background:linear-gradient(150deg,#5b7cfa,#8d72e8,#ff6fae,#ff9a5a);color:#fff;font-weight:900;font-size:34px;letter-spacing:-.04em}
+body.booting #splash{display:grid}
+#acctBar{display:none;align-items:center;gap:8px;padding:10px 14px 2px}
+#acctBar .who{display:flex;align-items:center;gap:4px;font-weight:800;font-size:19px;letter-spacing:-.03em;background:none!important;border:0!important;color:var(--ink);padding:6px 2px}
+#acctBar .who .ic{width:18px;height:18px}#acctBar .sp{flex:1}
+.btn-out{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border-radius:999px;background:var(--blue-soft);color:#ff3b6b;font-weight:800;font-size:13px;border:0}
+.acct-row{display:flex;align-items:center;gap:12px;padding:10px 2px;width:100%;color:var(--ink);cursor:pointer}
+.acct-row .av{width:48px;height:48px;border-radius:50%;background:var(--ig);color:#fff;display:grid;place-items:center;font-weight:800;font-size:18px;flex:none}
+.acct-row b{font-size:15px}.acct-row .on{margin-left:auto;color:#0095f6}.acct-row .rm{margin-left:auto;color:var(--muted);padding:8px;background:none;border:0}
+.acct-actions{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.story-reply-input{background:rgba(255,255,255,.2)!important;color:#fff!important;border:0!important}
+.story-reaction-bar{display:flex!important;flex-wrap:wrap;gap:8px;padding:0 12px calc(12px + env(safe-area-inset-bottom))!important}
+.story-reply-input{order:1;flex:1 1 calc(100% - 64px)!important;min-width:0!important;width:auto!important}
+#storyReplySend{order:2;flex:0 0 52px}
+.story-reaction-bar .reaction-btn[data-react]{order:3;flex:1 1 0;min-width:0}
+body.cloud [data-audience="close"]{display:none!important}
+@media(max-width:700px){
+ #feedSection .section-head>div:first-child{display:none}
+ #feedSection .section-head{padding:4px 0 0!important;gap:0}
+ .trending-bar{display:none!important}
+ .compose-card{margin:10px 14px 4px}
+ .sort-bar{padding:2px 14px 6px}
+ .filters{display:flex!important;gap:8px;overflow-x:auto;flex-wrap:nowrap!important;padding:0 14px 12px;scrollbar-width:none}.filters::-webkit-scrollbar{display:none}.filter{flex:none}
+ #feedSection .search-box{display:none!important}
+ body.search-open #feedSection .search-box{display:flex!important}
+ #peopleStrip{display:none}body.search-open #peopleStrip{display:block}
+ .post-card{padding-top:12px!important}
+}
+/* v12.1 polish */
+.post-card::before,.post-card::after{display:none!important}
+.story-avatar{background:linear-gradient(135deg,#5b7cfa,#ff6fae)!important;color:#fff!important}
+@media(max-width:700px){
+ #feedSection div:has(> .sort-btn){display:flex!important;flex-wrap:nowrap!important;overflow-x:auto;gap:8px;padding:2px 14px 6px;scrollbar-width:none}
+ #feedSection div:has(> .sort-btn)::-webkit-scrollbar{display:none}.sort-btn,.shuffle-btn{flex:none}
+ .filters{padding-bottom:8px}
+}
+/* v13 Claude x Apple: warm paper, serif voice, liquid-glass chrome, spring motion */
+:root{--serif:ui-serif,"New York","Iowan Old Style","Palatino Linotype",Georgia,"Times New Roman",serif;--sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",Inter,system-ui,"Segoe UI",sans-serif;
+--bg:#faf9f5;--card:#fff;--sand:#f1eee5;--sand-2:#e4e0d2;--border:#e9e6db;--ink:#1a1915;--muted:#6f6c64;--accent:#d97757;--accent-2:#b9553a;--accent-btn:#bd553a;--on-accent:#fff;--accent-soft:#fbece4;--like:#e5533d;
+--blue:#d97757;--blue-dark:#b9553a;--blue-soft:#f1eee5;--pink:#e0805f;--pink-dark:#b9553a;--pink-soft:#fbece4;--purple:#b9805f;
+--glass:rgba(250,249,245,.74);--glassb:rgba(255,255,255,.72);--sheet:rgba(255,255,255,.88);--gsh:none;--radius:28px;
+--shadow:0 1px 2px rgba(26,25,21,.04),0 8px 28px rgba(26,25,21,.06);--shadow-lg:0 2px 4px rgba(26,25,21,.05),0 24px 64px rgba(26,25,21,.16);
+--ig:linear-gradient(135deg,#f2b48a,#d97757 55%,#bd553a)}
+[data-theme="dark"]{--bg:#1b1a18;--card:#262522;--sand:#312f2b;--sand-2:#3d3a34;--border:#35332e;--ink:#f3f1ea;--muted:#a8a499;--accent:#e58b6a;--accent-2:#f0a587;--accent-btn:#e58b6a;--on-accent:#1b1a18;--accent-soft:#3a2a23;--like:#ff6b57;
+--blue-soft:#312f2b;--pink-soft:#3a2a23;--glass:rgba(27,26,24,.72);--glassb:rgba(255,255,255,.09);--sheet:rgba(38,37,34,.9);
+--shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);--shadow-lg:0 24px 64px rgba(0,0,0,.55)}
+html,body{background:var(--bg)!important}
+body{font-family:var(--sans);font-size:15.5px;line-height:1.5;letter-spacing:-.011em;color:var(--ink)}
+::selection{background:color-mix(in srgb,var(--accent) 30%,transparent)}
+*{scrollbar-width:thin;scrollbar-color:var(--sand-2) transparent}
+:focus-visible{outline:2px solid color-mix(in srgb,var(--accent) 60%,transparent);outline-offset:2px}
+h1,h2,h3,.modal-head h3,.section-head h2{font-family:var(--serif);font-weight:600;letter-spacing:-.025em}
+.ic{stroke-width:1.7}
+.topbar{background:var(--glass)!important;backdrop-filter:saturate(1.8) blur(28px)!important;-webkit-backdrop-filter:saturate(1.8) blur(28px)!important;border-bottom:1px solid var(--glassb)!important}
+.brand-text strong{font-family:var(--serif)!important;font-size:23px!important;font-weight:600!important;letter-spacing:-.035em!important;background:none!important;-webkit-background-clip:initial!important;background-clip:initial!important;color:var(--ink)!important;-webkit-text-fill-color:var(--ink)!important}
+.brand-text strong::after{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-left:5px;vertical-align:3px}
+.icon-btn{color:var(--ink)}.icon-btn:active{background:var(--sand)!important}
+.notif-badge{background:var(--accent-btn)!important;color:var(--on-accent)!important;border-color:var(--bg)!important}
+.story-ring{background:var(--ig);padding:2.5px}.story-ring.viewed{background:var(--sand-2)}
+.story-avatar{background:var(--ig)!important;color:#fff!important}.story-add{background:var(--accent-btn)!important;color:var(--on-accent)!important}
+.story-name{color:var(--ink);font-weight:500}
+.compose-card{background:var(--card)!important;border:1px solid var(--border)!important;box-shadow:var(--shadow)!important;border-radius:999px!important}
+.compose-input{font-family:var(--serif);font-style:italic;font-size:16.5px;color:var(--muted)!important}
+.btn-primary,.compose-button,.follow-btn{background:var(--accent-btn)!important;color:var(--on-accent)!important;border:0!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 6px 16px color-mix(in srgb,var(--accent) 32%,transparent)!important;font-weight:700}
+.following-btn,.btn-outline,.btn-soft,.btn-light{background:var(--sand)!important;color:var(--ink)!important;border:0!important;box-shadow:none!important}
+.danger-btn,.btn-out{background:color-mix(in srgb,#e5533d 12%,var(--bg))!important;color:#c4352a!important;box-shadow:none!important}
+[data-theme="dark"] .danger-btn,[data-theme="dark"] .btn-out{color:#ff8a78!important}
+.filter{background:var(--card)!important;border:1px solid var(--border)!important;color:var(--ink)!important;font-weight:600}
+.filter.active{background:var(--ink)!important;color:var(--bg)!important;border-color:var(--ink)!important}
+.sort-btn{background:transparent!important;color:var(--muted)!important;border-radius:999px!important;padding:7px 14px;font-weight:650;box-shadow:none!important}
+.sort-btn.active{background:var(--card)!important;color:var(--ink)!important;box-shadow:0 1px 3px rgba(26,25,21,.14)!important}
+.shuffle-btn{background:transparent!important;color:var(--accent-2)!important;font-weight:650}
+#feedSection div:has(> .sort-btn){background:var(--sand);border-radius:999px;padding:3px!important;margin:4px 14px 10px;width:max-content;max-width:calc(100% - 28px);gap:2px!important}
+.trend-chip{background:var(--sand)!important}.hashtag,.post-text a{color:var(--accent-2)!important}
+.post-card{background:var(--card)!important;border:1px solid var(--border)!important;border-radius:28px!important;box-shadow:var(--shadow)!important;margin:0 12px 12px!important;padding:14px 0 6px!important;overflow:hidden}
+.post-avatar{width:40px;height:40px;box-shadow:none!important;background:var(--ig)}
+.post-meta strong{font-size:15px;font-weight:650}.post-meta span{color:var(--muted)}
+.post-top .category{background:var(--accent-soft)!important;color:var(--accent-2)!important;font-weight:650}
+.post-card.text-only .post-text{margin:4px 14px 6px;padding:18px 20px 22px;border-radius:22px;background:var(--sand);font-family:var(--serif);font-size:19px;line-height:1.5;font-weight:500;letter-spacing:-.012em;color:var(--ink)}
+.post-card.text-only.love .post-text{background:var(--accent-soft)}
+[data-theme="dark"] .post-card.text-only .post-text{background:var(--sand);color:var(--ink)}[data-theme="dark"] .post-card.text-only.love .post-text{background:var(--accent-soft)}
+.post-card.text-only .post-text::before{content:"\201C";display:block;height:20px;font-family:var(--serif);font-size:46px;line-height:.9;color:var(--accent)}
+.post-card.has-media .post-text{padding:8px 16px 0;font-size:15.5px}
+.post-actions{padding:6px 10px 2px}.post-actions .ic{width:24px;height:24px}.post-actions .action{color:var(--ink)!important}.post-actions .action span{color:var(--muted);font-weight:600}
+.post-actions .hearted{color:var(--like)!important}.post-actions .save-action.hearted{color:var(--ink)!important}
+.view-comments{color:var(--muted)!important;padding:0 16px 10px}
+.carousel-dot{background:rgba(255,255,255,.6)}.carousel-count{background:rgba(26,25,21,.55);backdrop-filter:blur(8px)}
+.rank-item,.hero{border-radius:28px!important}
+.hero{background:linear-gradient(135deg,#f6e4d8,#f0cdb8)!important;color:var(--ink)!important;box-shadow:var(--shadow)!important}
+[data-theme="dark"] .hero{background:linear-gradient(135deg,#3a2a23,#2e2420)!important}
+.hero h1,.hero h2{font-family:var(--serif);color:var(--ink)!important}.hero p{color:color-mix(in srgb,var(--ink) 72%,transparent)!important}
+.modal-backdrop{background:rgba(26,25,21,.38)!important}
+.modal{background:var(--sheet)!important;border:1px solid var(--glassb)!important;box-shadow:var(--shadow-lg)!important}
+.modal::before{background:var(--sand-2)!important}.modal-head h3{font-size:22px}
+.close-btn{background:var(--sand)!important;color:var(--ink)!important}
+input,textarea,select{background:var(--sand)!important;color:var(--ink)!important;font-family:var(--sans)}
+input:focus,textarea:focus,select:focus{outline:0;box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 24%,transparent)!important}
+input::placeholder,textarea::placeholder{color:var(--muted);opacity:.85}
+.toast{background:rgba(26,25,21,.9)!important;color:#faf9f5!important;border-radius:999px!important;padding:11px 18px!important;font-weight:600;font-size:14px;backdrop-filter:blur(20px);bottom:calc(96px + env(safe-area-inset-bottom))!important}
+#newPill{background:var(--ink)!important;color:var(--bg)!important;box-shadow:0 10px 30px rgba(26,25,21,.3)!important}
+#adminFab{background:var(--ink)!important}
+#acctBar .who{font-family:var(--serif);font-size:23px;font-weight:600}
+.acct-row .av{background:var(--ig)!important}.acct-row .on{color:var(--accent-2)!important}
+body.gated{background:radial-gradient(70% 50% at 8% 6%,#f6d9c6 0,transparent 70%),radial-gradient(60% 50% at 95% 92%,#f2cdb8 0,transparent 70%),var(--bg)!important;animation:none!important}
+.gate-brand{color:var(--ink)!important;text-shadow:none!important;font-family:var(--serif);font-size:38px!important;font-weight:600;letter-spacing:-.04em!important}
+.gate-brand small{font-family:var(--sans);color:var(--muted)!important;opacity:1!important;font-size:14.5px!important;font-weight:500!important;letter-spacing:0!important;margin-top:8px!important}
+.gate-brand b{background:linear-gradient(135deg,#f2b48a,#d97757 55%,#bd553a)!important;color:#fff!important;border:0!important;box-shadow:0 14px 34px color-mix(in srgb,var(--accent) 40%,transparent),inset 0 1px 0 rgba(255,255,255,.5)!important;border-radius:26px!important}
+#splash{background:var(--bg)!important;color:var(--ink)!important;font-family:var(--serif);font-weight:600}
+@media(max-width:799px){
+ .bottom-nav{left:14px!important;right:14px!important;bottom:calc(12px + env(safe-area-inset-bottom))!important;width:auto!important;height:66px!important;padding:7px!important;border-radius:34px!important;background:var(--glass)!important;backdrop-filter:saturate(1.8) blur(30px)!important;-webkit-backdrop-filter:saturate(1.8) blur(30px)!important;border:1px solid var(--glassb)!important;box-shadow:0 12px 40px rgba(26,25,21,.16),inset 0 1px 0 rgba(255,255,255,.55)!important;transform:none!important}
+ .nav-item{height:52px!important;border-radius:26px!important;color:var(--ink)!important;transition:background-color .3s var(--ios),transform .35s var(--ios)}
+ .nav-item.active:not(.post){background:var(--sand)!important}.nav-item.active:not(.post) .ic{fill:none!important;stroke-width:2.2}
+ .nav-item.post .ic{background:var(--accent-btn)!important;color:var(--on-accent)!important;stroke:var(--on-accent)!important;border-radius:50%!important;width:22px!important;height:22px!important;padding:6px!important;box-sizing:content-box}
+ .app-shell{padding-bottom:calc(112px + env(safe-area-inset-bottom))!important}
+ #adminFab{bottom:calc(92px + env(safe-area-inset-bottom))!important}
+}
+@media(max-width:700px){.post-card{margin:0 12px 12px!important}.section-card{background:transparent!important}}
+@media(min-width:701px){
+ .section-card{background:var(--card)!important;border:1px solid var(--border)!important;border-radius:28px!important;box-shadow:var(--shadow)!important}
+ .post-card{margin:0 0 14px!important}
+ .compose-card{margin:0 0 16px}
+}
+@media(prefers-reduced-motion:no-preference){.nav-item:active,.icon-btn:active,.btn:active,.action:active,.filter:active{transform:scale(.95)}}
 </style>
 </head>
 
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="6"/><path d="M12 8v8M8 12h8"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5s-8-4.9-8-11A4.6 4.6 0 0 1 12 6.6 4.6 4.6 0 0 1 20 9.5c0 6.1-8 11-8 11z"/></symbol><symbol id="i-comment" viewBox="0 0 24 24"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.5L3.5 20.5l1.5-4.4A8.5 8.5 0 1 1 20.5 11.5z"/></symbol><symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3 10.5 13.5M21 3l-7 18-3.5-7.5L3 10z"/></symbol><symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4.5L6 21z"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15zM10 21h4"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol><symbol id="i-more" viewBox="0 0 24 24"><g fill="currentColor" stroke="none"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></g></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol><symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5 5 19"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7"/></symbol><symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></symbol><symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></symbol><symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v12H4z"/><circle cx="12" cy="13.5" r="3.5"/></symbol><symbol id="i-archive" viewBox="0 0 24 24"><path d="M3 5h18v4H3zM5 9v11h14V9M10 13h4"/></symbol><symbol id="i-arrowup" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol><symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol><symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2.5 20h19zM12 10v4M12 17.3v.4"/></symbol></defs></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="6"/><path d="M12 8v8M8 12h8"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5s-8-4.9-8-11A4.6 4.6 0 0 1 12 6.6 4.6 4.6 0 0 1 20 9.5c0 6.1-8 11-8 11z"/></symbol><symbol id="i-comment" viewBox="0 0 24 24"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.5L3.5 20.5l1.5-4.4A8.5 8.5 0 1 1 20.5 11.5z"/></symbol><symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3 10.5 13.5M21 3l-7 18-3.5-7.5L3 10z"/></symbol><symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4.5L6 21z"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15zM10 21h4"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol><symbol id="i-more" viewBox="0 0 24 24"><g fill="currentColor" stroke="none"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></g></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol><symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5 5 19"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7"/></symbol><symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></symbol><symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></symbol><symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v12H4z"/><circle cx="12" cy="13.5" r="3.5"/></symbol><symbol id="i-archive" viewBox="0 0 24 24"><path d="M3 5h18v4H3zM5 9v11h14V9M10 13h4"/></symbol><symbol id="i-arrowup" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol><symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol><symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2.5 20h19zM12 10v4M12 17.3v.4"/></symbol><symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol><symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol></defs></svg>
   <div class="app-shell">
     <header class="topbar">
       <div class="topbar-inner">
@@ -5717,7 +5844,7 @@ input,textarea,select{border:0!important;background:var(--blue-soft)!important;b
     }
     const start = u => { currentUser = { id: u.id, username: u.username, sv: u.sv || 0 }; save(STORAGE.currentUser, currentUser); localStorage.removeItem(LK); };
     window.addEventListener("storage", e => {
-      if (e.key === STORAGE.users || e.key === STORAGE.currentUser) { users = load(STORAGE.users, users); currentUser = load(STORAGE.currentUser, null); validateSession(); updateUI(); }
+      if (!window.__cloud && (e.key === STORAGE.users || e.key === STORAGE.currentUser)) { users = load(STORAGE.users, users); currentUser = load(STORAGE.currentUser, null); validateSession(); updateUI(); }
     });
     logout = window.logout = function () {
       currentUser = null; localStorage.removeItem(STORAGE.currentUser);
@@ -5788,7 +5915,7 @@ input,textarea,select{border:0!important;background:var(--blue-soft)!important;b
       if (Date.now() - lastBug < 60000) return showToast("Please wait a minute between reports.");
       const t = (prompt("Describe the bug (max 500 characters):") || "").trim().slice(0, 500); if (!t) return;
       const b = load(BK, []); b.unshift({ id: makeId(), userId: currentUser.id, username: currentUser.username, text: t, createdAt: new Date().toISOString() });
-      localStorage.setItem(BK, JSON.stringify(scrub(b.slice(0, 200)))); lastBug = Date.now(); showToast("Thanks! Bug reported 🐞");
+      if (window.__cloud) window.__sendBug(t); else localStorage.setItem(BK, JSON.stringify(scrub(b.slice(0, 200)))); lastBug = Date.now(); showToast("Thanks! Bug reported 🐞");
     };
 
     // --- Admin panel ---
@@ -5800,7 +5927,7 @@ input,textarea,select{border:0!important;background:var(--blue-soft)!important;b
     function view() {
       const v = me(); if (!isAdm(v)) return AD.classList.remove("open");
       $("admTabs").innerHTML = TABS.map(([k, l]) => `<button data-t="${k}" class="${k === tab ? "on" : ""}">${l}</button>`).join("");
-      const real = users.filter(u => !u.noLogin), live = posts.filter(p => !p.archived), sa = v.role === "superadmin", P = load("cpgshs_presence_v1", {}), on = u => Date.now() - (P[u.id] || 0) < 90000, nOn = real.filter(on).length; let h = "";
+      const real = users.filter(u => !u.noLogin), live = posts.filter(p => !p.archived), sa = v.role === "superadmin", P = load("cpgshs_presence_v1", {}), on = u => window.__cloud ? window.__online.has(u.id) : Date.now() - (P[u.id] || 0) < 90000, nOn = real.filter(on).length; let h = "";
       if (tab === "stats") {
         const sum = k => live.reduce((s, p) => s + (p[k] || 0), 0), day = n => { const d = new Date(Date.now() - n * 864e5); return [d, todayKey(d)]; };
         const days = [6, 5, 4, 3, 2, 1, 0].map(n => { const [d, k] = day(n); return { l: d.toLocaleDateString(undefined, { weekday: "short" }), p: live.filter(x => todayKey(x.createdAt) === k).length, u: real.filter(x => todayKey(x.createdAt) === k).length }; });
@@ -5835,9 +5962,10 @@ input,textarea,select{border:0!important;background:var(--blue-soft)!important;b
       else if (a === "rclr") { if (!confirm("Dismiss all reports?")) return; reports = []; }
       else if (a === "ban" && can) { u.banned = !u.banned; u.sv = (u.sv || 0) + 1; }
       else if (a === "role" && can && sa) u.role = u.role === "admin" ? "user" : "admin";
+      else if (a === "reset" && can && window.__cloud) { await window.__resetPin(u); return; }
       else if (a === "reset" && can) { const p = String(100000 + crypto.getRandomValues(new Uint32Array(1))[0] % 900000); await setPin(u, p); u.mustChangePin = true; u.sv = (u.sv || 0) + 1; alert("Temporary PIN for @" + u.username + ": " + p + "\nThey must change it after logging in."); }
       else if (a === "udel" && can) { if (!confirm("Delete @" + u.username + " and all their posts?")) return; users = users.filter(x => x.id !== i); posts = posts.filter(p => p.userId !== i); reports = reports.filter(r => r.reporterId !== i && posts.some(p => p.id === r.postId)); stories = stories.filter(s => s.userId !== i); save(STORAGE.stories, stories); }
-      else if (a === "bdel") localStorage.setItem(BK, JSON.stringify(load(BK, []).filter(x => x.id !== i)));
+      else if (a === "bdel") { if (window.__cloud) await window.__delBug(i); else localStorage.setItem(BK, JSON.stringify(load(BK, []).filter(x => x.id !== i))); }
       else if (a === "csv") {
         const rows = ["date,new_posts,new_users,hearts,shares"];
         for (let n = 13; n >= 0; n--) { const k = todayKey(new Date(Date.now() - n * 864e5)), ps = posts.filter(p => todayKey(p.createdAt) === k); rows.push([`"${k}"`, ps.length, users.filter(x => !x.noLogin && todayKey(x.createdAt) === k).length, ps.reduce((s, p) => s + (p.hearts || 0), 0), ps.reduce((s, p) => s + (p.shares || 0), 0)].join(",")); }
@@ -5944,7 +6072,7 @@ input,textarea,select{border:0!important;background:var(--blue-soft)!important;b
     let fresh = 0;
     const pill = () => { let p = $("newPill"); if (!p) { p = document.createElement("button"); p.id = "newPill"; p.onclick = () => { fresh = 0; p.classList.remove("on"); updateUI(); scrollTo({ top: 0, behavior: "smooth" }); }; document.body.appendChild(p); } p.textContent = `↑ ${fresh} new post${fresh > 1 ? "s" : ""}`; p.classList.add("on"); };
     addEventListener("storage", e => {
-      if (!currentUser || ![STORAGE.posts, STORAGE.stories, STORAGE.reports, STORAGE.follows].includes(e.key)) return;
+      if (window.__cloud || !currentUser || ![STORAGE.posts, STORAGE.stories, STORAGE.reports, STORAGE.follows].includes(e.key)) return;
       if (e.key === STORAGE.posts) { const old = new Set(posts.map(p => p.id)); posts = load(STORAGE.posts, posts); fresh += posts.filter(p => !old.has(p.id) && p.userId !== currentUser.id).length; }
       else if (e.key === STORAGE.stories) stories = load(STORAGE.stories, stories);
       else if (e.key === STORAGE.reports) reports = load(STORAGE.reports, reports);
@@ -5953,7 +6081,7 @@ input,textarea,select{border:0!important;background:var(--blue-soft)!important;b
     });
     addEventListener("scroll", () => { if (fresh && scrollY < 60) { fresh = 0; const p = $("newPill"); if (p) p.classList.remove("on"); updateUI(); } }, { passive: true });
     let idle = Date.now(); ["pointerdown", "keydown", "touchstart", "scroll"].forEach(n => addEventListener(n, () => { idle = Date.now(); }, { passive: true }));
-    setInterval(() => { if (currentUser && Date.now() - idle > 20 * 60000) { logout(); showToast("Logged out after 20 min of inactivity 🔒"); } }, 30000);
+    setInterval(() => { if (currentUser && Date.now() - idle > 20 * 60000) { (window.__idleOut || logout)(); showToast("Logged out after 20 min of inactivity 🔒"); } }, 30000);
     // --- v11: emoji-free chrome (icons), profile tab, aria ---
     const IC = { "⌂": "home", "☆": "bookmark", "★": "bookmark fill", "＋": "plus", "⌕": "search", "◉": "user", "♡": "heart", "♥": "heart fill", "↗": "send", "➤": "send", "💬": "comment", "🔗": "link", "🔔": "bell", "🌙": "moon", "☀": "sun", "✏": "pencil", "🗑": "trash", "🚩": "flag", "⚑": "flag", "🛡": "shield", "✕": "x", "✓": "check", "⚙": "gear", "📊": "chart", "📷": "camera", "📸": "camera", "📦": "archive", "⬇": "download", "👁": "eye", "🔒": "lock", "⚠": "alert", "↑": "arrowup", "⋯": "more", "🟢": "dot on", "⚪": "dot" };
     const EM = /(?:[\u{1F000}-\u{1FAFF}\u2600-\u27BF\u2B00-\u2BFF\u2190-\u21FF\u2300-\u23FF\u25A0-\u25FF\uFF0B\u22EF])\uFE0F?(?:\u200D[\u{1F000}-\u{1FAFF}\u2600-\u27BF]\uFE0F?)*/gu, HAS = /[\u{1F000}-\u{1FAFF}\u2600-\u27BF\u2B00-\u2BFF\u2190-\u21FF\u2300-\u23FF\u25A0-\u25FF\uFF0B\u22EF]/u;
@@ -5979,6 +6107,220 @@ input,textarea,select{border:0!important;background:var(--blue-soft)!important;b
     document.querySelector('.nav-item[data-scroll="home"]').setAttribute("aria-label", "Home"); document.querySelector('.nav-item[data-scroll="profileSection"]').setAttribute("aria-label", "Profile");
     document.addEventListener("click", e => { const b = e.target.closest(".nav-item[data-scroll],#headerProfileBtn"); if (b) document.body.classList.toggle("tab-profile", b.dataset.scroll === "profileSection" || b.id === "headerProfileBtn"); }, true);
     fix(document.body);
+    // --- v12: account bar + switcher, search toggle, story fixes ---
+    const ic = (n, c) => `<svg class="ic ${c || ""}" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+    const bar = document.createElement("div"); bar.id = "acctBar"; if ($("profileSection")) $("profileSection").prepend(bar);
+    const paintBar = () => { const u = currentUser; bar.style.display = u ? "flex" : "none"; if (u) bar.innerHTML = `<button class="who" id="acctOpen" aria-label="Switch account">${E(u.username)}${ic("chevron")}</button><span class="sp"></span><button class="btn-out" id="acctOut">${ic("logout")}Log out</button>`; };
+    const AM = document.createElement("div"); AM.className = "modal-backdrop"; AM.id = "acctModal"; AM.setAttribute("role", "dialog"); AM.setAttribute("aria-modal", "true");
+    AM.innerHTML = `<div class="modal"><div class="modal-head"><h3>Accounts</h3><button class="close-btn" data-xc aria-label="Close">${ic("x")}</button></div><div class="modal-body" id="acctBody"></div></div>`; document.body.appendChild(AM);
+    const paintAcct = () => {
+      const u = currentUser, list = window.__cloud ? Dev.list() : [], row = (a, on) => `<div class="acct-row" ${on ? "" : `data-sw="${E(a.id)}"`} role="button" tabindex="0"><span class="av">${E(getInitial(a.username))}</span><b>@${E(a.username)}</b>${on ? `<span class="on">${ic("check")}</span>` : `<button class="rm" data-rm="${E(a.id)}" aria-label="Remove account">${ic("x")}</button>`}</div>`;
+      $("acctBody").innerHTML = (list.length ? list.map(a => row(a, u && a.id === u.id)).join("") : (u ? row(u, true) : "")) + `<div class="acct-actions"><button class="btn btn-primary" id="acctAdd">Add account</button><button class="btn-out" id="acctOut2">${ic("logout")}Log out @${E(u ? u.username : "")}</button></div>`;
+    };
+    document.addEventListener("click", e => {
+      const t = e.target;
+      if (t === AM || t.closest("[data-xc]")) return closeModal("acctModal");
+      if (t.closest("#acctOpen")) { paintAcct(); return openModal("acctModal"); }
+      if (t.closest("#acctOut,#acctOut2")) { closeModal("acctModal"); return logout(); }
+      if (t.closest("#acctAdd")) { closeModal("acctModal"); return showAuth("login"); }
+      const rm = t.closest("[data-rm]"); if (rm) { e.stopPropagation(); Dev.del(rm.dataset.rm); return paintAcct(); }
+      const sw = t.closest("[data-sw]"); if (sw && window.__switch) { closeModal("acctModal"); window.__switch(sw.dataset.sw); }
+    });
+    ["headerSearchBtn", "bottomSearchBtn"].forEach(id => $(id) && $(id).addEventListener("click", e => {
+      e.stopImmediatePropagation(); const on = document.body.classList.toggle("search-open"), si = $("searchInput");
+      if (on) { scrollTo({ top: 0, behavior: "smooth" }); setTimeout(() => si.focus(), 120); } else { si.value = ""; si.dispatchEvent(new Event("input")); si.blur(); }
+    }, true));
+    $("composerPublishBtn").addEventListener("click", e => {
+      if (!sc) return; const keep = sc.texts.filter(t => (t.text || "").trim() && !/^Tap to edit/i.test(t.text.trim())); sc.texts.splice(0, sc.texts.length, ...keep);
+      if (!sc.texts.length && !sc.stickers.length && !sc.photo && !sc.strokes.length) { e.stopImmediatePropagation(); showToast("Add text, a photo or a sticker first."); }
+    }, true);
+    const _u5 = window.updateUI; window.updateUI = function () { _u5(); paintBar(); }; updateUI = window.updateUI;
+    // --- v12: Supabase cloud mode (shared posts, realtime, accounts) ---
+    const CFG = window.SPILL_CONFIG || {}, CLOUD = !!(CFG.url && CFG.key); window.__cloud = CLOUD;
+    const DK = "cpgshs_accounts_v1";
+    const Dev = {
+      list: () => { const l = load(DK, []); return Array.isArray(l) ? l : []; },
+      put(s, name) { const l = Dev.list().filter(a => a.id !== s.user.id); l.unshift({ id: s.user.id, username: name, at: s.access_token, rt: s.refresh_token }); localStorage.setItem(DK, JSON.stringify(l.slice(0, 5))); },
+      upd(s) { const l = Dev.list(), a = l.find(x => x.id === s.user.id); if (a) { a.at = s.access_token; a.rt = s.refresh_token; localStorage.setItem(DK, JSON.stringify(l)); } },
+      del(id) { localStorage.setItem(DK, JSON.stringify(Dev.list().filter(a => a.id !== id))); },
+      clear() { localStorage.removeItem(DK); }
+    };
+    let sb = null, CERR = false, chan = null, pch = null, live = false, ready = false, pulling = false, again = false, gen = 0, SNAP = null, pushing = Promise.resolve(), tm, pt, lastPull = 0, cloudBugs = [], selfOp = false;
+    const guard = f => async (...a) => { selfOp = true; try { return await f(...a); } finally { setTimeout(() => { selfOp = false; }, 900); } };
+    const wipe = () => { users = []; posts = []; stories = []; reports = []; try { socialFollows = {}; } catch (e) {} };
+    if (CLOUD) {
+      document.body.classList.add("cloud", "booting");
+      const sp = document.createElement("div"); sp.id = "splash"; sp.textContent = "SPILL"; document.body.appendChild(sp);
+      try { sb = window.supabase.createClient(CFG.url, CFG.key, { auth: { storageKey: "spill-auth", persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }, realtime: { params: { eventsPerSecond: 10 } } }); } catch (e) { CERR = true; }
+      wipe(); currentUser = null; window.__online = new Set();
+      [STORAGE.users, STORAGE.posts, STORAGE.reports, STORAGE.currentUser, STORAGE.stories, STORAGE.follows, STORAGE.storyArchive].forEach(k => k && localStorage.removeItem(k));
+      const em = u => u.toLowerCase() + "@spill.cpgshs.app", pw = (p, u) => `spill-${p}-${u.toLowerCase()}`;
+      const rows = async q => { const r = await q; if (r.error) throw r.error; return r.data || []; };
+      const page = async mk => { let out = [], from = 0; for (;;) { const d = await rows(mk().range(from, from + 999)); out = out.concat(d); if (d.length < 1000) return out; from += 1000; } };
+      const call = async (action, body) => { try { const { data, error } = await sb.functions.invoke("spill", { body: { action, ...body } }); return error || !data ? { ok: false, error: "Server unreachable. Try again." } : data; } catch (e) { return { ok: false, error: "Server unreachable. Try again." }; } };
+      const group = (a, k) => a.reduce((m, x) => ((m[x[k]] ||= []).push(x), m), {});
+      const snap = () => { const meU = users.find(u => u.id === (currentUser || {}).id) || {}, id = (currentUser || {}).id; return {
+        p: new Map(posts.map(p => [p.id, { sig: JSON.stringify([p.content, p.category, !!p.archived, (p.images || []).length]), liked: (p.likedBy || []).includes(id), saved: (p.savedBy || []).includes(id), shares: p.shares || 0, c: new Map((p.comments || []).map(c => [c.id, c.userId])) }])),
+        f: new Set(meU.following || []), s: new Set(stories.map(s => s.id)), v: new Set(stories.filter(s => (s.views || []).includes(id)).map(s => s.id)), r: new Set(reports.map(r => r.id)),
+        u: new Map(users.map(u => [u.id, JSON.stringify([u.bio, u.avatar, u.link, u.grade, u.section, !!u.banned, u.role])])) }; };
+      const pull = async quiet => {
+        if (!sb || !currentUser) return; if (pulling) { again = true; return; } pulling = true; const g0 = gen, me = currentUser.id;
+        try {
+          const [pr, po, ow, st, fo] = await Promise.all([
+            page(() => sb.from("profiles").select("id,username,grade,section,bio,avatar,link,role,banned,created_at").order("created_at").order("id")),
+            rows(sb.from("posts").select("*").order("created_at", { ascending: false }).limit(120)),
+            page(() => sb.from("post_owners").select("post_id").order("post_id")),
+            rows(sb.from("stories").select("*").order("created_at", { ascending: false }).limit(100)),
+            page(() => sb.from("follows").select("follower,followee").order("created_at").order("follower"))]);
+          const ids = po.map(p => p.id), sids = st.map(s => s.id), meP = pr.find(p => p.id === me), adm = !!meP && ["admin", "superadmin"].includes(meP.role);
+          const [he, co, sa, sh, sv, rp, bg] = await Promise.all([
+            ids.length ? page(() => sb.from("hearts").select("post_id,user_id").in("post_id", ids).order("created_at").order("user_id")) : [],
+            ids.length ? page(() => sb.from("comments").select("*").in("post_id", ids).order("created_at").order("id")) : [],
+            ids.length ? rows(sb.from("saves").select("post_id").in("post_id", ids)) : [],
+            ids.length ? page(() => sb.from("shares").select("post_id,user_id").in("post_id", ids).order("created_at").order("user_id")) : [],
+            sids.length ? rows(sb.from("story_views").select("story_id,user_id").in("story_id", sids)) : [],
+            rows(sb.from("reports").select("*").order("created_at", { ascending: false }).limit(200)),
+            adm ? rows(sb.from("bug_reports").select("*").order("created_at", { ascending: false }).limit(100)) : []]);
+          if (gen !== g0) { setTimeout(() => pushing.then(() => pull(quiet)), 80); return; }
+          const oldIds = new Set(posts.map(p => p.id)), first = !ready, keep = new Map(stories.map(s => [s.id, s]));
+          const fB = group(fo, "followee"), fO = group(fo, "follower"), H = group(he, "post_id"), C = group(co, "post_id"), SH = group(sh, "post_id"), V = group(sv, "story_id"), mine = new Set(ow.map(o => o.post_id)), S = new Set(sa.map(x => x.post_id)), name = new Map(pr.map(p => [p.id, p.username]));
+          users = pr.map(p => ({ id: p.id, username: p.username, grade: p.grade, section: p.section, bio: p.bio || "", avatar: p.avatar, link: p.link || "", role: p.role, banned: p.banned, createdAt: p.created_at, followers: (fB[p.id] || []).map(x => x.follower), following: (fO[p.id] || []).map(x => x.followee) }));
+          try { socialFollows = {}; fo.forEach(f => (socialFollows[f.follower] ||= []).push(f.followee)); } catch (e) {}
+          posts = po.map(p => { const lk = (H[p.id] || []).map(h => h.user_id), sb2 = (SH[p.id] || []).map(x => x.user_id); return { id: p.id, userId: p.anonymous ? (mine.has(p.id) ? me : "") : p.author_id, username: p.anonymous ? "Anonymous" : p.author_name, content: p.content, category: p.category, anonymous: p.anonymous, images: p.images || [], archived: p.archived, createdAt: p.created_at, editedAt: p.edited_at, hearts: lk.length, likedBy: lk, shares: sb2.length, sharedBy: sb2, savedBy: S.has(p.id) ? [me] : [], comments: (C[p.id] || []).map(c => ({ id: c.id, userId: c.user_id, username: c.username, content: c.content, createdAt: c.created_at })) }; });
+          stories = st.map(r => { const d = r.data || {}, o = keep.get(r.id) || {}; return { ...d, id: r.id, userId: r.user_id, username: name.get(r.user_id) || "student", audience: r.audience, createdAt: r.created_at, expiresAt: r.expires_at, views: (V[r.id] || []).map(v => v.user_id), reactions: o.reactions || d.reactions || [], replies: o.replies || [] }; });
+          reports = rp.map(r => ({ id: r.id, postId: r.post_id, reporterId: r.reporter, reason: r.reason, createdAt: r.created_at }));
+          cloudBugs = bg.map(b => ({ id: b.id, userId: b.user_id, username: b.username, text: b.text, createdAt: b.created_at }));
+          scrub(users); scrub(posts); scrub(stories); users.forEach(u => { if (u.avatar && !AV.test(u.avatar)) u.avatar = null; if (u.link && !URLRE.test(u.link)) u.link = ""; });
+          SNAP = snap(); lastPull = Date.now();
+          if (!quiet) refresh(first ? 0 : posts.filter(p => !oldIds.has(p.id) && p.userId !== me).length);
+        } catch (e) { console.warn("pull", e && e.message); } finally { pulling = false; if (again) { again = false; setTimeout(() => pull(), 60); } }
+      };
+      const refresh = added => {
+        fresh += added; if (/^(INPUT|TEXTAREA)$/.test((document.activeElement || {}).tagName || "")) return void setTimeout(() => refresh(0), 1500);
+        if (fresh && scrollY >= 140) return pill(); fresh = 0; updateUI();
+      };
+      const doPush = async () => {
+        if (!sb || !currentUser || !SNAP) return; const me = currentUser.id, S0 = SNAP, ops = [], meU = users.find(u => u.id === me) || {}, adm = isAdm(meU);
+        for (const p of posts) {
+          const s = S0.p.get(p.id);
+          if (!s) { if (p.userId === me) ops.push(sb.from("posts").insert({ id: p.id, content: p.content || " ", category: p.category || "Other", anonymous: !!p.anonymous, images: p.images || [] })); continue; }
+          if (p.userId === me && s.sig !== JSON.stringify([p.content, p.category, !!p.archived, (p.images || []).length])) ops.push(sb.from("posts").update({ content: p.content, category: p.category, archived: !!p.archived, images: p.images || [] }).eq("id", p.id));
+          const lk = (p.likedBy || []).includes(me); if (lk !== s.liked) ops.push(lk ? sb.from("hearts").insert({ post_id: p.id }) : sb.from("hearts").delete().eq("post_id", p.id).eq("user_id", me));
+          const sv = (p.savedBy || []).includes(me); if (sv !== s.saved) ops.push(sv ? sb.from("saves").insert({ post_id: p.id }) : sb.from("saves").delete().eq("post_id", p.id).eq("user_id", me));
+          if ((p.shares || 0) > s.shares) ops.push(sb.from("shares").upsert({ post_id: p.id, user_id: me }, { ignoreDuplicates: true }));
+          for (const c of p.comments || []) if (!s.c.has(c.id) && c.userId === me) ops.push(sb.from("comments").insert({ id: c.id, post_id: p.id, content: c.content }));
+          for (const cid of s.c.keys()) if (!(p.comments || []).some(c => c.id === cid)) ops.push(sb.from("comments").delete().eq("id", cid));
+        }
+        for (const id of S0.p.keys()) if (!posts.some(p => p.id === id)) ops.push(sb.from("posts").delete().eq("id", id));
+        const nowF = new Set(meU.following || []);
+        nowF.forEach(id => { if (!S0.f.has(id)) ops.push(sb.from("follows").insert({ followee: id })); });
+        S0.f.forEach(id => { if (!nowF.has(id)) ops.push(sb.from("follows").delete().eq("follower", me).eq("followee", id)); });
+        for (const s of stories) {
+          if (!S0.s.has(s.id) && s.userId === me) { const { id, userId, username, audience, views, reactions, replies, createdAt, expiresAt, ...data } = s; ops.push(sb.from("stories").insert({ id, audience: "all", data })); }
+          else if (S0.s.has(s.id) && s.userId !== me && (s.views || []).includes(me) && !S0.v.has(s.id)) ops.push(sb.from("story_views").upsert({ story_id: s.id, user_id: me }, { ignoreDuplicates: true }));
+        }
+        for (const id of S0.s) if (!stories.some(s => s.id === id)) ops.push(sb.from("stories").delete().eq("id", id));
+        for (const r of reports) if (!S0.r.has(r.id) && r.reporterId === me) ops.push(sb.from("reports").insert({ id: r.id, post_id: r.postId, reason: String(r.reason || "").slice(0, 200) }));
+        for (const id of S0.r) if (!reports.some(r => r.id === id)) ops.push(sb.from("reports").delete().eq("id", id));
+        for (const u of users) { const o = S0.u.get(u.id); if (!o) continue; const old = JSON.parse(o);
+          if (u.id === me) { if (JSON.stringify([u.bio, u.avatar, u.link, u.grade, u.section]) !== JSON.stringify(old.slice(0, 5))) ops.push(sb.from("profiles").update({ bio: u.bio || "", avatar: u.avatar || null, link: u.link || "", grade: u.grade, section: u.section }).eq("id", me)); }
+          else if (adm) { if (old[5] !== !!u.banned) ops.push(sb.from("profiles").update({ banned: !!u.banned }).eq("id", u.id)); if (old[6] !== u.role) ops.push(sb.from("profiles").update({ role: u.role }).eq("id", u.id)); } }
+        for (const id of S0.u.keys()) if (id !== me && !users.some(u => u.id === id) && adm) ops.push(call("admin_delete_user", { userId: id }));
+        const res = await Promise.all(ops.map(async q => { try { const r = await q; return r && (r.error ? r.error.message : r.ok === false ? r.error : null); } catch (e) { return "network"; } }));
+        const bad = res.find(Boolean); if (bad) { showToast(/slow down/i.test(bad) ? "Slow down a little, you're posting too fast." : "Couldn't sync that. Check your connection."); setTimeout(() => pull(), 300); } else SNAP = snap();
+      };
+      const _s2 = save;
+      save = function (k, v) {
+        if (![STORAGE.users, STORAGE.posts, STORAGE.reports, STORAGE.currentUser, STORAGE.stories, STORAGE.follows, STORAGE.storyArchive].includes(k)) return _s2(k, v);
+        try { scrub(v); if (k === STORAGE.users && Array.isArray(v)) v.forEach(u => { if (u.avatar && !AV.test(u.avatar)) u.avatar = null; if (u.link && !URLRE.test(u.link)) u.link = ""; }); } catch (e) {}
+        if (k !== STORAGE.currentUser && k !== STORAGE.storyArchive) { gen++; clearTimeout(pt); pt = setTimeout(() => { pushing = pushing.then(doPush).catch(e => console.warn("push", e && e.message)); }, 60); }
+        return true;
+      };
+      const _ld = load; load = function (k, f) { return k === BK ? cloudBugs : _ld(k, f); };
+      const sched = () => { clearTimeout(tm); tm = setTimeout(() => pushing.then(() => pull()), 250); };
+      const subscribe = () => {
+        if (chan) return; chan = sb.channel("spill-live");
+        ["posts", "hearts", "comments", "follows", "stories", "story_views", "profiles", "reports", "shares"].forEach(t => chan.on("postgres_changes", { event: "*", schema: "public", table: t }, sched));
+        chan.subscribe(st => { live = st === "SUBSCRIBED"; });
+        pch = sb.channel("spill-online", { config: { presence: { key: currentUser.id } } });
+        pch.on("presence", { event: "sync" }, () => { window.__online = new Set(Object.keys(pch.presenceState())); });
+        pch.subscribe(st => { if (st === "SUBSCRIBED") pch.track({ t: Date.now() }); });
+      };
+      const teardown = () => { try { sb.removeAllChannels(); } catch (e) {} chan = pch = null; live = false; window.__online = new Set(); };
+      const adopt = async session => {
+        const { data: prof, error } = await sb.from("profiles").select("id,username,banned,must_change_pin").eq("id", session.user.id).single();
+        if (error || !prof) { await sb.auth.signOut({ scope: "local" }).catch(() => {}); return false; }
+        if (prof.banned) { await sb.auth.signOut({ scope: "local" }).catch(() => {}); Dev.del(prof.id); showToast("This account is suspended."); return false; }
+        teardown(); wipe(); ready = false; pulling = false; currentUser = { id: prof.id, username: prof.username, sv: 0 };
+        await pull(true); ready = true; subscribe(); Dev.put(session, prof.username);
+        if (prof.must_change_pin) setTimeout(() => showToast("Please change your temporary PIN in Edit Profile."), 1500);
+        return true;
+      };
+      const switchTo = guard(async id => {
+        const a = Dev.list().find(x => x.id === id); if (!a) return false;
+        try { const { data: { session: cur } } = await sb.auth.getSession(); if (cur) Dev.upd(cur); } catch (e) {}
+        const { data, error } = await sb.auth.setSession({ access_token: a.at, refresh_token: a.rt });
+        if (error || !data || !data.session) { Dev.del(id); showToast("That session expired. Please log in again."); showAuth("login"); return false; }
+        if (!(await adopt(data.session))) return false; updateUI(); scrollTo({ top: 0 }); showToast("Switched to @" + currentUser.username); return true;
+      });
+      window.__switch = switchTo;
+      const out = guard(async global => {
+        ["settingsModal", "activityModal", "notifModal", "acctModal"].forEach(id => { try { closeModal(id); } catch (e) {} }); const id = currentUser && currentUser.id; teardown();
+        try { await sb.auth.signOut({ scope: global ? "global" : "local" }); } catch (e) {}
+        if (id) Dev.del(id); const next = Dev.list()[0]; if (next && (await switchTo(next.id))) return;
+        currentUser = null; wipe(); updateUI(); showToast("You are logged out.");
+      });
+      logout = window.logout = () => out(false);
+      $("sxAll").onclick = () => { if (!currentUser) return showToast("You are not logged in."); out(true); };
+      window.__idleOut = guard(async () => { Dev.clear(); teardown(); try { await sb.auth.signOut({ scope: "local" }); } catch (e) {} currentUser = null; wipe(); updateUI(); });
+      sb && sb.auth.onAuthStateChange((ev, s) => {
+        if (s && currentUser && s.user.id === currentUser.id && (ev === "TOKEN_REFRESHED" || ev === "SIGNED_IN")) Dev.upd(s);
+        if (selfOp) return;
+        if (ev === "SIGNED_IN" && s && (!currentUser || s.user.id !== currentUser.id)) setTimeout(async () => { if (!selfOp && (!currentUser || s.user.id !== currentUser.id) && (await adopt(s))) updateUI(); }, 0);
+        if (ev === "SIGNED_OUT" && currentUser) setTimeout(() => { if (selfOp) return; currentUser = null; teardown(); wipe(); updateUI(); }, 0);
+      });
+      let busy = false;
+      window.__submitAuth = guard(async function () {
+        if (busy) return; if (CERR || !sb) return showToast("Can't reach the server. Check your connection and refresh.");
+        const L = load(LK, { n: 0, until: 0 }); if (Date.now() < L.until) return showToast("Too many attempts. Try again in " + Math.ceil((L.until - Date.now()) / 1000) + "s.");
+        const username = $("authUsername").value.trim(), pin = $("authPin").value.trim(), conf = $("authConfirm").value.trim();
+        if (!validateUsername(username)) return showToast("Username: 3-20 letters, numbers, or _ only."); if (!validatePin(pin)) return showToast("Your PIN must be exactly 6 numbers.");
+        busy = true;
+        try {
+          if (authMode === "register") {
+            const grade = $("authGrade").value.trim(), section = $("authSection").value.trim();
+            if (!["Grade 11", "Grade 12"].includes(grade)) return showToast("Please select your grade."); if (pin !== conf) return showToast("PINs do not match.");
+            const r = await call("signup", { username, pin, grade, section }); if (!r.ok) return showToast(r.error);
+          }
+          const { data, error } = await sb.auth.signInWithPassword({ email: em(username), password: pw(pin, username) });
+          if (error || !data || !data.session) { L.n++; if (L.n % 5 === 0) L.until = Date.now() + 30000 * Math.min(2 ** (L.n / 5 - 1), 30); localStorage.setItem(LK, JSON.stringify(L)); return showToast("Incorrect username or 6-digit PIN."); }
+          localStorage.removeItem(LK); if (!(await adopt(data.session))) return;
+          closeModal("authModal"); updateUI(); scrollTo({ top: 0 }); showToast(authMode === "register" ? "Welcome to SPILL!" : "Welcome back, " + username + "!");
+        } finally { busy = false; }
+      });
+      window.pinOK = async (u, p) => { const { error } = await sb.auth.signInWithPassword({ email: em(u.username), password: pw(p, u.username) }); return !error; };
+      window.setPin = async (u, p) => { const { error } = await sb.auth.updateUser({ password: pw(p, u.username) }); if (error) throw error; await sb.from("profiles").update({ must_change_pin: false }).eq("id", u.id); };
+      if ($("editUsername")) $("editUsername").readOnly = true;
+      $("deleteAccountBtn").addEventListener("click", async e => {
+        e.stopImmediatePropagation(); selfOp = true; setTimeout(() => { selfOp = false; }, 5000); if (!confirm("Delete your account and everything you posted? This can't be undone.")) return;
+        const r = await call("delete_me", {}); if (!r.ok) return showToast(r.error); const id = currentUser.id; Dev.del(id); closeModal("settingsModal"); teardown(); try { await sb.auth.signOut({ scope: "local" }); } catch (x) {}
+        const nx = Dev.list()[0]; if (nx && (await switchTo(nx.id))) return; currentUser = null; wipe(); updateUI(); showToast("Account deleted.");
+      }, true);
+      window.__sendBug = t => sb.from("bug_reports").insert({ text: t }).then(r => r.error && showToast("Couldn't send the report."));
+      window.__resetPin = async u => { const r = await call("admin_reset_pin", { userId: u.id }); alert(r.ok ? "Temporary PIN for @" + u.username + ": " + r.pin + "\nThey must change it after logging in." : r.error); };
+      window.__delBug = id => { cloudBugs = cloudBugs.filter(x => x.id !== id); return sb.from("bug_reports").delete().eq("id", id); };
+      const poll = () => { if (currentUser && !document.hidden && (!live || Date.now() - lastPull > 60000)) pull(); };
+      setInterval(poll, 15000); document.addEventListener("visibilitychange", () => { if (!document.hidden && currentUser) pull(); }); addEventListener("online", () => { if (currentUser) pull(); });
+      (async () => {
+        try {
+          if (CERR || !sb) throw 0; const { data } = await sb.auth.getSession();
+          if (data && data.session && !(await adopt(data.session))) currentUser = null;
+        } catch (e) { CERR = true; showToast("Can't reach the server. Check your connection."); }
+        document.body.classList.remove("booting"); updateUI();
+      })();
+    }
+    const tcm = document.querySelector('meta[name="theme-color"]'); const syncTc = () => { const d = document.documentElement.dataset.theme === "dark" || document.body.dataset.theme === "dark"; if (tcm) tcm.content = d ? "#1b1a18" : "#faf9f5"; };
+    new MutationObserver(syncTc).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] }); new MutationObserver(syncTc).observe(document.body, { attributes: true, attributeFilter: ["data-theme"] }); syncTc();
     validateSession();
   } catch (e) { console.error("SPILL v8 patch error:", e); } })();
 
