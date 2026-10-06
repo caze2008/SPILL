@@ -2510,6 +2510,34 @@ body.gated #authModal{height:100dvh;min-height:100dvh;justify-content:flex-start
 body.gated #authModal>*{flex-shrink:0}
 body.gated #authModal .modal{margin:auto 0!important;width:min(440px,100%)!important;max-height:none!important;border-radius:26px!important}
 body.gated .modal-backdrop:not(#authModal),body.gated #newPill{display:none!important}
+
+/* v13 fixes: round things stay round, buttons keep their shape, sign-in screen fits */
+.icon-btn:not(.profile-btn),.close-btn,.compose-avatar,.post-avatar,.story-ring,.story-ring-inner,.story-avatar,.story-top-avatar,.viewer-avatar,.ig-avatar-wrap,.ig-avatar,.ig-avatar-xl,.people-avatar,.comment-avatar,.profile-large-avatar,.profile-hero-avatar,.profile-person-avatar,.acct-row .av,.highlight-circle-inner,.ps-c>button:first-child,#adminFab,.gate-brand b{flex:none!important;aspect-ratio:1/1}
+.avatar-img,.post-avatar img,.story-avatar img,.story-top-avatar img,.viewer-avatar img,.ps-c img{width:100%;height:100%;object-fit:cover}
+.btn,.btn-out{border-radius:14px!important;line-height:1.2}
+.action{border-radius:14px!important}
+.choice{border-radius:16px!important}
+.form-actions .btn{min-width:0}
+.modal input,.modal textarea,.modal select{font-size:16px}
+body.gated #authModal{display:flex!important;flex-direction:column;align-items:center!important;justify-content:flex-start!important;gap:16px;padding:calc(20px + env(safe-area-inset-top,0px)) 16px calc(20px + env(safe-area-inset-bottom,0px))!important;overflow-y:auto;overscroll-behavior:contain}
+body.gated #authModal .gate-brand{flex:none;margin-top:auto}
+body.gated #authModal .modal{flex:none;width:min(420px,100%)!important;height:auto!important;max-height:none!important;margin-bottom:auto;border-radius:28px!important}
+body.gated #authModal .modal::before{display:none!important}
+body.gated #authModal .modal-head{position:static;padding:18px 20px 0}
+body.gated #authModal .modal-body{padding:14px 20px 22px}
+
+/* v14 fixes: header text on phones (title no longer overlaps the buttons) */
+.brand{flex:1 1 0;min-width:0;overflow:hidden}
+.brand-text{min-width:0;max-width:100%}
+.brand-text strong{font-size:clamp(14px,4.4vw,22px);line-height:1.25;letter-spacing:-.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:.06em}
+.header-actions{flex:none;gap:6px}
+.modal-head h3,.section-head h2{min-width:0;line-height:1.25;overflow-wrap:anywhere}
+@media(max-width:440px){
+ .header-actions{gap:2px}
+ .icon-btn:not(.profile-btn){width:36px!important;height:36px!important;font-size:18px}
+ .icon-btn .ic{width:22px;height:22px}
+}
+@media(max-width:350px){#glassToggleBtn{display:none!important}}
 </style>
 </head>
 
@@ -6340,14 +6368,7 @@ body.gated .modal-backdrop:not(#authModal),body.gated #newPill{display:none!impo
       else if (a === "role" && can && sa) u.role = u.role === "admin" ? "user" : "admin";
       else if (a === "reset" && can && window.__cloud) { await window.__resetPin(u); return; }
       else if (a === "reset" && can) { const p = String(100000 + crypto.getRandomValues(new Uint32Array(1))[0] % 900000); await setPin(u, p); u.mustChangePin = true; u.sv = (u.sv || 0) + 1; alert("Temporary PIN for @" + u.username + ": " + p + "\nThey must change it after logging in."); }
-      else if (a === "udel" && can) { if (!confirm("Delete @" + u.username + " and all their posts?")) return;
-        if (window.__cloud) { b.disabled = true; const ok = await window.__adminDelete(u); if (!ok) b.disabled = false; view(); return; }
-        const id = u.id; users = users.filter(x => x.id !== id); posts = posts.filter(p => p.userId !== id);
-        posts.forEach(p => { p.likedBy = (p.likedBy || []).filter(x => x !== id); p.savedBy = (p.savedBy || []).filter(x => x !== id); p.comments = (p.comments || []).filter(c => c.userId !== id); p.hearts = p.likedBy.length; });
-        users.forEach(x => { x.followers = (x.followers || []).filter(y => y !== id); x.following = (x.following || []).filter(y => y !== id); });
-        reports = reports.filter(r => r.reporterId !== id && posts.some(p => p.id === r.postId)); stories = stories.filter(s => s.userId !== id);
-        delete socialFollows[id]; Object.keys(socialFollows).forEach(k => socialFollows[k] = (socialFollows[k] || []).filter(y => y !== id)); delete allPreferences[id];
-        save(STORAGE.stories, stories); save(STORAGE.follows, socialFollows); save(STORAGE.prefs, allPreferences); showToast("Deleted @" + u.username); }
+      else if (a === "udel" && can) { if (!confirm("Delete @" + u.username + " and all their posts?")) return; users = users.filter(x => x.id !== i); posts = posts.filter(p => p.userId !== i); reports = reports.filter(r => r.reporterId !== i && posts.some(p => p.id === r.postId)); stories = stories.filter(s => s.userId !== i); save(STORAGE.stories, stories); }
       else if (a === "bdel") { if (window.__cloud) await window.__delBug(i); else localStorage.setItem(BK, JSON.stringify(load(BK, []).filter(x => x.id !== i))); }
       else if (a === "csv") {
         const rows = ["date,new_posts,new_users,hearts,shares"];
@@ -6854,14 +6875,6 @@ body.gated .modal-backdrop:not(#authModal),body.gated #newPill{display:none!impo
         const nx = Dev.list()[0]; if (nx && (await switchTo(nx.id))) return; currentUser = null; wipe(); updateUI(); showToast("Account deleted.");
       }, true);
       window.__sendBug = t => sb.from("bug_reports").insert({ text: t }).then(r => r.error && showToast("Couldn't send the report."));
-      window.__adminDelete = async u => {
-        const r = await call("admin_delete_user", { userId: u.id });
-        if (!r || r.ok === false) { alert("Could not delete @" + u.username + ": " + ((r && r.error) || "no response from server") + "\n\nThe 'spill' Edge Function must allow the admin_delete_user action for admins."); return false; }
-        const id = u.id; users = users.filter(x => x.id !== id); posts = posts.filter(p => p.userId !== id); stories = stories.filter(x => x.userId !== id); reports = reports.filter(x => posts.some(p => p.id === x.postId));
-        users.forEach(x => { x.followers = (x.followers || []).filter(y => y !== id); x.following = (x.following || []).filter(y => y !== id); });
-        Object.keys(socialFollows).forEach(k => { if (k === id) delete socialFollows[k]; else socialFollows[k] = socialFollows[k].filter(y => y !== id); });
-        Dev.del(id); SNAP = snap(); updateUI(); showToast("Deleted @" + u.username); setTimeout(() => pull(true).then(() => updateUI()), 500); return true;
-      };
       window.__resetPin = async u => { const r = await call("admin_reset_pin", { userId: u.id }); alert(r.ok ? "Temporary PIN for @" + u.username + ": " + r.pin + "\nThey must change it after logging in." : r.error); };
       window.__delBug = id => { cloudBugs = cloudBugs.filter(x => x.id !== id); return sb.from("bug_reports").delete().eq("id", id); };
       const poll = () => { if (currentUser && !document.hidden && (!live || Date.now() - lastPull > 60000)) pull(); };
@@ -7122,31 +7135,6 @@ document.addEventListener('touchend',function(){if(!sm)return;var m=sm;sm=null;m
 if(sd>110){m.style.transform='translateY(100%)';var bd=m.closest('.modal-backdrop');setTimeout(function(){m.style.transform='';m.style.transition='';if(bd&&bd.id&&typeof closeModal==='function')closeModal(bd.id);else{var c=bd&&bd.querySelector('[data-close],.close-btn');if(c)c.click()}},260)}
 else{m.style.transform='';setTimeout(function(){m.style.transition=''},420)}},{passive:true});
 })();
-</script>
-<script>
-/* v13: any signed-in student can open any profile and see followers / following */
-(function () { try {
-  window.socialCanViewProfile = function (id) { return !!socialUser(id); };
-  const prev = window.openPublicProfile;
-  window.openPublicProfile = function (id) {
-    if (!socialUser(id)) { showToast("That profile isn't available."); return; }
-    return prev.apply(this, arguments);
-  };
-  const E = x => escapeHTML(String(x == null ? "" : x));
-  window.openRelationshipList = function (userId, type) {
-    const u = socialUser(userId); if (!u) return showToast("That profile isn't available.");
-    type = type === "followers" ? "followers" : "following";
-    const v = currentUser && socialUser(currentUser.id), isA = !!v && (v.role === "admin" || v.role === "superadmin");
-    const people = [...new Set(u[type] || [])].map(socialUser).filter(p => p && (isA || !p.banned));
-    const tab = (t, l) => `<button class="ig-tab ${type === t ? "active" : ""}" onclick="openRelationshipList('${E(u.id)}','${t}')">${l}</button>`;
-    const rows = people.map(p => {
-      const mine = currentUser && currentUser.id === p.id, f = socialFollowing(p.id), av = p.avatar && /^data:image\//.test(p.avatar);
-      return `<div class="profile-person"><div class="profile-person-avatar">${av ? `<img src="${p.avatar}" alt="" style="width:100%;height:100%;border-radius:inherit;object-fit:cover">` : E(getInitial(p.username))}</div><div class="profile-person-info" onclick="openPublicProfile('${E(p.id)}')"><strong>${E(p.username)}</strong><span>${E(socialSchool(p))}</span></div>${mine ? `<span class="profile-link-btn" style="opacity:.6">You</span>` : currentUser ? `<button class="profile-link-btn" onclick="__follow('${E(p.id)}');openRelationshipList('${E(u.id)}','${type}')">${f ? "Following" : "Follow"}</button>` : ""}</div>`;
-    }).join("");
-    document.getElementById("publicProfileBody").innerHTML = `<div class="ig-profile"><div class="section-head" style="padding:0 0 12px"><div><h2>@${E(u.username)}</h2><p>${people.length} ${type}</p></div></div><div class="ig-profile-tabs">${tab("followers", "FOLLOWERS")}${tab("following", "FOLLOWING")}</div><div class="profile-people-list" style="margin-top:12px">${rows || `<div class="no-results">No ${type} yet.</div>`}</div><div class="form-actions" style="margin-top:14px"><button class="btn btn-outline" onclick="openPublicProfile('${E(u.id)}')">Back to profile</button></div></div>`;
-    openModal("profileViewModal");
-  };
-} catch (e) { console.error("SPILL v13 patch error:", e); } })();
 </script>
 </body>
 </html>
