@@ -3,15 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src data: blob:; connect-src https://fwafqzoexbhsgjihdsnq.supabase.co wss://fwafqzoexbhsgjihdsnq.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src data: blob:; connect-src https://wuohwhozdetmcmnpmbag.supabase.co wss://wuohwhozdetmcmnpmbag.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'" />
   <meta name="referrer" content="no-referrer" />
-  <script src="config.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <meta name="theme-color" content="#faf9f5" />
+  <!-- SPILL cloud configuration. Use a Supabase anon/publishable key only; NEVER put a service_role key in this file. -->
+  <script>
+    window.SPILL_CONFIG = window.SPILL_CONFIG || {
+      url: "https://wuohwhozdetmcmnpmbag.supabase.co",
+      key: "sb_publishable_uWoeJxmGu8w4GyZdvlpQTw_bxb1907C"
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+  <meta name="theme-color" content="#ffffff" />
   <meta name="description" content="CPGSHS SPILL — the student wall of Carlos P. Garcia Senior High School. Spill thoughts, share stories, follow classmates." />
   <meta property="og:title" content="CPGSHS SPILL" /><meta property="og:description" content="Spill thoughts, share stories, follow classmates." /><meta property="og:type" content="website" />
   <meta name="apple-mobile-web-app-title" content="SPILL" /><meta name="mobile-web-app-capable" content="yes" />
-  <link rel="manifest" href="manifest.webmanifest" /><link rel="icon" type="image/png" href="icon-192.png" /><link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <title>CPGSHS SPILL</title>
@@ -2050,101 +2055,64 @@ body.cloud [data-audience="close"]{display:none!important}
  #peopleStrip{display:none}body.search-open #peopleStrip{display:block}
  .post-card{padding-top:12px!important}
 }
-/* v12.1 polish */
-.post-card::before,.post-card::after{display:none!important}
-.story-avatar{background:linear-gradient(135deg,#5b7cfa,#ff6fae)!important;color:#fff!important}
-@media(max-width:700px){
- #feedSection div:has(> .sort-btn){display:flex!important;flex-wrap:nowrap!important;overflow-x:auto;gap:8px;padding:2px 14px 6px;scrollbar-width:none}
- #feedSection div:has(> .sort-btn)::-webkit-scrollbar{display:none}.sort-btn,.shuffle-btn{flex:none}
- .filters{padding-bottom:8px}
-}
-/* v13 Claude x Apple: warm paper, serif voice, liquid-glass chrome, spring motion */
-:root{--serif:ui-serif,"New York","Iowan Old Style","Palatino Linotype",Georgia,"Times New Roman",serif;--sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",Inter,system-ui,"Segoe UI",sans-serif;
---bg:#faf9f5;--card:#fff;--sand:#f1eee5;--sand-2:#e4e0d2;--border:#e9e6db;--ink:#1a1915;--muted:#6f6c64;--accent:#d97757;--accent-2:#b9553a;--accent-btn:#bd553a;--on-accent:#fff;--accent-soft:#fbece4;--like:#e5533d;
---blue:#d97757;--blue-dark:#b9553a;--blue-soft:#f1eee5;--pink:#e0805f;--pink-dark:#b9553a;--pink-soft:#fbece4;--purple:#b9805f;
---glass:rgba(250,249,245,.74);--glassb:rgba(255,255,255,.72);--sheet:rgba(255,255,255,.88);--gsh:none;--radius:28px;
---shadow:0 1px 2px rgba(26,25,21,.04),0 8px 28px rgba(26,25,21,.06);--shadow-lg:0 2px 4px rgba(26,25,21,.05),0 24px 64px rgba(26,25,21,.16);
---ig:linear-gradient(135deg,#f2b48a,#d97757 55%,#bd553a)}
-[data-theme="dark"]{--bg:#1b1a18;--card:#262522;--sand:#312f2b;--sand-2:#3d3a34;--border:#35332e;--ink:#f3f1ea;--muted:#a8a499;--accent:#e58b6a;--accent-2:#f0a587;--accent-btn:#e58b6a;--on-accent:#1b1a18;--accent-soft:#3a2a23;--like:#ff6b57;
---blue-soft:#312f2b;--pink-soft:#3a2a23;--glass:rgba(27,26,24,.72);--glassb:rgba(255,255,255,.09);--sheet:rgba(38,37,34,.9);
---shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);--shadow-lg:0 24px 64px rgba(0,0,0,.55)}
-html,body{background:var(--bg)!important}
-body{font-family:var(--sans);font-size:15.5px;line-height:1.5;letter-spacing:-.011em;color:var(--ink)}
-::selection{background:color-mix(in srgb,var(--accent) 30%,transparent)}
-*{scrollbar-width:thin;scrollbar-color:var(--sand-2) transparent}
-:focus-visible{outline:2px solid color-mix(in srgb,var(--accent) 60%,transparent);outline-offset:2px}
-h1,h2,h3,.modal-head h3,.section-head h2{font-family:var(--serif);font-weight:600;letter-spacing:-.025em}
-.ic{stroke-width:1.7}
-.topbar{background:var(--glass)!important;backdrop-filter:saturate(1.8) blur(28px)!important;-webkit-backdrop-filter:saturate(1.8) blur(28px)!important;border-bottom:1px solid var(--glassb)!important}
-.brand-text strong{font-family:var(--serif)!important;font-size:23px!important;font-weight:600!important;letter-spacing:-.035em!important;background:none!important;-webkit-background-clip:initial!important;background-clip:initial!important;color:var(--ink)!important;-webkit-text-fill-color:var(--ink)!important}
-.brand-text strong::after{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-left:5px;vertical-align:3px}
-.icon-btn{color:var(--ink)}.icon-btn:active{background:var(--sand)!important}
-.notif-badge{background:var(--accent-btn)!important;color:var(--on-accent)!important;border-color:var(--bg)!important}
-.story-ring{background:var(--ig);padding:2.5px}.story-ring.viewed{background:var(--sand-2)}
-.story-avatar{background:var(--ig)!important;color:#fff!important}.story-add{background:var(--accent-btn)!important;color:var(--on-accent)!important}
-.story-name{color:var(--ink);font-weight:500}
-.compose-card{background:var(--card)!important;border:1px solid var(--border)!important;box-shadow:var(--shadow)!important;border-radius:999px!important}
-.compose-input{font-family:var(--serif);font-style:italic;font-size:16.5px;color:var(--muted)!important}
-.btn-primary,.compose-button,.follow-btn{background:var(--accent-btn)!important;color:var(--on-accent)!important;border:0!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 6px 16px color-mix(in srgb,var(--accent) 32%,transparent)!important;font-weight:700}
-.following-btn,.btn-outline,.btn-soft,.btn-light{background:var(--sand)!important;color:var(--ink)!important;border:0!important;box-shadow:none!important}
-.danger-btn,.btn-out{background:color-mix(in srgb,#e5533d 12%,var(--bg))!important;color:#c4352a!important;box-shadow:none!important}
-[data-theme="dark"] .danger-btn,[data-theme="dark"] .btn-out{color:#ff8a78!important}
-.filter{background:var(--card)!important;border:1px solid var(--border)!important;color:var(--ink)!important;font-weight:600}
-.filter.active{background:var(--ink)!important;color:var(--bg)!important;border-color:var(--ink)!important}
-.sort-btn{background:transparent!important;color:var(--muted)!important;border-radius:999px!important;padding:7px 14px;font-weight:650;box-shadow:none!important}
-.sort-btn.active{background:var(--card)!important;color:var(--ink)!important;box-shadow:0 1px 3px rgba(26,25,21,.14)!important}
-.shuffle-btn{background:transparent!important;color:var(--accent-2)!important;font-weight:650}
-#feedSection div:has(> .sort-btn){background:var(--sand);border-radius:999px;padding:3px!important;margin:4px 14px 10px;width:max-content;max-width:calc(100% - 28px);gap:2px!important}
-.trend-chip{background:var(--sand)!important}.hashtag,.post-text a{color:var(--accent-2)!important}
-.post-card{background:var(--card)!important;border:1px solid var(--border)!important;border-radius:28px!important;box-shadow:var(--shadow)!important;margin:0 12px 12px!important;padding:14px 0 6px!important;overflow:hidden}
-.post-avatar{width:40px;height:40px;box-shadow:none!important;background:var(--ig)}
-.post-meta strong{font-size:15px;font-weight:650}.post-meta span{color:var(--muted)}
-.post-top .category{background:var(--accent-soft)!important;color:var(--accent-2)!important;font-weight:650}
-.post-card.text-only .post-text{margin:4px 14px 6px;padding:18px 20px 22px;border-radius:22px;background:var(--sand);font-family:var(--serif);font-size:19px;line-height:1.5;font-weight:500;letter-spacing:-.012em;color:var(--ink)}
-.post-card.text-only.love .post-text{background:var(--accent-soft)}
-[data-theme="dark"] .post-card.text-only .post-text{background:var(--sand);color:var(--ink)}[data-theme="dark"] .post-card.text-only.love .post-text{background:var(--accent-soft)}
-.post-card.text-only .post-text::before{content:"\201C";display:block;height:20px;font-family:var(--serif);font-size:46px;line-height:.9;color:var(--accent)}
-.post-card.has-media .post-text{padding:8px 16px 0;font-size:15.5px}
-.post-actions{padding:6px 10px 2px}.post-actions .ic{width:24px;height:24px}.post-actions .action{color:var(--ink)!important}.post-actions .action span{color:var(--muted);font-weight:600}
-.post-actions .hearted{color:var(--like)!important}.post-actions .save-action.hearted{color:var(--ink)!important}
-.view-comments{color:var(--muted)!important;padding:0 16px 10px}
-.carousel-dot{background:rgba(255,255,255,.6)}.carousel-count{background:rgba(26,25,21,.55);backdrop-filter:blur(8px)}
-.rank-item,.hero{border-radius:28px!important}
-.hero{background:linear-gradient(135deg,#f6e4d8,#f0cdb8)!important;color:var(--ink)!important;box-shadow:var(--shadow)!important}
-[data-theme="dark"] .hero{background:linear-gradient(135deg,#3a2a23,#2e2420)!important}
-.hero h1,.hero h2{font-family:var(--serif);color:var(--ink)!important}.hero p{color:color-mix(in srgb,var(--ink) 72%,transparent)!important}
-.modal-backdrop{background:rgba(26,25,21,.38)!important}
-.modal{background:var(--sheet)!important;border:1px solid var(--glassb)!important;box-shadow:var(--shadow-lg)!important}
-.modal::before{background:var(--sand-2)!important}.modal-head h3{font-size:22px}
-.close-btn{background:var(--sand)!important;color:var(--ink)!important}
-input,textarea,select{background:var(--sand)!important;color:var(--ink)!important;font-family:var(--sans)}
-input:focus,textarea:focus,select:focus{outline:0;box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 24%,transparent)!important}
-input::placeholder,textarea::placeholder{color:var(--muted);opacity:.85}
-.toast{background:rgba(26,25,21,.9)!important;color:#faf9f5!important;border-radius:999px!important;padding:11px 18px!important;font-weight:600;font-size:14px;backdrop-filter:blur(20px);bottom:calc(96px + env(safe-area-inset-bottom))!important}
-#newPill{background:var(--ink)!important;color:var(--bg)!important;box-shadow:0 10px 30px rgba(26,25,21,.3)!important}
-#adminFab{background:var(--ink)!important}
-#acctBar .who{font-family:var(--serif);font-size:23px;font-weight:600}
-.acct-row .av{background:var(--ig)!important}.acct-row .on{color:var(--accent-2)!important}
-body.gated{background:radial-gradient(70% 50% at 8% 6%,#f6d9c6 0,transparent 70%),radial-gradient(60% 50% at 95% 92%,#f2cdb8 0,transparent 70%),var(--bg)!important;animation:none!important}
-.gate-brand{color:var(--ink)!important;text-shadow:none!important;font-family:var(--serif);font-size:38px!important;font-weight:600;letter-spacing:-.04em!important}
-.gate-brand small{font-family:var(--sans);color:var(--muted)!important;opacity:1!important;font-size:14.5px!important;font-weight:500!important;letter-spacing:0!important;margin-top:8px!important}
-.gate-brand b{background:linear-gradient(135deg,#f2b48a,#d97757 55%,#bd553a)!important;color:#fff!important;border:0!important;box-shadow:0 14px 34px color-mix(in srgb,var(--accent) 40%,transparent),inset 0 1px 0 rgba(255,255,255,.5)!important;border-radius:26px!important}
-#splash{background:var(--bg)!important;color:var(--ink)!important;font-family:var(--serif);font-weight:600}
-@media(max-width:799px){
- .bottom-nav{left:14px!important;right:14px!important;bottom:calc(12px + env(safe-area-inset-bottom))!important;width:auto!important;height:66px!important;padding:7px!important;border-radius:34px!important;background:var(--glass)!important;backdrop-filter:saturate(1.8) blur(30px)!important;-webkit-backdrop-filter:saturate(1.8) blur(30px)!important;border:1px solid var(--glassb)!important;box-shadow:0 12px 40px rgba(26,25,21,.16),inset 0 1px 0 rgba(255,255,255,.55)!important;transform:none!important}
- .nav-item{height:52px!important;border-radius:26px!important;color:var(--ink)!important;transition:background-color .3s var(--ios),transform .35s var(--ios)}
- .nav-item.active:not(.post){background:var(--sand)!important}.nav-item.active:not(.post) .ic{fill:none!important;stroke-width:2.2}
- .nav-item.post .ic{background:var(--accent-btn)!important;color:var(--on-accent)!important;stroke:var(--on-accent)!important;border-radius:50%!important;width:22px!important;height:22px!important;padding:6px!important;box-sizing:content-box}
- .app-shell{padding-bottom:calc(112px + env(safe-area-inset-bottom))!important}
- #adminFab{bottom:calc(92px + env(safe-area-inset-bottom))!important}
-}
-@media(max-width:700px){.post-card{margin:0 12px 12px!important}.section-card{background:transparent!important}}
-@media(min-width:701px){
- .section-card{background:var(--card)!important;border:1px solid var(--border)!important;border-radius:28px!important;box-shadow:var(--shadow)!important}
- .post-card{margin:0 0 14px!important}
- .compose-card{margin:0 0 16px}
-}
-@media(prefers-reduced-motion:no-preference){.nav-item:active,.icon-btn:active,.btn:active,.action:active,.filter:active{transform:scale(.95)}}
+
+    /* ===== LAUNCH HARDENING / RESPONSIVE POLISH ===== */
+    html, body { max-width: 100%; overflow-x: clip; }
+    body { overscroll-behavior-y: contain; }
+    button, a, input, textarea, select { -webkit-user-select: none; user-select: none; }
+    input, textarea, [contenteditable="true"] { -webkit-user-select: text; user-select: text; }
+    @media (pointer: coarse) {
+      button, .nav-item, .action, .filter, .sort-btn, .tool-btn, .icon-btn { touch-action: manipulation; }
+    }
+    .launch-sync-pill {
+      position: fixed; left: 50%; top: max(68px, env(safe-area-inset-top) + 60px); transform: translateX(-50%) translateY(-10px);
+      z-index: 180; opacity: 0; pointer-events: none; transition: .22s ease; padding: 9px 14px; border-radius: 999px;
+      background: rgba(30,35,64,.94); color:#fff; font-size:11px; font-weight:850; box-shadow:0 10px 28px rgba(30,35,64,.22);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    }
+    .launch-sync-pill.show { opacity:1; transform:translateX(-50%) translateY(0); }
+    .cloud-status {
+      display:flex; align-items:center; gap:8px; margin-top:10px; padding:9px 11px; border:1px solid var(--border); border-radius:13px;
+      background:rgba(255,255,255,.72); color:var(--muted); font-size:10px; line-height:1.4;
+    }
+    .cloud-dot { width:8px; height:8px; border-radius:50%; background:#94a3b8; flex:0 0 auto; }
+    .cloud-dot.on { background:#22c55e; box-shadow:0 0 0 4px rgba(34,197,94,.12); }
+    .cloud-dot.off { background:#ef4444; }
+    [data-theme="dark"] .cloud-status { background:rgba(24,28,48,.74); }
+    @media (max-width: 520px) {
+      .app-shell { width:100%; padding-left:0; padding-right:0; }
+      .topbar { margin:0; padding-left:11px; padding-right:11px; }
+      .topbar-inner { width:100%; }
+      .brand-icon { width:38px;height:38px;border-radius:13px; }
+      .header-actions { gap:5px; }
+      .icon-btn { width:38px;height:38px;border-radius:13px; }
+      .profile-btn { width:38px; padding:0; justify-content:center; }
+      .profile-btn #headerProfileText { display:none; }
+      .hero { margin-top:12px; margin-left:10px; margin-right:10px; padding:24px 18px; }
+      .content-grid { margin-top:12px; }
+      .left-column,.right-column { gap:12px; }
+      .section-card { border-radius:18px; }
+      .post-card { border-radius:18px; margin-left:0; margin-right:0; }
+      .compose-card { margin:8px 10px 2px; }
+      .compose-input { min-width:0; }
+      .compose-button { flex:0 0 auto; }
+      .post-actions { gap:6px; }
+      .action { min-height:34px; padding:0 9px; }
+    }
+    @media (min-width: 800px) and (max-width: 1100px) {
+      .content-grid { grid-template-columns:minmax(0,1.25fr) minmax(250px,.75fr); }
+    }
+    .carousel-btn { display:none !important; }
+    .carousel { touch-action: pan-y; }
+    .carousel-track { will-change: transform; }
+
+    #launchConfigGate{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:22px;background:rgba(15,18,32,.88);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+    .launch-gate-card{width:min(560px,100%);padding:28px;border:1px solid rgba(255,255,255,.18);border-radius:28px;background:rgba(255,255,255,.96);box-shadow:0 24px 80px rgba(0,0,0,.28);text-align:center}
+    .launch-gate-brand{display:inline-flex;padding:8px 13px;border-radius:999px;color:#fff;font-size:11px;font-weight:900;letter-spacing:.08em;background:linear-gradient(135deg,#5b7cfa,#ff6fae);margin-bottom:12px}
+    .launch-gate-card h1{margin:0;font-size:24px;letter-spacing:-.5px;color:#1e2340}.launch-gate-card p{font-size:12px;line-height:1.65;color:#73798f;margin:10px auto;max-width:470px}.launch-gate-code{margin:16px 0;padding:12px;border-radius:15px;background:#f5f7ff;color:#3f5fe0;font:600 11px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}.launch-gate-small{font-size:10px!important}
+    .daily-top3{margin:12px 0 0;padding:14px;border-radius:20px}.daily-top3-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.daily-top3-head strong{display:block;font-size:14px}.daily-top3-head span{display:block;margin-top:2px;color:var(--muted);font-size:9px}.daily-top3-list{display:grid;gap:7px;margin-top:10px}.daily-rank{display:flex;align-items:center;gap:9px;width:100%;padding:10px;border:1px solid var(--border);border-radius:14px;background:linear-gradient(180deg,#fff,#fbfbff);text-align:left}.daily-num{width:27px;height:27px;border-radius:9px;display:grid;place-items:center;background:var(--blue-soft);color:var(--blue-dark);font-size:10px;font-weight:900;flex:0 0 auto}.daily-rank:nth-child(1) .daily-num{background:#fff1a9;color:#846900}.daily-rank:nth-child(2) .daily-num{background:#e9edf4;color:#606879}.daily-rank:nth-child(3) .daily-num{background:#ffd9bf;color:#a55a1f}.daily-copy{min-width:0;flex:1}.daily-copy b{display:block;font-size:10px}.daily-copy span{display:block;margin-top:2px;font-size:9px;line-height:1.35;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.daily-score{font-size:9px;font-weight:900;color:var(--pink-dark);white-space:nowrap}.daily-empty{padding:14px 2px 2px;color:var(--muted);font-size:10px}
+    [data-theme="dark"] #launchConfigGate{background:rgba(0,0,0,.78)} [data-theme="dark"] .launch-gate-card{background:#181c30;border-color:#262b42}.launch-config-missing .app-shell,.launch-config-missing .topbar,.launch-config-missing .bottom-nav{filter:blur(5px);pointer-events:none;user-select:none}
+    @media(max-width:520px){.launch-gate-card{padding:22px 16px;border-radius:24px}.daily-top3{margin:10px 10px 0}}
 </style>
 </head>
 
@@ -4080,7 +4048,7 @@ body.gated{background:radial-gradient(70% 50% at 8% 6%,#f6d9c6 0,transparent 70%
       const comments = p.comments || [];
       const canProfile = !p.anonymous && author && socialCanViewProfile(author.id);
       const name = p.anonymous ? "Anonymous" : p.username;
-      const nameMarkup = canProfile ? `<button class="post-author-button" onclick="openPublicProfile('${author.id}')"><strong>${escapeHTML(name)}</strong></button>` : `<strong>${escapeHTML(name)}</strong>`;
+      const nameMarkup = canProfile ? `<button class="post-author-button" onclick="openPublicProfile('${author.id}')"><strong>${String(name).replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;","":"&quot;","'":"&#039;"}[m]))}</strong></button>` : `<strong>${escapeHTML(name)}</strong>`;
       const school = p.anonymous ? `Anonymous · ${socialSchool(author)}` : socialSchool(author);
       document.getElementById("viewBody").innerHTML = `<article class="post-card ${p.category === "Love" ? "love" : ""}" style="box-shadow:none;"><div class="post-top"><div class="post-avatar">${getInitial(name)}</div><div class="post-meta">${nameMarkup}<span>${escapeHTML(school)} · ${new Date(p.createdAt).toLocaleString()}</span></div><div class="category">${escapeHTML(p.category)}</div></div><div class="post-text">${escapeHTML(p.content)}</div><div class="post-actions"><button class="action ${liked?"hearted":""}" onclick="toggleHeart('${p.id}',event);viewPost('${p.id}')">${liked?"♥":"♡"} ${p.hearts||0}</button><button class="action" onclick="sharePost('${p.id}')">↗ Share ${p.shares||0}</button><button class="action" onclick="copyPostLink('${p.id}')">🔗 Copy Link</button><button class="action ${saved?"hearted":""}" onclick="toggleSave('${p.id}');viewPost('${p.id}')">${saved?"★ Saved":"☆ Save"}</button><button class="action" onclick="reportPost('${p.id}')">⚑ Report</button></div><div class="section-head" style="padding:16px 0 8px;"><div><h2>Comments 💬</h2><p>${comments.length} comment${comments.length===1?"":"s"}</p></div></div>${currentUser?`<div class="comment-form"><input id="commentInput-${p.id}" maxlength="300" placeholder="Write a respectful comment..." autocomplete="off"><button onclick="addComment('${p.id}')">Comment</button></div>`:`<div class="privacy-note">Sign in to leave a comment.</div>`}<div class="comment-list">${comments.length?comments.map(c=>`<div class="comment-item"><div class="comment-avatar">${getInitial(c.username)}</div><div class="comment-bubble"><strong>${escapeHTML(c.username)}</strong><span>${escapeHTML(c.content)}</span><span class="comment-meta">${formatTime(c.createdAt)}${currentUser?.id===c.userId?` · <button style="border:0;background:transparent;color:var(--pink-dark);font-size:9px;font-weight:800;padding:0;" onclick="deleteComment('${p.id}','${c.id}')">Delete</button>`:""}</span></div></div>`).join(""):`<div class="no-results" style="padding:18px 10px;">No comments yet. Be the first to say something kind. 💬</div>`}</div></article>`;
       openModal("viewModal");
@@ -4310,6 +4278,7 @@ body.gated{background:radial-gradient(70% 50% at 8% 6%,#f6d9c6 0,transparent 70%
           <button class="action" onclick="copyPostLink('${post.id}')">🔗 Link</button>
           <button class="action" onclick="viewPost('${post.id}')">💬 ${(post.comments || []).length}</button>
           <button class="action ${saved ? "hearted" : ""}" onclick="toggleSave('${post.id}')">${saved ? "★" : "☆"} Save</button>
+          ${!isMine ? `<button class="action" onclick="reportPost('${post.id}')">⚑ Report</button>` : ""}
           ${isMine ? `<button class="action" onclick="openEditPost('${post.id}')">✏️ Edit</button>` : ""}
         </div></article>`;
     };
@@ -4699,7 +4668,7 @@ body.gated{background:radial-gradient(70% 50% at 8% 6%,#f6d9c6 0,transparent 70%
       });
       const top = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 3);
       const chips = top.length
-        ? top.map(([word, n], i) => `<button class="trend-chip" onclick="filterByHashtag('${word}')"><span class="rank">${i + 1}</span>#${escapeHTML(word)} · ${n}</button>`).join("")
+        ? top.map(([word, n], i) => `<button class="trend-chip" onclick="filterByHashtag('${word}')"><span class="rank">${i + 1}</span>#${String(word).replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;","":"&quot;","'":"&#039;"}[m]))} · ${n}</button>`).join("")
         : "";
       bar.style.display = top.length ? "" : "none"; bar.innerHTML = `<span class="trending-label">Trending</span>` + chips;
     };
@@ -5676,7 +5645,7 @@ body.gated{background:radial-gradient(70% 50% at 8% 6%,#f6d9c6 0,transparent 70%
       const link = document.createElement("div");
       link.className = "link-in-bio"; link.style.marginTop = "6px";
       link.textContent = "🔗 " + u.link;
-      link.onclick = () => window.open(u.link, "_blank");
+      link.onclick = () => window.open(u.link, "_blank", "noopener,noreferrer");
       bioEl.appendChild(link);
     }
     // highlights row
@@ -5885,12 +5854,15 @@ body.gated{background:radial-gradient(70% 50% at 8% 6%,#f6d9c6 0,transparent 70%
       } catch (e) { showToast("Secure login needs https (or localhost)."); }
     };
 
-    // --- super admin seed (default PIN must be changed on first login) ---
-    (async () => {
-      if (users.some(u => u.role === "superadmin")) return;
-      const u = { id: "sa-" + makeId(), username: users.some(x => x.username.toLowerCase() === "superadmin") ? "spill_admin" : "superadmin", role: "superadmin", grade: "Grade 12", section: "Admin", bio: "Super admin", followers: [], following: [], sv: 0, createdAt: new Date().toISOString() };
-      await setPin(u, "482916"); u.mustChangePin = true; users.push(u); save(STORAGE.users, users);
-    })();
+    // --- local/demo super admin seed only. Cloud mode must provision admin server-side.
+    const LOCAL_DEV = /^(localhost|127(?:\.\d{1,3}){3})$/.test(location.hostname) || location.protocol === "file:";
+    if (LOCAL_DEV && !(window.SPILL_CONFIG && window.SPILL_CONFIG.url && window.SPILL_CONFIG.key && !String(window.SPILL_CONFIG.key).startsWith("PASTE_"))) {
+      (async () => {
+        if (users.some(u => u.role === "superadmin")) return;
+        const u = { id: "sa-" + makeId(), username: users.some(x => x.username.toLowerCase() === "superadmin") ? "spill_admin" : "superadmin", role: "superadmin", grade: "Grade 12", section: "Admin", bio: "Super admin", followers: [], following: [], sv: 0, createdAt: new Date().toISOString() };
+        await setPin(u, "482916"); u.mustChangePin = true; users.push(u); save(STORAGE.users, users);
+      })();
+    }
 
     // --- Top 3 of the day (name + word), ranked by hearts + shares ---
     renderLeaderboard = function () {
@@ -6134,17 +6106,35 @@ body.gated{background:radial-gradient(70% 50% at 8% 6%,#f6d9c6 0,transparent 70%
       if (!sc) return; const keep = sc.texts.filter(t => (t.text || "").trim() && !/^Tap to edit/i.test(t.text.trim())); sc.texts.splice(0, sc.texts.length, ...keep);
       if (!sc.texts.length && !sc.stickers.length && !sc.photo && !sc.strokes.length) { e.stopImmediatePropagation(); showToast("Add text, a photo or a sticker first."); }
     }, true);
-    const _u5 = window.updateUI; window.updateUI = function () { _u5(); paintBar(); }; updateUI = window.updateUI;
+    const _u5 = window.updateUI; window.updateUI = function () { _u5(); paintBar(); try { const hs=window.__spillHealth?.(); const el=document.getElementById("heroStats"); if(el&&currentUser){ let cs=el.querySelector(".cloud-status"); if(!cs){ cs=document.createElement("div"); cs.className="cloud-status"; el.appendChild(cs); } const ok=!!window.__cloud&&navigator.onLine!==false; cs.innerHTML=`<span class="cloud-dot ${ok?"on":"off"}"></span><span>${ok?"Live community sync enabled":"Cloud sync not configured or offline"}</span>`; } } catch(e){} }; updateUI = window.updateUI;
     // --- v12: Supabase cloud mode (shared posts, realtime, accounts) ---
     const CFG = window.SPILL_CONFIG || {}, CLOUD = !!(CFG.url && CFG.key); window.__cloud = CLOUD;
-    const DK = "cpgshs_accounts_v1";
+    const DK = "cpgshs_accounts_v2";
     const Dev = {
-      list: () => { const l = load(DK, []); return Array.isArray(l) ? l : []; },
-      put(s, name) { const l = Dev.list().filter(a => a.id !== s.user.id); l.unshift({ id: s.user.id, username: name, at: s.access_token, rt: s.refresh_token }); localStorage.setItem(DK, JSON.stringify(l.slice(0, 5))); },
-      upd(s) { const l = Dev.list(), a = l.find(x => x.id === s.user.id); if (a) { a.at = s.access_token; a.rt = s.refresh_token; localStorage.setItem(DK, JSON.stringify(l)); } },
+      list: () => {
+        const l = load(DK, []);
+        return Array.isArray(l) ? l.filter(a => a && a.id && a.username).slice(0, 5) : [];
+      },
+      put(_session, name) {
+        const id = _session?.user?.id;
+        if (!id || !name) return;
+        const l = Dev.list().filter(a => a.id !== id);
+        l.unshift({ id, username: String(name).slice(0, 20), at: Date.now() });
+        localStorage.setItem(DK, JSON.stringify(l.slice(0, 5)));
+      },
+      upd() {},
       del(id) { localStorage.setItem(DK, JSON.stringify(Dev.list().filter(a => a.id !== id))); },
       clear() { localStorage.removeItem(DK); }
     };
+    // Remove the old vulnerable account-switch records that contained access/refresh tokens.
+    try {
+      const legacy = JSON.parse(localStorage.getItem("cpgshs_accounts_v1") || "[]");
+      if (Array.isArray(legacy) && legacy.length) {
+        const safe = legacy.filter(a => a && a.id && a.username).map(a => ({ id:a.id, username:String(a.username).slice(0,20), at:Date.now() }));
+        if (!Dev.list().length) localStorage.setItem(DK, JSON.stringify(safe.slice(0,5)));
+      }
+      localStorage.removeItem("cpgshs_accounts_v1");
+    } catch (_) { localStorage.removeItem("cpgshs_accounts_v1"); }
     let sb = null, CERR = false, chan = null, pch = null, live = false, ready = false, pulling = false, again = false, gen = 0, SNAP = null, pushing = Promise.resolve(), tm, pt, lastPull = 0, cloudBugs = [], selfOp = false;
     const guard = f => async (...a) => { selfOp = true; try { return await f(...a); } finally { setTimeout(() => { selfOp = false; }, 900); } };
     const wipe = () => { users = []; posts = []; stories = []; reports = []; try { socialFollows = {}; } catch (e) {} };
@@ -6157,7 +6147,48 @@ body.gated{background:radial-gradient(70% 50% at 8% 6%,#f6d9c6 0,transparent 70%
       const em = u => u.toLowerCase() + "@spill.cpgshs.app", pw = (p, u) => `spill-${p}-${u.toLowerCase()}`;
       const rows = async q => { const r = await q; if (r.error) throw r.error; return r.data || []; };
       const page = async mk => { let out = [], from = 0; for (;;) { const d = await rows(mk().range(from, from + 999)); out = out.concat(d); if (d.length < 1000) return out; from += 1000; } };
-      const call = async (action, body) => { try { const { data, error } = await sb.functions.invoke("spill", { body: { action, ...body } }); return error || !data ? { ok: false, error: "Server unreachable. Try again." } : data; } catch (e) { return { ok: false, error: "Server unreachable. Try again." }; } };
+      const call = async (action, body) => {
+        try {
+          const { data, error } = await sb.functions.invoke("spill", {
+            body: { action, ...body }
+          });
+
+          if (!error && data) return data;
+
+          if (error) {
+            let message = error.message || "Server error.";
+
+            // Supabase FunctionsHttpError can contain the Edge Function response.
+            // Read that response so the website shows the real backend error
+            // instead of incorrectly saying "Server unreachable" for every 4xx/5xx.
+            try {
+              const ctx = error.context;
+              if (ctx && typeof ctx.text === "function") {
+                const raw = await ctx.text();
+                if (raw) {
+                  try {
+                    const parsed = JSON.parse(raw);
+                    if (parsed && typeof parsed.error === "string" && parsed.error.trim()) {
+                      message = parsed.error.trim();
+                    }
+                  } catch (_) {
+                    if (raw.trim()) message = raw.trim().slice(0, 300);
+                  }
+                }
+              }
+            } catch (_) {}
+
+            return { ok: false, error: message };
+          }
+
+          return { ok: false, error: "Server returned no response." };
+        } catch (e) {
+          return {
+            ok: false,
+            error: e && e.message ? e.message : "Unable to reach the server."
+          };
+        }
+      };
       const group = (a, k) => a.reduce((m, x) => ((m[x[k]] ||= []).push(x), m), {});
       const snap = () => { const meU = users.find(u => u.id === (currentUser || {}).id) || {}, id = (currentUser || {}).id; return {
         p: new Map(posts.map(p => [p.id, { sig: JSON.stringify([p.content, p.category, !!p.archived, (p.images || []).length]), liked: (p.likedBy || []).includes(id), saved: (p.savedBy || []).includes(id), shares: p.shares || 0, c: new Map((p.comments || []).map(c => [c.id, c.userId])) }])),
@@ -6258,17 +6289,23 @@ body.gated{background:radial-gradient(70% 50% at 8% 6%,#f6d9c6 0,transparent 70%
       };
       const switchTo = guard(async id => {
         const a = Dev.list().find(x => x.id === id); if (!a) return false;
-        try { const { data: { session: cur } } = await sb.auth.getSession(); if (cur) Dev.upd(cur); } catch (e) {}
-        const { data, error } = await sb.auth.setSession({ access_token: a.at, refresh_token: a.rt });
-        if (error || !data || !data.session) { Dev.del(id); showToast("That session expired. Please log in again."); showAuth("login"); return false; }
-        if (!(await adopt(data.session))) return false; updateUI(); scrollTo({ top: 0 }); showToast("Switched to @" + currentUser.username); return true;
+        const input = $("authUsername"), pin = $("authPin");
+        if (input) input.value = a.username;
+        if (pin) pin.value = "";
+        authMode = "login";
+        showAuth("login");
+        setTimeout(() => $("authPin")?.focus(), 80);
+        showToast("Sign in to switch to @" + a.username);
+        return false;
       });
       window.__switch = switchTo;
       const out = guard(async global => {
-        ["settingsModal", "activityModal", "notifModal", "acctModal"].forEach(id => { try { closeModal(id); } catch (e) {} }); const id = currentUser && currentUser.id; teardown();
+        ["settingsModal", "activityModal", "notifModal", "acctModal"].forEach(id => { try { closeModal(id); } catch (e) {} });
+        const id = currentUser && currentUser.id;
+        teardown();
         try { await sb.auth.signOut({ scope: global ? "global" : "local" }); } catch (e) {}
-        if (id) Dev.del(id); const next = Dev.list()[0]; if (next && (await switchTo(next.id))) return;
-        currentUser = null; wipe(); updateUI(); showToast("You are logged out.");
+        if (id) Dev.del(id);
+        currentUser = null; wipe(); updateUI(); showAuth("login"); showToast("You are logged out.");
       });
       logout = window.logout = () => out(false);
       $("sxAll").onclick = () => { if (!currentUser) return showToast("You are not logged in."); out(true); };
@@ -6319,9 +6356,9 @@ body.gated{background:radial-gradient(70% 50% at 8% 6%,#f6d9c6 0,transparent 70%
         document.body.classList.remove("booting"); updateUI();
       })();
     }
-    const tcm = document.querySelector('meta[name="theme-color"]'); const syncTc = () => { const d = document.documentElement.dataset.theme === "dark" || document.body.dataset.theme === "dark"; if (tcm) tcm.content = d ? "#1b1a18" : "#faf9f5"; };
-    new MutationObserver(syncTc).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] }); new MutationObserver(syncTc).observe(document.body, { attributes: true, attributeFilter: ["data-theme"] }); syncTc();
     validateSession();
+    // Read-only bridge for the standalone launch patch. It exposes no credentials.
+    window.__spillState = () => ({ posts, users, currentUser, stories, reports, todayKey });
   } catch (e) { console.error("SPILL v8 patch error:", e); } })();
 
 
@@ -6331,6 +6368,114 @@ body.gated{background:radial-gradient(70% 50% at 8% 6%,#f6d9c6 0,transparent 70%
   }
 })();
 
+</script>
+
+<script>
+/* ===== SPILL FINAL LAUNCH PATCH ===== */
+(function(){
+  "use strict";
+  const $ = id => document.getElementById(id);
+  const LOCAL_DEV = /^(localhost|127(?:\.\d{1,3}){3})$/.test(location.hostname) || location.protocol === "file:";
+  const cfg = window.SPILL_CONFIG || {};
+  const CLOUD_CONFIGURED = !!(cfg.url && cfg.key && !String(cfg.key).startsWith("PASTE_"));
+
+  // Production must not silently fall back to browser-only storage.
+  if (!LOCAL_DEV && !CLOUD_CONFIGURED) {
+    const gate = document.createElement("div");
+    gate.id = "launchConfigGate";
+    gate.innerHTML = `
+      <div class="launch-gate-card">
+        <div class="launch-gate-brand">SPILL</div>
+        <h1>Cloud setup required</h1>
+        <p>This production build is intentionally locked until the Supabase anon/publishable key is configured. This prevents a public deployment from silently using private browser-only data.</p>
+        <div class="launch-gate-code">Open this HTML and replace<br><b>sb_publishable_uWoeJxmGu8w4GyZdvlpQTw_bxb1907C</b><br>with the public Supabase anon/publishable key.</div>
+        <p class="launch-gate-small">Never place a Supabase <b>service_role</b> key in this file. The existing backend tables, RLS policies, realtime configuration, and <b>spill</b> Edge Function must remain enabled for production.</p>
+      </div>`;
+    document.body.appendChild(gate);
+    document.body.classList.add("launch-config-missing");
+  }
+
+  // Prevent embedding/clickjacking where the browser permits a frame check.
+  try { if (window.top !== window.self) window.top.location = window.location.href; } catch (_) {}
+
+  // Keep page scale fixed while preserving scrolling and normal form selection.
+  try {
+    document.addEventListener("gesturestart", e => e.preventDefault(), { passive:false });
+    document.addEventListener("gesturechange", e => e.preventDefault(), { passive:false });
+    document.addEventListener("gestureend", e => e.preventDefault(), { passive:false });
+    document.addEventListener("wheel", e => { if (e.ctrlKey || e.metaKey) e.preventDefault(); }, { passive:false });
+    document.addEventListener("keydown", e => { if ((e.ctrlKey || e.metaKey) && ["+","-","=","0"].includes(e.key)) e.preventDefault(); });
+  } catch (_) {}
+
+  // Keep user-generated payloads bounded to avoid accidental huge local/cloud writes.
+  const cap = (el, max) => {
+    if (!el || el.dataset.spillCap) return;
+    el.dataset.spillCap = "1";
+    el.addEventListener("paste", () => setTimeout(() => { if (el.value && el.value.length > max) el.value = el.value.slice(0,max); }, 0));
+  };
+  [["postText",1000],["editPostText",1000],["reportNote",300],["editBio",500],["editSection",30],["authSection",30],["storyReplyInput",300]].forEach(([id,max])=>cap($(id),max));
+
+  // Instagram-style swipe behavior for image carousels; navigation arrows stay hidden on touch layouts.
+  const carousels = new WeakMap();
+  function setSlide(c, idx){
+    const tr=c?.querySelector(".carousel-track"); if(!tr) return;
+    const n=tr.children.length; if(!n) return;
+    idx=Math.max(0,Math.min(idx,n-1)); carousels.set(c,idx); tr.style.transform=`translate3d(${-idx*100}%,0,0)`;
+    c.querySelectorAll(".carousel-dot").forEach((d,i)=>d.classList.toggle("active",i===idx));
+    const count=c.querySelector(".carousel-count"); if(count) count.textContent=(idx+1)+" / "+n;
+  }
+  function bind(root=document){
+    root.querySelectorAll?.(".carousel").forEach(c=>{
+      if(c.dataset.spillSwipe) return; c.dataset.spillSwipe="1";
+      let sx=0,sy=0,dx=0,dy=0,down=false;
+      c.addEventListener("touchstart",e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY;dx=dy=0;down=true;},{passive:true});
+      c.addEventListener("touchmove",e=>{if(!down)return;const t=e.touches[0];dx=t.clientX-sx;dy=t.clientY-sy;if(Math.abs(dx)>Math.abs(dy))e.preventDefault();},{passive:false});
+      c.addEventListener("touchend",()=>{if(!down)return;down=false;const cur=carousels.get(c)||0;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy))setSlide(c,cur+(dx<0?1:-1));},{passive:true});
+    });
+  }
+  bind(document);
+  try { new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(n=>n.nodeType===1&&bind(n)))).observe(document.body,{childList:true,subtree:true}); } catch (_) {}
+
+  // Daily Top 3 — visible, date-scoped, and scored by hearts + shares.
+  function renderDailyTop3(){
+    const tray=$('storyTray'); const state=window.__spillState?.(); const list=state?.posts||[]; if(!tray) return;
+    let box=$('dailyTop3');
+    if(!box){ box=document.createElement('section'); box.id='dailyTop3'; box.className='daily-top3 section-card'; tray.insertAdjacentElement('afterend',box); }
+    const tk=typeof state?.todayKey==='function'?state.todayKey:null;
+    const dayKey=v=>tk?tk(v):new Date(v).toISOString().slice(0,10);
+    const today=dayKey(new Date());
+    const score=p=>(Number(p.hearts)||0)+(Number(p.shares)||0);
+    const top=list.filter(p=>!p.archived && p.createdAt && dayKey(p.createdAt)===today).sort((a,b)=>score(b)-score(a)||new Date(a.createdAt)-new Date(b.createdAt)).slice(0,3);
+    if(!top.length){ box.innerHTML=`<div class="daily-top3-head"><div><strong>Top 3 of the day</strong><span>Hearts + shares decide the ranking.</span></div></div><div class="daily-empty">The first standout post of the day will appear here.</div>`; return; }
+    box.innerHTML=`<div class="daily-top3-head"><div><strong>Top 3 of the day</strong><span>Hearts + shares · ${today}</span></div><button class="sort-btn" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})">Latest feed</button></div><div class="daily-top3-list">${top.map((p,i)=>{const name=p.anonymous?'Anonymous':(p.username||'Student');const word=String(p.content||'').trim().replace(/\\s+/g,' ').slice(0,110);return `<button class="daily-rank" type="button" onclick="viewPost('${String(p.id).replace(/'/g,'')}')"><span class="daily-num">${i+1}</span><span class="daily-copy"><b>@${escapeHTML(name)}</b><span>${escapeHTML(word)}${String(p.content||'').length>110?'…':''}</span></span><span class="daily-score">♥ ${score(p)}</span></button>`;}).join('')}</div>`;
+  }
+
+  // Launch health is intentionally non-sensitive and never exposes tokens/keys.
+  window.__spillHealth = () => ({
+    secureContext:!!window.isSecureContext,
+    https:location.protocol==='https:' || location.hostname==='localhost',
+    supabaseLoaded:!!window.supabase,
+    cloudConfigured:CLOUD_CONFIGURED,
+    cloudActive:!!window.__cloud,
+    online:navigator.onLine!==false,
+    viewport:`${innerWidth}x${innerHeight}`
+  });
+
+  const baseUpdate=window.updateUI;
+  if(typeof baseUpdate==='function'){
+    window.updateUI=function(){ baseUpdate(); renderDailyTop3(); bind(document); };
+    try { updateUI=window.updateUI; } catch (_) {}
+    setTimeout(()=>window.updateUI(),0);
+  }
+
+  // Report a post directly from the feed if the v5/v7 report system is present.
+  if(typeof window.reportPost==='function'){
+    document.addEventListener('click',e=>{
+      const b=e.target.closest('.post-actions button');
+      if(!b || !/Report/i.test(b.textContent||'')) return;
+    },true);
+  }
+})();
 </script>
 </body>
 </html>
