@@ -2540,10 +2540,57 @@ body.gated #authModal .modal-body{padding:14px 20px 22px}
 @media(max-width:350px){#glassToggleBtn{display:none!important}}
 
 /* v15: version label at the very bottom (change the text in --app-version) */
-:root{--app-version:"Version 3.0"}
+:root{--app-version:"Version 6.0"}
 .app-version{display:block;text-align:center;color:var(--muted);font-size:12px;font-weight:700;letter-spacing:.02em;padding:18px 0 6px}
 .app-version::before{content:var(--app-version)}
 body.gated #authModal::after{content:var(--app-version);flex:none;color:rgba(255,255,255,.85);font-size:12px;font-weight:700;letter-spacing:.02em;text-align:center}
+
+/* v17: login background: the SPILL mark ghosted into the dark */
+#authModal .gate-art{display:none}
+body.gated #authModal{isolation:isolate}
+body.gated #authModal .gate-art{display:block;position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:radial-gradient(115% 85% at 50% 40%,rgba(10,6,34,0) 0%,rgba(10,6,34,.42) 58%,rgba(4,2,18,.86) 100%)}
+.gate-art .ga-mist{position:absolute;width:130vmax;height:130vmax;border-radius:50%;background:radial-gradient(closest-side,rgba(206,184,255,.26),rgba(206,184,255,0));will-change:transform}
+.gate-art .m1{left:-62vmax;top:-30vmax;animation:gaDriftA 28s ease-in-out infinite alternate}
+.gate-art .m2{right:-70vmax;bottom:-50vmax;background:radial-gradient(closest-side,rgba(255,138,214,.20),rgba(255,138,214,0));animation:gaDriftB 34s ease-in-out infinite alternate}
+.gate-art .ga-logo{position:absolute;left:50%;top:43%;width:clamp(320px,min(100vw,92vh*.8137),760px);opacity:.86;transform:translate(-50%,-50%);animation:gaFloat 12s ease-in-out infinite;will-change:transform;filter:drop-shadow(0 0 16px rgba(190,164,255,.55)) drop-shadow(0 0 60px rgba(150,110,255,.38))}
+.gate-art svg{display:block;width:100%;height:auto;overflow:visible}
+.gate-art .ga-body{fill:url(#gaBody);stroke:rgba(226,212,255,.5);stroke-width:2;stroke-linejoin:round}
+.gate-art .ga-eyes{animation:gaEyes 7s ease-in-out infinite}
+.gate-art .ga-eye{fill:#ffeefb}
+.gate-art .ga-halo{fill:#ff7fdc;filter:url(#gaBlur);opacity:.9}
+body.gated #authModal .modal{background:rgba(238,240,248,.66)!important;-webkit-backdrop-filter:blur(7px) saturate(1.5)!important;backdrop-filter:blur(7px) saturate(1.5)!important;border:1px solid rgba(255,255,255,.45)!important;box-shadow:0 24px 70px rgba(6,3,28,.45)!important}
+body.gated #authModal .field input,body.gated #authModal .field select{background:rgba(255,255,255,.74)!important}
+body.gated #authModal .btn-outline{background:rgba(255,255,255,.72)!important}
+@keyframes gaFloat{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-50%,calc(-50% - 12px))}}
+@keyframes gaEyes{0%,100%{opacity:.5}40%{opacity:1}46%{opacity:.08}52%{opacity:1}}
+@keyframes gaDriftA{to{transform:translate(18vmax,12vmax)}}
+@keyframes gaDriftB{to{transform:translate(-16vmax,-10vmax)}}
+@media (prefers-reduced-motion:reduce){.gate-art *{animation:none!important}}
+
+/* v16: sign-in / sign-up screen + button shapes */
+body.gated #authModal{background:linear-gradient(150deg,#5b7cfa,#8d72e8,#7c5ce6,#3b4aa8)!important;min-height:100dvh}
+body.gated #authModal .gate-brand{margin:auto 0 0!important}
+body.gated #authModal .modal{margin:0 0 auto!important}
+body.gated #authModal .modal-head{background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border:0!important}
+body.gated #authModal .modal-head h3{font-size:20px}
+body.gated #authModal .form-actions{flex-direction:column-reverse;gap:10px}
+body.gated #authModal .form-actions .btn{width:100%;flex:none}
+.btn{padding:11px 18px;min-height:48px;white-space:normal;text-align:center}
+@media(max-height:760px){
+ body.gated #authModal .gate-brand{font-size:24px}
+ body.gated #authModal .gate-brand small{display:none}
+ body.gated #authModal .gate-brand b{width:56px;height:56px;font-size:26px;margin-bottom:8px;border-radius:20px}
+}
+
+/* v17: "Top 3 of the day" no longer runs off the screen edge on phones */
+@media(max-width:700px){
+ #dailyTop3{padding:0 14px!important;margin:10px 0 0!important}
+ .daily-top3-list{grid-template-columns:minmax(0,1fr)}
+ .daily-rank{min-width:0;max-width:100%}
+ .daily-copy{min-width:0;flex:1;overflow:hidden}
+ .daily-copy>b,.daily-copy>span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .daily-score{flex:none}
+}
 </style>
 </head>
 
@@ -2738,6 +2785,7 @@ body.gated #authModal::after{content:var(--app-version);flex:none;color:rgba(255
 
   <!-- Auth Modal -->
   <div class="modal-backdrop" id="authModal" role="dialog" aria-modal="true">
+    <div class="gate-art" aria-hidden="true"><i class="ga-mist m1"></i><i class="ga-mist m2"></i><div class="ga-logo"><svg viewBox="0 0 1000 1229" xmlns="http://www.w3.org/2000/svg" focusable="false"><defs><linearGradient id="gaBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1f66"/><stop offset=".55" stop-color="#110c33"/><stop offset="1" stop-color="#05040f"/></linearGradient><filter id="gaBlur" x="-150%" y="-150%" width="400%" height="400%"><feGaussianBlur stdDeviation="16"/></filter></defs><path class="ga-body" d="M499 897 314 1096 429 1224 571 1224 685 1096ZM5 5 5 752 145 908 146 384 400 667 265 818 217 766 217 988 264 1040 500 779 735 1040 783 988 783 766 734 818 599 667 853 384 854 908 994 752 995 5 500 555Z"/><g class="ga-eyes"><path class="ga-halo" d="M783 576 693 665 738 710 783 670ZM217 576 217 670 261 710 306 665Z"/><path class="ga-eye" d="M783 576 693 665 738 710 783 670ZM217 576 217 670 261 710 306 665Z"/></g></svg></div></div>
     <div class="modal">
       <div class="modal-head">
         <h3 id="authTitle">Welcome 💙💗</h3>
@@ -6375,7 +6423,19 @@ body.gated #authModal::after{content:var(--app-version);flex:none;color:rgba(255
       else if (a === "role" && can && sa) u.role = u.role === "admin" ? "user" : "admin";
       else if (a === "reset" && can && window.__cloud) { await window.__resetPin(u); return; }
       else if (a === "reset" && can) { const p = String(100000 + crypto.getRandomValues(new Uint32Array(1))[0] % 900000); await setPin(u, p); u.mustChangePin = true; u.sv = (u.sv || 0) + 1; alert("Temporary PIN for @" + u.username + ": " + p + "\nThey must change it after logging in."); }
-      else if (a === "udel" && can) { if (!confirm("Delete @" + u.username + " and all their posts?")) return; users = users.filter(x => x.id !== i); posts = posts.filter(p => p.userId !== i); reports = reports.filter(r => r.reporterId !== i && posts.some(p => p.id === r.postId)); stories = stories.filter(s => s.userId !== i); save(STORAGE.stories, stories); }
+      else if (a === "udel" && can) { if (!confirm("Delete @" + u.username + " and all their posts?")) return; users = users.filter(x => x.id !== i); users.forEach(x => { x.followers = (x.followers || []).filter(f => f !== i); x.following = (x.following || []).filter(f => f !== i); });
+        try { delete socialFollows[i]; Object.keys(socialFollows).forEach(k => { socialFollows[k] = (socialFollows[k] || []).filter(f => f !== i); }); save(STORAGE.follows, socialFollows); } catch (e) {}
+        posts = posts.filter(p => p.userId !== i);
+        if (!window.__cloud) posts.forEach(p => { // cloud mode: the server cascades these; local mode must clean them itself
+          if ((p.likedBy || []).includes(i)) { p.likedBy = p.likedBy.filter(x => x !== i); p.hearts = p.likedBy.length; }
+          p.savedBy = (p.savedBy || []).filter(x => x !== i);
+          if ((p.sharedBy || []).includes(i)) { p.sharedBy = p.sharedBy.filter(x => x !== i); p.shares = Math.max(0, (p.shares || 0) - 1); }
+          p.comments = (p.comments || []).filter(c => c.userId !== i);
+        });
+        reports = reports.filter(r => r.reporterId !== i && posts.some(p => p.id === r.postId));
+        stories = stories.filter(s => s.userId !== i); stories.forEach(s => { s.views = (s.views || []).filter(x => x !== i); s.reactions = (s.reactions || []).filter(x => !x || (x.userId || x.user || x.by) !== i); s.replies = (s.replies || []).filter(x => !x || (x.userId || x.user || x.by) !== i); });
+        try { delete allPreferences[i]; save(STORAGE.prefs, allPreferences); } catch (e) {}
+        save(STORAGE.stories, stories); }
       else if (a === "bdel") { if (window.__cloud) await window.__delBug(i); else localStorage.setItem(BK, JSON.stringify(load(BK, []).filter(x => x.id !== i))); }
       else if (a === "csv") {
         const rows = ["date,new_posts,new_users,hearts,shares"];
@@ -6742,6 +6802,7 @@ body.gated #authModal::after{content:var(--app-version);flex:none;color:rgba(255
             rows(sb.from("stories").select("*").order("created_at", { ascending: false }).limit(100)),
             page(() => sb.from("follows").select("follower,followee").order("created_at").order("follower"))]);
           const ids = po.map(p => p.id), sids = st.map(s => s.id), meP = pr.find(p => p.id === me), adm = !!meP && ["admin", "superadmin"].includes(meP.role);
+          if (pr.length && (!meP || meP.banned)) { const gone = !meP; setTimeout(() => kick(gone ? "This account no longer exists." : "This account is suspended."), 0); return; }
           const [he, co, sa, sh, sv, rp, bg] = await Promise.all([
             ids.length ? page(() => sb.from("hearts").select("post_id,user_id").in("post_id", ids).order("created_at").order("user_id")) : [],
             ids.length ? page(() => sb.from("comments").select("*").in("post_id", ids).order("created_at").order("id")) : [],
@@ -6847,6 +6908,11 @@ body.gated #authModal::after{content:var(--app-version);flex:none;color:rgba(255
       });
       logout = window.logout = () => out(false);
       $("sxAll").onclick = () => { if (!currentUser) return showToast("You are not logged in."); out(true); };
+      const kick = guard(async msg => {
+        ["settingsModal", "activityModal", "notifModal", "acctModal"].forEach(id => { try { closeModal(id); } catch (e) {} });
+        const id = currentUser && currentUser.id; teardown(); try { await sb.auth.signOut({ scope: "local" }); } catch (e) {} if (id) Dev.del(id);
+        currentUser = null; wipe(); updateUI(); showAuth("login"); showToast(msg);
+      });
       window.__idleOut = guard(async () => { Dev.clear(); teardown(); try { await sb.auth.signOut({ scope: "local" }); } catch (e) {} currentUser = null; wipe(); updateUI(); });
       sb && sb.auth.onAuthStateChange((ev, s) => {
         if (s && currentUser && s.user.id === currentUser.id && (ev === "TOKEN_REFRESHED" || ev === "SIGNED_IN")) Dev.upd(s);
