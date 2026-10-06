@@ -2538,6 +2538,12 @@ body.gated #authModal .modal-body{padding:14px 20px 22px}
  .icon-btn .ic{width:22px;height:22px}
 }
 @media(max-width:350px){#glassToggleBtn{display:none!important}}
+
+/* v15: version label at the very bottom (change the text in --app-version) */
+:root{--app-version:"Version 3.0"}
+.app-version{display:block;text-align:center;color:var(--muted);font-size:12px;font-weight:700;letter-spacing:.02em;padding:18px 0 6px}
+.app-version::before{content:var(--app-version)}
+body.gated #authModal::after{content:var(--app-version);flex:none;color:rgba(255,255,255,.85);font-size:12px;font-weight:700;letter-spacing:.02em;text-align:center}
 </style>
 </head>
 
@@ -2652,6 +2658,7 @@ body.gated #authModal .modal-body{padding:14px 20px 22px}
       <footer>
         For the CPGSHS student community · Keep it respectful, kind, and safe. 💙💗 · SPILL
       </footer>
+      <div class="app-version"></div>
     </main>
   </div>
 
