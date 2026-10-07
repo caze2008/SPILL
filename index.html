@@ -7725,5 +7725,53 @@ document.addEventListener('change',function(e){var t=e.target;if(!t||t.id!=='pro
 })();
 </script>
 
+<style id="v11b-style">
+/* v11.1: full-screen post reader */
+html :is(#viewModal,#profileViewModal).modal-backdrop{background:var(--bg)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;padding:0!important;align-items:stretch!important;justify-content:center!important}
+html[data-glass="1"] :is(#viewModal,#profileViewModal).modal-backdrop{background:radial-gradient(60% 40% at 12% 6%,rgba(110,140,255,.38),transparent 70%),radial-gradient(55% 40% at 95% 30%,rgba(160,120,255,.32),transparent 70%),radial-gradient(60% 45% at 18% 100%,rgba(90,200,250,.28),transparent 70%),var(--bg)!important}
+html :is(#viewModal,#profileViewModal).modal-backdrop .modal{width:100%!important;max-width:none!important;height:100%!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;box-shadow:none!important;display:flex!important;flex-direction:column;overflow:hidden}
+html :is(#viewModal,#profileViewModal).modal-backdrop .modal-head{flex:none;display:flex;align-items:center;gap:8px;padding:max(10px,env(safe-area-inset-top)) 14px 10px!important;background:var(--glass,rgba(247,248,255,.85))!important;-webkit-backdrop-filter:blur(22px) saturate(180%);backdrop-filter:blur(22px) saturate(180%);border-bottom:.5px solid var(--glb,var(--sep,rgba(128,128,160,.25)))!important;touch-action:none}
+html[data-glass="1"] :is(#viewModal,#profileViewModal).modal-backdrop .modal-head{background:var(--gl)!important}
+html :is(#viewModal,#profileViewModal) .modal-head::before{display:none!important}
+html :is(#viewModal,#profileViewModal) .modal-head::after{content:"";flex:none;width:40px}
+html :is(#viewModal,#profileViewModal) .modal-head h3{flex:1;margin:0;text-align:center;font-size:17px;font-weight:800;letter-spacing:-.02em}
+html :is(#viewModal,#profileViewModal) .modal-head .close-btn{order:-1;flex:none;position:relative!important;inset:auto!important;width:40px;height:40px;display:grid;place-items:center;font-size:0!important;border-radius:50%!important}
+html :is(#viewModal,#profileViewModal) .modal-head .close-btn::before{content:"";width:11px;height:11px;border-left:2.5px solid currentColor;border-bottom:2.5px solid currentColor;border-radius:2px;transform:translateX(2px) rotate(45deg)}
+html #viewModal #viewBody.modal-body{flex:1 1 auto;min-height:0;width:100%;max-width:700px;margin:0 auto;padding:0 20px!important;display:flex;flex-direction:column;overflow-y:auto}
+html #viewBody .post-card{position:relative;flex:1 0 auto;display:flex;flex-direction:column;width:100%;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;overflow:visible!important;transform:none!important}
+html #viewBody .post-card::before,html #viewBody .post-card::after{display:none!important}
+html #viewBody .post-top{display:flex;align-items:center;gap:14px;padding:22px 0 6px}
+html #viewBody .post-avatar{width:54px;height:54px;font-size:20px;box-shadow:0 0 0 2.5px var(--bg),0 0 0 4.5px var(--acc,#7c5ce6)!important}
+html #viewBody .post-meta strong,html #viewBody .post-author-button{font-size:17px;font-weight:800;letter-spacing:-.02em}
+html #viewBody .post-meta span{font-size:12.5px;color:var(--muted)}
+html #viewBody .category{padding:6px 12px;border-radius:99px;background:var(--fill,rgba(128,128,160,.12));color:var(--ink);font-size:12px;font-weight:800;border:.5px solid var(--glb,var(--border))}
+html #viewBody .carousel{margin:10px 0 0!important;border-radius:22px;overflow:hidden}
+html #viewBody .post-text{font-size:clamp(23px,6.4vw,32px)!important;line-height:1.36!important;font-weight:700;letter-spacing:-.022em;padding:26px 0 28px!important;overflow-wrap:anywhere}
+html #viewBody .post-text.v11-long{font-size:18px!important;line-height:1.6!important;font-weight:500;letter-spacing:-.005em;padding:20px 0 24px!important}
+html #viewBody .ig-bar{display:flex;align-items:center;gap:2px;margin:0!important;padding:4px 6px;border-radius:999px;background:var(--gl,var(--fill,rgba(128,128,160,.12)));border:.5px solid var(--glb,var(--border));box-shadow:var(--hi,none);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
+html #viewBody .ig-b{width:46px;height:46px;transition:transform .2s cubic-bezier(.3,1.6,.5,1),background-color .2s}
+html #viewBody .ig-b:active{transform:scale(.9)}
+html #viewBody .ig-lk{font-size:13px;font-weight:700;color:var(--muted);padding:10px 6px 0}
+html #viewBody .section-head{padding:26px 0 6px!important}
+html #viewBody .section-head h2{font-size:19px;font-weight:800;letter-spacing:-.02em}
+html #viewBody .section-head p{font-size:12.5px;color:var(--muted)}
+html #viewBody .comment-list{padding:6px 0 18px}
+html #viewBody .no-results{padding:34px 10px 40px;text-align:center;color:var(--muted);font-size:14px}
+html #viewBody .comment-form{order:99;position:sticky!important;bottom:0;z-index:5;display:flex;gap:10px;align-items:center;margin:auto -20px 0!important;padding:10px 16px calc(10px + env(safe-area-inset-bottom))!important;background:var(--gl2,var(--glass,rgba(247,248,255,.9)))!important;-webkit-backdrop-filter:blur(22px) saturate(180%);backdrop-filter:blur(22px) saturate(180%);border-top:.5px solid var(--glb,var(--sep,rgba(128,128,160,.25)))!important}
+html #viewBody .comment-form input{flex:1;min-width:0;font-size:16px;padding:12px 18px;border-radius:999px;border:.5px solid var(--glb,var(--border))!important;background:var(--fill,rgba(128,128,160,.12))!important}
+html #viewBody .comment-form button{flex:none;padding:11px 20px!important;border-radius:999px!important;background:var(--ig,linear-gradient(135deg,#5b7cfa,#7c5ce6))!important;color:#fff!important;font-weight:800;box-shadow:0 6px 18px var(--glow,rgba(91,124,250,.3))!important}
+html #viewBody #rpChip{order:98;position:sticky;bottom:calc(66px + env(safe-area-inset-bottom));z-index:5}
+@keyframes v11Rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+html #viewModal.v11-enter :is(.post-top,.carousel,.post-text,.ig-bar,.ig-lk,.section-head,.comment-list){animation:v11Rise .55s cubic-bezier(.2,.8,.2,1) both}
+html #viewModal.v11-enter .post-text{animation-delay:.07s}html #viewModal.v11-enter .ig-bar{animation-delay:.13s}html #viewModal.v11-enter .ig-lk{animation-delay:.16s}html #viewModal.v11-enter .section-head{animation-delay:.2s}html #viewModal.v11-enter .comment-list{animation-delay:.24s}
+</style>
+<script id="v11b-script">
+(function(){try{var m=document.getElementById('viewModal');if(!m)return;
+document.querySelectorAll('#viewModal .close-btn,#profileViewModal .close-btn').forEach(function(b){b.setAttribute('aria-label','Back')});
+new MutationObserver(function(){if(m.classList.contains('open')){if(!m._o){m._o=1;m.classList.add('v11-enter');setTimeout(function(){m.classList.remove('v11-enter')},900)}}else m._o=0}).observe(m,{attributes:true,attributeFilter:['class']});
+var _v=window.viewPost;if(typeof _v==='function'){window.viewPost=function(){var r=_v.apply(this,arguments);try{var t=document.querySelector('#viewBody .post-text');if(t&&t.textContent.length>220)t.classList.add('v11-long')}catch(e){}return r};try{viewPost=window.viewPost}catch(e){}}
+}catch(e){console.error('v11b',e)}})();
+</script>
+
 </body>
 </html>
