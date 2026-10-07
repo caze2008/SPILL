@@ -2543,7 +2543,7 @@ body.gated #authModal .modal-body{padding:14px 20px 22px}
 @media(max-width:350px){#glassToggleBtn{display:none!important}}
 
 /* v15: version label at the very bottom (change the text in --app-version) */
-:root{--app-version:"Version 12.0"}
+:root{--app-version:"Version 13.0"}
 /* v8.0 fixes: close button was 36 wide but min-height 44 (oblong); tall avatar photos ignored height:100% inside the grid and became ovals; active tab text was dark on dark */
 .modal-head .close-btn{width:36px;height:36px;min-width:36px;min-height:36px;padding:0;flex:none;align-self:center;border-radius:50%!important}
 .ig-avatar-xl{overflow:hidden}
@@ -5332,6 +5332,8 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
       } else alive.push(s);
     });
     stories = alive;
+    const keepIds = new Set(Object.values(highlights).flat().flatMap(h => h.storyIds || []));
+    if (storyArchive.length > 60) storyArchive = storyArchive.filter((a, i) => keepIds.has(a.id) || i >= storyArchive.length - 60);
     save(STORAGE.stories, stories);
     save(STORAGE.storyArchive, storyArchive);
   }
@@ -5675,8 +5677,8 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
   document.getElementById("storyCloseBtn").addEventListener("click", svClose);
   function svCurrent() { return svQueue[svUserIdx].stories[svStoryIdx]; }
   function svMarkView() {
-    const s = svCurrent(); if (!s) return;
-    if (s.userId === currentUser.id) return;
+    const c = svCurrent(); if (!c || c.userId === currentUser.id) return;
+    const s = stories.find(x => x.id === c.id); if (!s) return; // archive / highlight replays are not views
     s.views = s.views || [];
     if (!s.views.includes(currentUser.id)) { s.views.push(currentUser.id); save(STORAGE.stories, stories); }
   }
@@ -5702,18 +5704,19 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
       chip.textContent = "👁 " + ((s.views || []).length) + " views · " + ((s.reactions || []).length) + " reactions";
       chip.onclick = () => showStoryViewers(s.id);
     } else { chip.style.display = "none"; chip.onclick = null; }
-    svMarkView();
+    svMarkView(); svSyncReact();
     svStartProgress();
   }
   function svStartProgress() {
     const fill = document.getElementById("spf-" + svStoryIdx);
     if (!fill) return;
-    let start = null;
+    let el = 0, last = performance.now();
     clearInterval(svTimer);
     svTimer = setInterval(() => {
-      if (svPaused) { start = null; return; }
-      if (!start) start = performance.now();
-      const pct = Math.min(100, ((performance.now() - start) / svDuration) * 100);
+      const now = performance.now(), dt = now - last; last = now;
+      if (svPaused || document.hidden) return;
+      el += dt;
+      const pct = Math.min(100, (el / svDuration) * 100);
       fill.style.width = pct + "%";
       if (pct >= 100) svAdvance();
     }, 50);
@@ -5739,21 +5742,38 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
   document.getElementById("storyViewer").addEventListener("touchend", e => {
     if (e.changedTouches[0].clientY - svStartY > 80) svClose();
   }, { passive: true });
-  // reactions
+  // reactions: one per person per story - same emoji again = undo, other emoji = change
+  [stories, storyArchive].forEach(L => L.forEach(x => { if (x.reactions) { const m = new Map(); x.reactions.forEach(r => r && m.set(r.from, r)); x.reactions = [...m.values()]; } }));
+  function svSave() { save(STORAGE.stories, stories); save(STORAGE.storyArchive, storyArchive); }
+  function svSyncReact() {
+    const s = svCurrent(), own = !s || s.userId === currentUser.id, bar = document.querySelector(".story-reaction-bar");
+    if (bar) { if (own) bar.style.setProperty("display", "none", "important"); else bar.style.removeProperty("display"); }
+    const mine = !own && (s.reactions || []).find(r => r.from === currentUser.id);
+    document.querySelectorAll(".reaction-btn[data-react]").forEach(b => b.classList.toggle("on", !!mine && mine.emoji === b.dataset.react));
+  }
+  function svBurst(em, btn) {
+    const st = document.getElementById("storyStage");
+    for (let i = 0; i < 9; i++) {
+      const f = document.createElement("div"); f.className = "story-float-reaction sp-burst"; f.textContent = em;
+      f.style.left = (50 + (Math.random() - .5) * 46) + "%"; f.style.top = "62%";
+      f.style.setProperty("--dx", ((Math.random() - .5) * 120) + "px"); f.style.setProperty("--rot", ((Math.random() - .5) * 50) + "deg");
+      f.style.animationDelay = (i * 45) + "ms"; st.appendChild(f); setTimeout(() => f.remove(), 1600);
+    }
+    if (btn) { btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop"); }
+    try { navigator.vibrate && navigator.vibrate(12); } catch (e) {}
+  }
   document.querySelectorAll(".reaction-btn[data-react]").forEach(btn => {
     btn.addEventListener("click", () => {
-      const s = svCurrent(); if (!s) return;
-      s.reactions = s.reactions || [];
-      s.reactions.push({ from: currentUser.id, emoji: btn.dataset.react, at: new Date().toISOString() });
-      save(STORAGE.stories, stories);
-      const float = document.createElement("div");
-      float.className = "story-float-reaction"; float.textContent = btn.dataset.react;
-      float.style.left = "50%"; float.style.top = "55%";
-      document.getElementById("storyStage").appendChild(float);
-      setTimeout(() => float.remove(), 1100);
-      showToast("Reaction sent! " + btn.dataset.react);
+      const s = svCurrent(); if (!s || s.userId === currentUser.id) return;
+      const em = btn.dataset.react; s.reactions = s.reactions || [];
+      const i = s.reactions.findIndex(r => r.from === currentUser.id);
+      if (i >= 0 && s.reactions[i].emoji === em) { s.reactions.splice(i, 1); showToast("Reaction removed"); }
+      else { const r = { from: currentUser.id, emoji: em, at: new Date().toISOString() }; if (i >= 0) s.reactions[i] = r; else s.reactions.push(r); svBurst(em, btn); showToast("Reacted " + em); }
+      svSave(); svSyncReact();
     });
   });
+  const _ri = document.getElementById("storyReplyInput");
+  _ri.addEventListener("focus", () => { svPaused = true; }); _ri.addEventListener("blur", () => { svPaused = false; });
   document.getElementById("storyReplySend").addEventListener("click", sendStoryReply);
   document.getElementById("storyReplyInput").addEventListener("keydown", e => { if (e.key === "Enter") sendStoryReply(); });
   function sendStoryReply() {
@@ -6182,6 +6202,7 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
         wrap.appendChild(btn);
       }
     }
+    if (avatarXl && stories.some(x => x.userId === userId && storyIsLive(x))) { avatarXl.classList.add("has-story"); avatarXl.onclick = () => { closeModal("profileViewModal"); window.openStoryViewer(userId); }; }
     // link in bio
     const bioEl = body.querySelector(".ig-bio-xl");
     if (bioEl && u.link) {
@@ -6197,7 +6218,7 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
     const hlHtml = (own || myHighlights.length) ? `
       <div class="highlights-row">
         ${myHighlights.map(h => `<div class="highlight-cover" onclick="openHighlight('${userId}','${h.id}')">
-          <div class="highlight-circle"><div class="highlight-circle-inner">${h.cover ? `<img src="${h.cover}">` : (h.emoji || "📌")}</div></div>
+          <div class="highlight-circle" style="position:relative"><div class="highlight-circle-inner" style="${!h.cover && h.bg ? "background:" + safeBg(h.bg) : ""}">${h.cover ? `<img src="${h.cover}">` : (h.bg ? "" : (h.emoji || "📌"))}</div>${own ? `<button class="hl-edit" aria-label="Edit highlight" onclick="event.stopPropagation();editHighlight('${userId}','${h.id}')">✎</button>` : ""}</div>
           <span class="highlight-name">${escapeHTML(h.name)}</span></div>`).join("")}
         ${own && archivedStories.length ? `<div class="highlight-cover" onclick="openStoryArchive('${userId}')">
           <div class="highlight-circle"><div class="highlight-circle-inner">📦</div></div>
@@ -6227,7 +6248,7 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
     if (!grid) return;
     let list = [];
     if (tab === "archived") list = posts.filter(p => p.userId === userId && p.archived);
-    else if (tab === "saved") list = posts.filter(p => (p.savedBy || []).includes(currentUser?.id));
+    else if (tab === "saved" && currentUser?.id === userId) list = posts.filter(p => (p.savedBy || []).includes(currentUser?.id));
     else if (tab === "shared") list = posts.filter(p => (p.sharedBy || []).includes(userId));
     else list = posts.filter(p => p.userId === userId && !p.archived);
     list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -6263,26 +6284,53 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
     document.body.style.overflow = "hidden";
     svRenderCurrent();
   };
-  window.newHighlight = function (userId) {
-    const name = prompt("Name your highlight:");
-    if (!name || !name.trim()) return;
-    const candidates = storyArchive.filter(s => s.userId === userId);
-    if (!candidates.length) { showToast("Watch some stories first — they'll land in archive after 24h."); return; }
-    highlights[userId] = highlights[userId] || [];
-    highlights[userId].push({ id: makeId(), name: name.trim().slice(0, 20), storyIds: candidates.slice(0, 5).map(c => c.id), emoji: "✨", cover: candidates[0].photo || null });
-    save(STORAGE.highlights, highlights);
-    showToast("Highlight created ✨");
-    window.openPublicProfile(userId);
-  };
+  // highlights: pick any of your stories (live or archived), name it, edit or delete it later
+  const safeBg = x => /^linear-gradient\([\w#(),.% -]+\)$/i.test(x || "") ? x : "";
+  const hlStory = id => stories.find(x => x.id === id) || storyArchive.find(x => x.id === id);
+  const hlPool = uid => { const m = new Map(); [...stories, ...storyArchive].forEach(x => { if (x.userId === uid) m.set(x.id, x); }); return [...m.values()].sort((p, q) => new Date(q.createdAt) - new Date(p.createdAt)); };
+  function hlSheet(uid, hl) {
+    const pool = hlPool(uid); if (!pool.length) { showToast("Post a story first, then pin it to a highlight."); return; }
+    const sel = new Set(hl ? hl.storyIds : []); document.getElementById("hlSheet")?.remove();
+    const d = document.createElement("div"); d.id = "hlSheet"; d.className = "hl-sheet";
+    d.innerHTML = `<div class="hl-card"><div class="hl-head"><b>${hl ? "Edit highlight" : "New highlight"}</b><button data-x="close" aria-label="Close">✕</button></div>
+      <input class="hl-name" maxlength="20" placeholder="Highlight name" value="${hl ? escapeHTML(hl.name) : ""}">
+      <div class="hl-grid">${pool.map(x => `<button type="button" data-id="${x.id}" class="hl-it${sel.has(x.id) ? " on" : ""}" style="${x.photo ? "" : "background:" + safeBg(x.bg)}">${x.photo ? `<img src="${x.photo}" alt="">` : ""}<i>✓</i><small>${formatTime(x.createdAt)}</small></button>`).join("")}</div>
+      <div class="hl-foot"><span id="hlCount"></span>${hl ? `<button class="btn btn-outline danger-btn" data-x="del">Delete</button>` : ""}<button class="btn btn-primary" data-x="save">${hl ? "Save" : "Create"}</button></div></div>`;
+    document.body.appendChild(d);
+    const cnt = () => { d.querySelector("#hlCount").textContent = sel.size + " selected"; }; cnt();
+    d.addEventListener("click", e => {
+      const it = e.target.closest(".hl-it"), x = e.target.closest("[data-x]")?.dataset.x;
+      if (e.target === d || x === "close") return d.remove();
+      if (it) { const id = it.dataset.id; if (sel.has(id)) sel.delete(id); else if (sel.size < 30) sel.add(id); else showToast("Max 30 stories"); it.classList.toggle("on", sel.has(id)); return cnt(); }
+      if (x === "del") { if (!confirm("Delete this highlight?")) return; highlights[uid] = highlights[uid].filter(h => h.id !== hl.id); }
+      else if (x === "save") {
+        const name = d.querySelector(".hl-name").value.trim().slice(0, 20), ids = pool.filter(y => sel.has(y.id)).reverse().map(y => y.id);
+        if (!name) return showToast("Give it a name"); if (!ids.length) return showToast("Pick at least one story");
+        highlights[uid] = highlights[uid] || []; if (!hl && highlights[uid].length >= 10) return showToast("Max 10 highlights");
+        const f = hlStory(ids[0]), item = hl || { id: makeId(), emoji: "✨" };
+        Object.assign(item, { name, storyIds: ids, cover: f.photo || null, bg: f.photo ? "" : safeBg(f.bg) }); if (!hl) highlights[uid].push(item);
+        showToast(hl ? "Highlight updated ✨" : "Highlight created ✨");
+      } else return;
+      save(STORAGE.highlights, highlights); d.remove(); window.openPublicProfile(uid);
+    });
+  }
+  window.newHighlight = uid => hlSheet(uid, null);
+  window.editHighlight = (uid, id) => { const h = (highlights[uid] || []).find(x => x.id === id); if (h && currentUser?.id === uid) hlSheet(uid, h); };
   window.openHighlight = function (userId, hlId) {
     const hl = (highlights[userId] || []).find(h => h.id === hlId); if (!hl) return;
-    const list = hl.storyIds.map(id => storyArchive.find(s => s.id === id) || stories.find(s => s.id === id)).filter(Boolean);
+    const list = hl.storyIds.map(hlStory).filter(Boolean);
     if (!list.length) { showToast("This highlight is empty."); return; }
-    svQueue = [{ userId, stories: list }];
-    svUserIdx = 0; svStoryIdx = 0;
-    document.getElementById("storyViewer").classList.add("open");
-    document.body.style.overflow = "hidden";
-    svRenderCurrent();
+    if (list.length !== hl.storyIds.length) { hl.storyIds = list.map(x => x.id); save(STORAGE.highlights, highlights); }
+    svQueue = [{ userId, stories: list }]; svUserIdx = 0; svStoryIdx = 0;
+    document.getElementById("storyViewer").classList.add("open"); document.body.style.overflow = "hidden"; svRenderCurrent();
+  };
+  // handle for the super-admin tools (the story data lives inside this closure)
+  window.__spStories = {
+    live: () => stories, arch: () => storyArchive, hl: () => highlights,
+    del(id) { stories = stories.filter(x => x.id !== id); storyArchive = storyArchive.filter(x => x.id !== id); Object.values(highlights).forEach(L => L.forEach(h => { h.storyIds = h.storyIds.filter(y => y !== id); })); svSave(); save(STORAGE.highlights, highlights); window.updateUI(); },
+    wipeArchive() { storyArchive = []; Object.values(highlights).forEach(L => L.forEach(h => { h.storyIds = h.storyIds.filter(id => stories.some(x => x.id === id)); })); svSave(); save(STORAGE.highlights, highlights); },
+    wipeHl() { highlights = {}; save(STORAGE.highlights, highlights); },
+    wipeAll() { stories = []; storyArchive = []; highlights = {}; svSave(); save(STORAGE.highlights, highlights); window.updateUI(); }
   };
 
   // ============================================================
@@ -7641,7 +7689,7 @@ html.v11-fade *,html.v11-fade *::before,html.v11-fade *::after{transition:backgr
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
 </style>
 <script id="v11-script">
-(function(){'use strict';if(window.__v11)return;window.__v11=1;window.SPILL_VERSION='12.0';
+(function(){'use strict';if(window.__v11)return;window.__v11=1;window.SPILL_VERSION='13.0';
 var h=document.documentElement,$=function(i){return document.getElementById(i)},K='cpgshs_skin_v1',AT='cpgshs_skin_at',RL='cpgshs_rl',PV='cpgshs_pview_v11',
 OK=['light','darkblue','pink','yellow','brown','clear','crystal','red','maroon'],
 TCm={light:'#e6e8ec',darkblue:'#06142e',pink:'#fff0f6',yellow:'#fff8dc',brown:'#e9d2ba',clear:'#0b1020',crystal:'#dfe9f7',red:'#fff1f1',maroon:'#1e0509'},
@@ -7802,5 +7850,60 @@ window.__spillPal=function(){
  return Object.assign({},B,T[s]||{})};
 </script>
 
+<style id="v13-style">
+.sp-burst{position:absolute;font-size:30px;pointer-events:none;z-index:8;animation:spBurst 1.3s cubic-bezier(.2,.7,.2,1) both}
+@keyframes spBurst{0%{opacity:0;transform:translate(0,0) scale(.3)}15%{opacity:1;transform:translate(calc(var(--dx)*.2),-40px) scale(1.2)}100%{opacity:0;transform:translate(var(--dx),-260px) rotate(var(--rot)) scale(.8)}}
+.reaction-btn.on{background:rgba(255,255,255,.38)!important;box-shadow:inset 0 0 0 2px #fff}.reaction-btn.pop{animation:spPop .35s cubic-bezier(.3,1.6,.5,1)}
+@keyframes spPop{50%{transform:scale(1.35)}}@keyframes spFade{from{opacity:0}}@keyframes spUp{from{transform:translateY(40px);opacity:0}}
+.hl-sheet{position:fixed;inset:0;z-index:99999;background:rgba(10,12,30,.55);display:flex;align-items:flex-end;justify-content:center;animation:spFade .2s}
+.hl-card{width:100%;max-width:520px;max-height:86dvh;overflow:auto;background:var(--card,#fff);color:var(--ink,#111);border-radius:24px 24px 0 0;padding:16px calc(16px + env(safe-area-inset-right)) calc(16px + env(safe-area-inset-bottom));animation:spUp .3s cubic-bezier(.2,.8,.2,1)}
+.hl-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.hl-head button{border:0;background:none;color:inherit;font-size:18px;min-width:44px;min-height:44px}
+.hl-name{width:100%;padding:12px;border-radius:12px;border:1px solid var(--border,#ddd);background:var(--bg,#fff);color:inherit;margin-bottom:10px;font:inherit}
+.hl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.hl-it{position:relative;aspect-ratio:9/14;border:0;border-radius:12px;overflow:hidden;cursor:pointer;background:#667eea;padding:0;opacity:.6;transition:opacity .2s,box-shadow .2s}
+.hl-it img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hl-it i{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;background:#fff;color:#4f6df5;font-style:normal;display:grid;place-items:center;transform:scale(0);transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+.hl-it.on{opacity:1;box-shadow:0 0 0 3px #4f6df5}.hl-it.on i{transform:scale(1)}
+.hl-it small{position:absolute;left:0;right:0;bottom:0;padding:12px 6px 5px;color:#fff;font-size:10px;font-weight:800;background:linear-gradient(transparent,rgba(0,0,0,.6));text-align:left}
+.hl-foot{display:flex;gap:8px;align-items:center;margin-top:12px;position:sticky;bottom:0;background:var(--card,#fff);padding-top:6px}.hl-foot span{flex:1;font-size:12px;color:var(--muted)}
+.hl-edit{position:absolute;right:-4px;bottom:-4px;width:22px;height:22px;border-radius:50%;border:2px solid var(--bg,#fff);background:#4f6df5;color:#fff;font-size:11px;padding:0;cursor:pointer}
+.has-story{box-shadow:0 0 0 3px var(--bg,#fff),0 0 0 6px #e1306c!important;cursor:pointer}
+.v13-back{position:sticky;top:0;z-index:5;display:block;margin:0 0 8px;padding:10px 14px;border:0;border-radius:14px;background:var(--blue-soft,#eef1ff);color:var(--blue-dark,#4f6df5);font:800 13px/1 inherit;cursor:pointer}
+</style>
+<script id="v13-script">
+(function(){if(window.__v13)return;window.__v13=1;try{
+/* profile-to-profile navigation: back stack, scroll reset */
+var st=[],cur=null,going=false,orig=window.openPublicProfile;
+if(typeof orig==='function')window.openPublicProfile=function(id){var m=document.getElementById('profileViewModal'),was=!!(m&&m.classList.contains('open'));if(!was)st=[];
+ var r=orig.apply(this,arguments);m=document.getElementById('profileViewModal');
+ if(m&&m.classList.contains('open')){if(!going&&st[st.length-1]!==id)st.push(id);if(st.length>20)st.shift();
+  var b=document.getElementById('publicProfileBody');if(b){if(!was||id!==cur)b.scrollTop=0;
+   if(st.length>1){var p=users.find(function(u){return u.id===st[st.length-2]}),x=document.createElement('button');x.type='button';x.className='v13-back';x.textContent='‹ Back'+(p?' to @'+p.username:'');
+    x.onclick=function(){st.pop();going=true;try{window.openPublicProfile(st[st.length-1])}finally{going=false}};b.insertBefore(x,b.firstChild)}}cur=id}
+ return r};
+/* super admin + story moderation tools */
+var E=escapeHTML,isA=function(u){return !!u&&(u.role==='admin'||u.role==='superadmin')},meU=function(){return currentUser&&users.find(function(u){return u.id===currentUser.id})};
+var bt=function(a,i,t,c){return '<button class="btn '+(c||'btn-outline')+'" data-sx="'+a+'" data-i="'+E(i||'x')+'">'+t+'</button>'};
+var _t=window.__admTools;
+window.__admTools=function(v){var h=_t?_t(v):'',S=window.__spStories;if(!S)return h;var live=S.live(),kb=0;
+ h+='<b class="adm-t">🎞 Story moderation ('+live.length+' live)</b>'+(live.slice(0,15).map(function(s){return '<div class="adm-r"><div class="adm-i"><small>@'+E(s.username||'?')+' · '+E(new Date(s.createdAt).toLocaleString())+' · 👁'+(s.views||[]).length+' ❤'+(s.reactions||[]).length+'</small></div><div class="adm-b">'+bt('sdel',s.id,'Delete','danger-btn')+'</div></div>'}).join('')||'<div class="hint">No live stories.</div>');
+ if(v.role==='superadmin'){try{for(var k in localStorage)kb+=(localStorage[k]||'').length+k.length}catch(e){}
+  h+='<b class="adm-t">👑 Super admin</b>'+bt('bk','x','⬇ Backup JSON (no PINs)')+' '+bt('unban','x','Unban everyone')+' '+bt('clrA','x','Wipe story archive','danger-btn')+' '+bt('clrH','x','Wipe highlights','danger-btn')+' '+bt('clrS','x','Wipe ALL stories','danger-btn')+' '+bt('reload','x','↻ Clear cache &amp; reload')+'<div class="hint">Local storage in use: ~'+Math.round(kb/512)+' KB · version '+E(window.SPILL_VERSION||'')+'</div>'}
+ return h};
+var A=document.getElementById('adm');
+if(A)A.addEventListener('click',function(e){var t=e.target.closest('[data-sx]');if(!t)return;var v=meU(),a=t.dataset.sx,S=window.__spStories;if(!isA(v)||!S)return;
+ if(a==='sdel'){if(!confirm('Delete this story?'))return;S.del(t.dataset.i)}
+ else if(v.role!=='superadmin')return;
+ else if(a==='bk'){var c=function(u){var o=Object.assign({},u);delete o.pin;delete o.ph;delete o.salt;return o},l=document.createElement('a');
+  l.href=URL.createObjectURL(new Blob([JSON.stringify({version:window.SPILL_VERSION,at:new Date().toISOString(),users:users.map(c),posts:posts,reports:reports,stories:S.live(),archive:S.arch(),highlights:S.hl()})],{type:'application/json'}));l.download='spill-backup.json';l.click();setTimeout(function(){URL.revokeObjectURL(l.href)},4000);return}
+ else if(a==='unban'){if(!confirm('Unban every user?'))return;users.forEach(function(u){if(u.banned){u.banned=false;u.sv=(u.sv||0)+1}});save(STORAGE.users,users)}
+ else if(a==='clrA'){if(!confirm('Wipe the story archive?'))return;S.wipeArchive()}
+ else if(a==='clrH'){if(!confirm('Wipe every highlight?'))return;S.wipeHl()}
+ else if(a==='clrS'){if(!confirm('Delete ALL stories, archive and highlights?'))return;S.wipeAll()}
+ else if(a==='reload'){try{navigator.serviceWorker&&navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(x){x.unregister()})});window.caches&&caches.keys().then(function(k){k.forEach(function(n){caches.delete(n)})})}catch(e){}setTimeout(function(){location.reload()},500);return}
+ else return;
+ if(typeof updateUI==='function')updateUI();var on=document.querySelector('#admTabs button.on');if(on)on.click()})
+}catch(e){console.error('v13',e)}})();
+</script>
 </body>
 </html>
