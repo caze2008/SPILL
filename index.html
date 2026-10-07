@@ -2541,7 +2541,7 @@ body.gated #authModal .modal-body{padding:14px 20px 22px}
 @media(max-width:350px){#glassToggleBtn{display:none!important}}
 
 /* v15: version label at the very bottom (change the text in --app-version) */
-:root{--app-version:"Version 9.0"}
+:root{--app-version:"Version 10.0"}
 /* v8.0 fixes: close button was 36 wide but min-height 44 (oblong); tall avatar photos ignored height:100% inside the grid and became ovals; active tab text was dark on dark */
 .modal-head .close-btn{width:36px;height:36px;min-width:36px;min-height:36px;padding:0;flex:none;align-self:center;border-radius:50%!important}
 .ig-avatar-xl{overflow:hidden}
@@ -2663,6 +2663,7 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
         <div class="header-actions">
           <button class="icon-btn notif-bell" id="notifBtn" title="Notifications">🔔<span class="notif-badge hidden" id="notifBadge">0</span></button>
           <button class="icon-btn" id="glassToggleBtn" title="Liquid Glass" aria-label="Toggle Liquid Glass" aria-pressed="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 4 6 6.5 6 10a6 6 0 0 1-12 0c0-3.5 3-6 6-10z"/></svg></button>
+          <button class="icon-btn" id="themeMenuBtn" title="Theme" aria-label="Choose theme" aria-haspopup="dialog" aria-expanded="false">🎨</button>
           <button class="icon-btn" id="themeToggleBtn" title="Toggle dark mode">🌙</button>
           <button class="icon-btn" id="headerSearchBtn" title="Search">⌕</button>
           <button class="icon-btn profile-btn" id="headerProfileBtn" title="Profile" aria-label="Open my profile">
@@ -7307,7 +7308,7 @@ function build(){var l=document.querySelector('#settingsModal .setting-list');if
  var d=document.createElement('div');d.id='skinBox';
  d.innerHTML='<div class="sk-t">🎨 Theme</div><div class="sk-g">'+SKN.map(function(k){return '<button type="button" class="sk-o" data-s="'+k[0]+'"><i style="background:linear-gradient(135deg,'+k[2]+')"></i>'+k[1]+(k[0]==='clear'?'<em>9.0</em>':'')+'</button>'}).join('')+'</div>';
  l.insertBefore(d,l.firstChild);d.addEventListener('click',function(e){var b=e.target.closest('.sk-o');if(b)setSkin(b.dataset.s)});mark()}
-build();tc();
+build();tc();window.__setSkin=setSkin;
 var sm=document.getElementById('settingsModal');
 if(sm){new MutationObserver(function(){build();mark()}).observe(sm,{attributes:true,attributeFilter:['class']});
  sm.addEventListener('change',function(e){if(/^sp(Dark|Glass)$/.test(e.target.id)&&h.hasAttribute('data-skin'))setTimeout(function(){h.removeAttribute('data-skin');try{localStorage.setItem('cpgshs_skin_v1','light')}catch(x){}mark();tc()},0)},true)}
@@ -7528,6 +7529,75 @@ var raf=0;function a11y(){raf=0;document.querySelectorAll('.close-btn:not([aria-
  document.querySelectorAll('img:not([alt])').forEach(function(i){i.alt=i.closest('.post-avatar,.comment-avatar,.avatar')?'':'Attached photo'})}
 a11y();new MutationObserver(function(){if(!raf)raf=requestAnimationFrame(a11y)}).observe(document.body,{childList:true,subtree:true});
 }catch(e){console.error('v14 patch',e)}})();
+</script>
+<style id="v15-style">
+/* v15: logo loader for sign-in */
+#ldOv{position:fixed;inset:0;z-index:100000;display:grid;place-items:center;align-content:center;gap:18px;background:rgba(5,4,15,.88);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);opacity:0;visibility:hidden;transition:opacity .2s ease,visibility 0s linear .2s;touch-action:none}
+#ldOv.on{opacity:1;visibility:visible;transition:opacity .2s ease}
+#ldOv .ld-m{width:92px;filter:drop-shadow(0 0 22px rgba(160,140,255,.45));animation:ldBreath 1.8s ease-in-out infinite}
+#ldOv svg{display:block;width:100%;height:auto;overflow:visible}
+#ldOv .ld-b{fill:#fff;fill-opacity:.5}
+#ldOv .ld-e{fill:#fff;animation:ldEye 1.8s ease-in-out infinite}
+#ldOv .ld-s{animation:ldSweep 1.8s ease-in-out infinite}
+#ldOv p{margin:0;font-size:14px;font-weight:600;letter-spacing:.01em;color:rgba(255,255,255,.8)}
+#toast{z-index:100001!important}
+@keyframes ldBreath{0%,100%{transform:scale(.97);opacity:.9}50%{transform:scale(1.04);opacity:1}}
+@keyframes ldEye{0%,100%{opacity:.4}50%{opacity:1}}
+@keyframes ldSweep{0%{transform:translateX(-320px) skewX(-18deg)}100%{transform:translateX(1400px) skewX(-18deg)}}
+@media (prefers-reduced-motion:reduce){#ldOv .ld-m,#ldOv .ld-e,#ldOv .ld-s{animation:none!important}#ldOv .ld-b{fill-opacity:1}#ldOv .ld-s{display:none}}
+</style>
+<script id="v15-script">
+(function(){if(window.__v15)return;window.__v15=1;try{
+var B='M499 897 314 1096 429 1224 571 1224 685 1096ZM5 5 5 752 145 908 146 384 400 667 265 818 217 766 217 988 264 1040 500 779 735 1040 783 988 783 766 734 818 599 667 853 384 854 908 994 752 995 5 500 555Z',
+E='M783 576 693 665 738 710 783 670ZM217 576 217 670 261 710 306 665Z';
+var ov=document.createElement('div');ov.id='ldOv';ov.setAttribute('role','status');ov.setAttribute('aria-live','polite');ov.setAttribute('aria-hidden','true');
+ov.innerHTML='<div class="ld-m"><svg viewBox="0 0 1000 1229" aria-hidden="true" focusable="false"><defs><clipPath id="ldClip"><path d="'+B+'"/></clipPath><linearGradient id="ldG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><path class="ld-b" d="'+B+'"/><g clip-path="url(#ldClip)"><rect class="ld-s" x="0" y="-60" width="300" height="1350" fill="url(#ldG)"/></g><path class="ld-e" d="'+E+'"/></svg></div><p id="ldMsg"></p>';
+document.body.appendChild(ov);
+var msg=document.getElementById('ldMsg'),depth=0,showT=0,maxT=0,t0=0,on=false;
+function show(){on=true;t0=Date.now();ov.classList.add('on');ov.setAttribute('aria-hidden','false')}
+function hide(){on=false;ov.classList.remove('on');ov.setAttribute('aria-hidden','true')}
+function start(){depth++;if(depth>1)return;
+ msg.textContent=(typeof authMode!=='undefined'&&authMode==='register')?'Creating your account…':'Signing you in…';
+ clearTimeout(showT);showT=setTimeout(show,180);
+ clearTimeout(maxT);maxT=setTimeout(function(){depth=0;clearTimeout(showT);hide();try{showToast('This is taking longer than usual. Check your connection and try again.')}catch(e){}},25000)}
+function stop(){depth=Math.max(0,depth-1);if(depth)return;clearTimeout(showT);clearTimeout(maxT);
+ if(on)setTimeout(function(){if(!depth)hide()},Math.max(0,600-(Date.now()-t0)))}
+function wrap(f){if(typeof f!=='function'||f.__ld)return f;
+ var w=function(){var r=f.apply(this,arguments);start();Promise.resolve(r).then(stop,stop);return r};w.__ld=1;return w}
+var fn=wrap(window.__submitAuth);
+Object.defineProperty(window,'__submitAuth',{configurable:true,enumerable:true,get:function(){return fn},set:function(f){fn=wrap(f)}});
+}catch(e){console.error('v15 loader',e)}})();
+</script>
+<style id="v16-style">
+/* v16: theme menu in the header */
+#themeToggleBtn{display:none!important}
+#thPop{position:fixed;z-index:99998;padding:12px;border-radius:22px;background:var(--sheet,rgba(255,255,255,.96));color:var(--ink,#111);border:1px solid var(--border,rgba(128,128,160,.25));box-shadow:0 18px 50px rgba(0,0,0,.28);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);opacity:0;transform:translateY(-6px) scale(.97);transform-origin:top right;transition:opacity .15s ease,transform .15s ease}
+#thPop.on{opacity:1;transform:none}
+#thPop[hidden]{display:none!important}
+#thPop .sk-g{grid-template-columns:repeat(3,1fr)}
+#thPop .sk-o{min-height:44px;cursor:pointer}
+@media (prefers-reduced-motion:reduce){#thPop{transition:none}}
+</style>
+<script id="v16-script">
+(function(){if(window.__v16)return;window.__v16=1;try{
+var btn=document.getElementById('themeMenuBtn');if(!btn)return;
+var T=[['light','Light','#ffffff,#d9deea'],['darkblue','Dark','#2f7bff,#06142e'],['pink','Pink','#ffd0e4,#ff5fa2'],['yellow','Yellow','#fff0a8,#ffc700'],['brown','Brown','#e9d2ba,#8a4f1d'],['clear','Glass','#6ee7ff,#a78bfa,#ff9bd2']];
+var pop=document.createElement('div');pop.id='thPop';pop.setAttribute('role','dialog');pop.setAttribute('aria-label','Choose theme');pop.hidden=true;
+pop.innerHTML='<div class="sk-t">Theme</div><div class="sk-g">'+T.map(function(k){return '<button type="button" class="sk-o" data-s="'+k[0]+'" aria-pressed="false"><i style="background:linear-gradient(135deg,'+k[2]+')"></i>'+k[1]+'</button>'}).join('')+'</div>';
+document.body.appendChild(pop);
+function cur(){return document.documentElement.getAttribute('data-skin')||'light'}
+function mark(){var c=cur();pop.querySelectorAll('.sk-o').forEach(function(b){var on=b.dataset.s===c;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on?'true':'false')})}
+function place(){var r=btn.getBoundingClientRect(),w=Math.min(288,innerWidth-16);pop.style.width=w+'px';pop.style.top=(r.bottom+8)+'px';pop.style.left=Math.max(8,Math.min(r.right-w,innerWidth-w-8))+'px'}
+function open(){mark();place();pop.hidden=false;btn.setAttribute('aria-expanded','true');requestAnimationFrame(function(){pop.classList.add('on')})}
+function close(f){pop.classList.remove('on');pop.hidden=true;btn.setAttribute('aria-expanded','false');if(f===true)btn.focus()}
+btn.addEventListener('click',function(){if(pop.hidden)open();else close()});
+pop.addEventListener('click',function(e){var b=e.target.closest('.sk-o');if(!b)return;var k=b.dataset.s;
+ if(window.__setSkin)window.__setSkin(k);else{var s=document.querySelector('#skinBox .sk-o[data-s="'+k+'"]');if(s)s.click()}
+ mark();setTimeout(function(){close()},220)});
+document.addEventListener('pointerdown',function(e){if(!pop.hidden&&!pop.contains(e.target)&&!btn.contains(e.target))close()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!pop.hidden)close(true)});
+addEventListener('resize',function(){if(!pop.hidden)close()});
+}catch(e){console.error('v16 theme menu',e)}})();
 </script>
 </body>
 </html>
