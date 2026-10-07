@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src data: blob:; connect-src https://wuohwhozdetmcmnpmbag.supabase.co wss://wuohwhozdetmcmnpmbag.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://wuohwhozdetmcmnpmbag.supabase.co wss://wuohwhozdetmcmnpmbag.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests" />
   <meta name="referrer" content="no-referrer" />
+  <meta name="color-scheme" content="light dark" />
   <!-- SPILL cloud configuration. Use a Supabase anon/publishable key only; NEVER put a service_role key in this file. -->
   <script>
     window.SPILL_CONFIG = window.SPILL_CONFIG || {
@@ -20,7 +21,6 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <script>try{if(localStorage.getItem("cpgshs_glass_v1")==="1")document.documentElement.setAttribute("data-glass","1")}catch(e){}</script>
-  <script>try{var _s=localStorage.getItem("cpgshs_skin_v1");if(_s&&_s!=="light")document.documentElement.setAttribute("data-skin",_s)}catch(e){}</script>
   <title>CPGSHS SPILL</title>
 
   <style>
@@ -50,6 +50,15 @@
     html {
       scroll-behavior: smooth;
     }
+    :focus-visible {
+      outline: 3px solid rgba(91,124,250,.45);
+      outline-offset: 3px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+    }
+
 
     body {
       margin: 0;
@@ -2511,135 +2520,6 @@ body.gated #authModal{height:100dvh;min-height:100dvh;justify-content:flex-start
 body.gated #authModal>*{flex-shrink:0}
 body.gated #authModal .modal{margin:auto 0!important;width:min(440px,100%)!important;max-height:none!important;border-radius:26px!important}
 body.gated .modal-backdrop:not(#authModal),body.gated #newPill{display:none!important}
-
-/* v13 fixes: round things stay round, buttons keep their shape, sign-in screen fits */
-.icon-btn:not(.profile-btn),.close-btn,.compose-avatar,.post-avatar,.story-ring,.story-ring-inner,.story-avatar,.story-top-avatar,.viewer-avatar,.ig-avatar-wrap,.ig-avatar,.ig-avatar-xl,.people-avatar,.comment-avatar,.profile-large-avatar,.profile-hero-avatar,.profile-person-avatar,.acct-row .av,.highlight-circle-inner,.ps-c>button:first-child,#adminFab,.gate-brand b{flex:none!important;aspect-ratio:1/1}
-.avatar-img,.post-avatar img,.story-avatar img,.story-top-avatar img,.viewer-avatar img,.ps-c img{width:100%;height:100%;object-fit:cover}
-.btn,.btn-out{border-radius:14px!important;line-height:1.2}
-.action{border-radius:14px!important}
-.choice{border-radius:16px!important}
-.form-actions .btn{min-width:0}
-.modal input,.modal textarea,.modal select{font-size:16px}
-body.gated #authModal{display:flex!important;flex-direction:column;align-items:center!important;justify-content:flex-start!important;gap:16px;padding:calc(20px + env(safe-area-inset-top,0px)) 16px calc(20px + env(safe-area-inset-bottom,0px))!important;overflow-y:auto;overscroll-behavior:contain}
-body.gated #authModal .gate-brand{flex:none;margin-top:auto}
-body.gated #authModal .modal{flex:none;width:min(420px,100%)!important;height:auto!important;max-height:none!important;margin-bottom:auto;border-radius:28px!important}
-body.gated #authModal .modal::before{display:none!important}
-body.gated #authModal .modal-head{position:static;padding:18px 20px 0}
-body.gated #authModal .modal-body{padding:14px 20px 22px}
-
-/* v14 fixes: header text on phones (title no longer overlaps the buttons) */
-.brand{flex:1 1 0;min-width:0;overflow:hidden}
-.brand-text{min-width:0;max-width:100%}
-.brand-text strong{font-size:clamp(14px,4.4vw,22px);line-height:1.25;letter-spacing:-.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:.06em}
-.header-actions{flex:none;gap:6px}
-.modal-head h3,.section-head h2{min-width:0;line-height:1.25;overflow-wrap:anywhere}
-@media(max-width:440px){
- .header-actions{gap:2px}
- .icon-btn:not(.profile-btn){width:36px!important;height:36px!important;font-size:18px}
- .icon-btn .ic{width:22px;height:22px}
-}
-@media(max-width:350px){#glassToggleBtn{display:none!important}}
-
-/* v15: version label at the very bottom (change the text in --app-version) */
-:root{--app-version:"Version 9.0"}
-/* v8.0 fixes: close button was 36 wide but min-height 44 (oblong); tall avatar photos ignored height:100% inside the grid and became ovals; active tab text was dark on dark */
-.modal-head .close-btn{width:36px;height:36px;min-width:36px;min-height:36px;padding:0;flex:none;align-self:center;border-radius:50%!important}
-.ig-avatar-xl{overflow:hidden}
-.ig-avatar-xl img{display:block;width:100%!important;height:auto!important;aspect-ratio:1/1!important;object-fit:cover!important;border-radius:50%!important}
-.avatar-img,.post-avatar img,.story-avatar img,.story-top-avatar img,.viewer-avatar img,.comment-avatar img,.people-avatar img{aspect-ratio:1/1;object-fit:cover}
-[data-theme="dark"]{--tab-on:#d6deff}
-/* v7.0 fix: the "CPGSHS SPILL" gate brand belongs to the logged-out gate only. It stayed inside #authModal after login and, with the modal as a flex row, squeezed the sheet into a narrow column (words split mid-letter). */
-#authModal .gate-brand{display:none}
-body.gated #authModal .gate-brand{display:block}
-.auth-account-picker-head{flex-wrap:wrap}
-.auth-account-picker-head strong,.auth-account-item small{white-space:nowrap}
-.app-version{display:block;text-align:center;color:var(--muted);font-size:12px;font-weight:700;letter-spacing:.02em;padding:18px 0 6px}
-.app-version::before{content:var(--app-version)}
-body.gated #authModal::after{content:var(--app-version);flex:none;color:rgba(255,255,255,.85);font-size:12px;font-weight:700;letter-spacing:.02em;text-align:center}
-
-/* v17: login background: the SPILL mark ghosted into the dark */
-#authModal .gate-art{display:none}
-body.gated #authModal{isolation:isolate}
-body.gated #authModal .gate-art{display:block;position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:radial-gradient(115% 85% at 50% 40%,rgba(10,6,34,0) 0%,rgba(10,6,34,.42) 58%,rgba(4,2,18,.86) 100%)}
-.gate-art .ga-mist{position:absolute;width:130vmax;height:130vmax;border-radius:50%;background:radial-gradient(closest-side,rgba(206,184,255,.26),rgba(206,184,255,0));will-change:transform}
-.gate-art .m1{left:-62vmax;top:-30vmax;animation:gaDriftA 28s ease-in-out infinite alternate}
-.gate-art .m2{right:-70vmax;bottom:-50vmax;background:radial-gradient(closest-side,rgba(255,138,214,.20),rgba(255,138,214,0));animation:gaDriftB 34s ease-in-out infinite alternate}
-.gate-art .ga-logo{position:absolute;left:50%;top:43%;width:clamp(320px,min(100vw,92vh*.8137),760px);opacity:.86;transform:translate(-50%,-50%);animation:gaFloat 12s ease-in-out infinite;will-change:transform;filter:drop-shadow(0 0 16px rgba(190,164,255,.55)) drop-shadow(0 0 60px rgba(150,110,255,.38))}
-.gate-art svg{display:block;width:100%;height:auto;overflow:visible}
-.gate-art .ga-body{fill:url(#gaBody);stroke:rgba(226,212,255,.5);stroke-width:2;stroke-linejoin:round}
-.gate-art .ga-eyes{animation:gaEyes 7s ease-in-out infinite}
-.gate-art .ga-eye{fill:#ffeefb}
-.gate-art .ga-halo{fill:#ff7fdc;filter:url(#gaBlur);opacity:.9}
-body.gated #authModal .modal{background:rgba(238,240,248,.66)!important;-webkit-backdrop-filter:blur(7px) saturate(1.5)!important;backdrop-filter:blur(7px) saturate(1.5)!important;border:1px solid rgba(255,255,255,.45)!important;box-shadow:0 24px 70px rgba(6,3,28,.45)!important}
-body.gated #authModal .field input,body.gated #authModal .field select{background:rgba(255,255,255,.74)!important}
-body.gated #authModal .btn-outline{background:rgba(255,255,255,.72)!important}
-@keyframes gaFloat{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-50%,calc(-50% - 12px))}}
-@keyframes gaEyes{0%,100%{opacity:.5}40%{opacity:1}46%{opacity:.08}52%{opacity:1}}
-@keyframes gaDriftA{to{transform:translate(18vmax,12vmax)}}
-@keyframes gaDriftB{to{transform:translate(-16vmax,-10vmax)}}
-@media (prefers-reduced-motion:reduce){.gate-art *{animation:none!important}}
-
-/* v16: sign-in / sign-up screen + button shapes */
-body.gated #authModal{background:linear-gradient(150deg,#5b7cfa,#8d72e8,#7c5ce6,#3b4aa8)!important;min-height:100dvh}
-body.gated #authModal .gate-brand{margin:auto 0 0!important}
-body.gated #authModal .modal{margin:0 0 auto!important}
-body.gated #authModal .modal-head{background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border:0!important}
-body.gated #authModal .modal-head h3{font-size:20px}
-body.gated #authModal .form-actions{flex-direction:column-reverse;gap:10px}
-body.gated #authModal .form-actions .btn{width:100%;flex:none}
-.btn{padding:11px 18px;min-height:48px;white-space:normal;text-align:center}
-@media(max-height:760px){
- body.gated #authModal .gate-brand{font-size:24px}
- body.gated #authModal .gate-brand small{display:none}
- body.gated #authModal .gate-brand b{width:56px;height:56px;font-size:26px;margin-bottom:8px;border-radius:20px}
-}
-
-/* v17: "Top 3 of the day" no longer runs off the screen edge on phones */
-@media(max-width:700px){
- #dailyTop3{padding:0 14px!important;margin:10px 0 0!important}
- .daily-top3-list{grid-template-columns:minmax(0,1fr)}
- .daily-rank{min-width:0;max-width:100%}
- .daily-copy{min-width:0;flex:1;overflow:hidden}
- .daily-copy>b,.daily-copy>span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
- .daily-score{flex:none}
-}
-
-/* ===== v13: skins, threaded comments, notification tabs, admin tools ===== */
-html[data-skin=darkblue]:root{--bg:#06142e;--card:#0d2147;--ink:#eaf2ff;--muted:#8fa8d6;--sep:rgba(120,160,230,.22);--fill:rgba(100,150,230,.16);--glass:rgba(6,20,46,.86);--acc:#4da3ff;--tint:#4da3ff;--sheet:rgba(13,33,71,.95);--border:#173463;--blue-soft:#10285a;--pink-soft:rgba(77,163,255,.14);--blue:#2f7bff;--blue-dark:#1b5fe0;--pink:#4da3ff;--pink-dark:#2f7bff;--ig:linear-gradient(135deg,#1e5bff,#4da3ff);--glow:rgba(47,123,255,.32)}
-html[data-skin=darkblue]:root body{background:radial-gradient(circle at 50% 0,rgba(47,123,255,.30),transparent 60%) top/100% 440px no-repeat,#06142e!important}
-html[data-skin=pink]:root{--bg:#fff0f6;--card:#fff8fb;--ink:#3a1228;--muted:#8f5c78;--sep:rgba(190,60,120,.16);--fill:rgba(220,80,140,.09);--glass:rgba(255,240,247,.9);--acc:#e0357f;--tint:#e0357f;--sheet:rgba(255,246,250,.95);--border:#f6cfe1;--blue-soft:#ffe6f1;--pink-soft:rgba(224,53,127,.10);--blue:#ff5fa2;--blue-dark:#e0357f;--pink:#c04cff;--pink-dark:#a62fd6;--ig:linear-gradient(135deg,#ff5fa2,#ff8fc0 55%,#c04cff);--glow:rgba(224,53,127,.30)}
-html[data-skin=pink]:root body{background:radial-gradient(circle at 50% 0,rgba(255,95,162,.25),transparent 60%) top/100% 440px no-repeat,#fff0f6!important}
-html[data-skin=yellow]:root{--bg:#fff8dc;--card:#fffdf2;--ink:#2e2400;--muted:#7d6a2a;--sep:rgba(160,120,0,.18);--fill:rgba(200,150,0,.10);--glass:rgba(255,248,220,.92);--acc:#c98a00;--tint:#c98a00;--sheet:rgba(255,252,238,.96);--border:#f1e1a0;--blue-soft:#fff0b8;--pink-soft:rgba(240,180,0,.16);--blue:#ffc700;--blue-dark:#d99a00;--pink:#ff9f1a;--pink-dark:#c97800;--ig:linear-gradient(135deg,#ffd000,#ff9f1a);--glow:rgba(240,170,0,.32)}
-html[data-skin=yellow]:root body{background:radial-gradient(circle at 50% 0,rgba(255,208,0,.30),transparent 60%) top/100% 440px no-repeat,#fff8dc!important}
-html[data-skin=yellow] .btn-primary,html[data-skin=yellow] .compose-button,html[data-skin=yellow] .comment-form button,html[data-skin=yellow] .filter.active,html[data-skin=yellow] .nf-bar button.on{color:#2e2400!important}
-html[data-skin=clear]:root{--bg:#0b1020;--card:rgba(255,255,255,.10);--ink:#fff;--muted:rgba(255,255,255,.74);--sep:rgba(255,255,255,.22);--fill:rgba(255,255,255,.14);--glass:rgba(255,255,255,.12);--acc:#9fe3ff;--tint:#9fe3ff;--sheet:rgba(255,255,255,.18);--border:rgba(255,255,255,.2);--blue-soft:rgba(255,255,255,.12);--pink-soft:rgba(255,255,255,.12);--ig:linear-gradient(135deg,#6ee7ff,#a78bfa 55%,#ff9bd2);--glow:rgba(110,231,255,.35)}
-html[data-skin=clear][data-glass="1"]{--gl:rgba(255,255,255,.10);--gl2:rgba(255,255,255,.16);--glb:rgba(255,255,255,.40);--hi:inset 0 1px 0 rgba(255,255,255,.6),inset 0 -1px 0 rgba(255,255,255,.12);--gshadow:0 12px 40px rgba(0,0,0,.28)}
-html[data-skin=clear]:root body{background:radial-gradient(60% 40% at 15% 10%,rgba(59,130,246,.75),transparent 70%),radial-gradient(50% 40% at 90% 25%,rgba(236,72,153,.65),transparent 70%),radial-gradient(60% 45% at 30% 95%,rgba(34,211,238,.6),transparent 70%),radial-gradient(50% 40% at 90% 90%,rgba(139,92,246,.65),transparent 70%),#0b1020!important;background-attachment:fixed!important}
-html[data-skin=clear] body::before{display:none!important}
-html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][data-glass="1"][data-theme] .bottom-nav,html[data-skin=clear][data-glass="1"][data-theme] .post-card,html[data-skin=clear][data-glass="1"][data-theme] .modal,html[data-skin=clear][data-glass="1"][data-theme] .compose-card{backdrop-filter:blur(9px) saturate(170%)!important;-webkit-backdrop-filter:blur(9px) saturate(170%)!important}
-#skinBox{margin:0 0 14px}.sk-t{font-weight:800;font-size:13px;margin:4px 2px 8px}
-.sk-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
-.sk-o{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border-radius:18px;background:var(--fill,rgba(0,0,0,.05));color:var(--ink);border:2px solid transparent;font-size:11px;font-weight:700}
-.sk-o i{width:34px;height:34px;border-radius:50%;border:1px solid rgba(0,0,0,.14);box-shadow:inset 0 0 0 3px rgba(255,255,255,.55)}
-.sk-o.on{border-color:var(--tint,#7c5ce6)}
-.sk-o em{position:absolute;top:4px;right:5px;font-size:8px;font-style:normal;font-weight:800;background:var(--ig);color:#fff;border-radius:6px;padding:1px 4px}
-.cm{display:flex;gap:9px;padding:8px 0;align-items:flex-start}.cm .comment-avatar{flex:0 0 auto}.cm-b{flex:1;min-width:0}
-.cm-bub{display:inline-block;max-width:100%;background:var(--fill,rgba(120,120,160,.12));border-radius:18px;padding:8px 12px;font-size:13px;line-height:1.45;overflow-wrap:anywhere;white-space:pre-wrap}
-.cm-bub b{display:block;font-size:12px}
-.cm-m{display:flex;gap:14px;align-items:center;padding:3px 10px 0;font-size:11px;color:var(--muted)}
-.cm-m button,.cm-more{background:none;border:0;padding:2px 0;font-weight:800;font-size:11px;color:var(--muted)}
-.cm-more{padding:6px 0 2px 10px}.cm-k{margin:2px 0 0 2px;padding-left:10px;border-left:2px solid var(--sep,rgba(120,120,160,.2))}
-.mn{color:var(--tint,#6d4bd8);font-weight:700}
-.cm.flash .cm-bub{animation:cmf 1.8s ease}@keyframes cmf{0%,65%{box-shadow:0 0 0 3px var(--tint,#6d4bd8)}100%{box-shadow:0 0 0 0 transparent}}
-#rpChip{align-items:center;justify-content:space-between;gap:8px;margin:10px 0 -4px;padding:7px 12px;border-radius:12px;background:var(--fill,rgba(120,120,160,.12));font-size:12px;color:var(--muted)}
-#rpChip button{background:none;border:0;font-size:15px;color:var(--ink);padding:0 4px}
-.nf-bar{display:flex;gap:6px;align-items:center;overflow-x:auto;padding:0 0 10px}
-.nf-bar button{flex:0 0 auto;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:700;background:var(--fill,rgba(120,120,160,.12));color:var(--ink)}
-.nf-bar button.on{background:var(--ig);color:#fff}.nf-bar .nf-x{margin-left:auto;background:none;color:var(--muted)}
-.notif-item{cursor:pointer}.nf-q{display:block;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.nf-d{background:none;border:0;color:var(--muted);font-size:16px;padding:4px 6px}
-#xq{width:100%;height:42px;margin:0 0 10px}.adm-t{display:block;margin:14px 0 6px}
-#admTabs{overflow-x:auto;-webkit-overflow-scrolling:touch}
 </style>
 </head>
 
@@ -2657,10 +2537,10 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
         </a>
 
         <div class="header-actions">
-          <button class="icon-btn notif-bell" id="notifBtn" title="Notifications">🔔<span class="notif-badge hidden" id="notifBadge">0</span></button>
+          <button class="icon-btn notif-bell" id="notifBtn" title="Notifications" aria-label="Notifications">🔔<span class="notif-badge hidden" id="notifBadge">0</span></button>
           <button class="icon-btn" id="glassToggleBtn" title="Liquid Glass" aria-label="Toggle Liquid Glass" aria-pressed="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 4 6 6.5 6 10a6 6 0 0 1-12 0c0-3.5 3-6 6-10z"/></svg></button>
-          <button class="icon-btn" id="themeToggleBtn" title="Toggle dark mode">🌙</button>
-          <button class="icon-btn" id="headerSearchBtn" title="Search">⌕</button>
+          <button class="icon-btn" id="themeToggleBtn" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
+          <button class="icon-btn" id="headerSearchBtn" title="Search" aria-label="Search">⌕</button>
           <button class="icon-btn profile-btn" id="headerProfileBtn" title="Profile" aria-label="Open my profile">
             <span class="avatar" id="headerAvatar">?</span>
             <span id="headerProfileText">Sign in</span>
@@ -2751,10 +2631,16 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
         </aside>
       </div>
 
-      <footer>
-        For the CPGSHS student community · Keep it respectful, kind, and safe. 💙💗 · SPILL
+      <footer id="siteFooter">
+        <div>For the CPGSHS student community · Keep it respectful, kind, and safe. 💙💗 · SPILL</div>
+        <div class="footer-links" aria-label="Site information">
+          <button type="button" onclick="window.openSpillInfo('about')">About</button>
+          <button type="button" onclick="window.openSpillInfo('rules')">Community Rules</button>
+          <button type="button" onclick="window.openSpillInfo('privacy')">Privacy</button>
+          <button type="button" onclick="window.openSpillInfo('terms')">Terms</button>
+          <button type="button" onclick="window.openSpillInfo('safety')">Safety &amp; Reports</button>
+        </div>
       </footer>
-      <div class="app-version"></div>
     </main>
   </div>
 
@@ -2834,7 +2720,6 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
 
   <!-- Auth Modal -->
   <div class="modal-backdrop" id="authModal" role="dialog" aria-modal="true">
-    <div class="gate-art" aria-hidden="true"><i class="ga-mist m1"></i><i class="ga-mist m2"></i><div class="ga-logo"><svg viewBox="0 0 1000 1229" xmlns="http://www.w3.org/2000/svg" focusable="false"><defs><linearGradient id="gaBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1f66"/><stop offset=".55" stop-color="#110c33"/><stop offset="1" stop-color="#05040f"/></linearGradient><filter id="gaBlur" x="-150%" y="-150%" width="400%" height="400%"><feGaussianBlur stdDeviation="16"/></filter></defs><path class="ga-body" d="M499 897 314 1096 429 1224 571 1224 685 1096ZM5 5 5 752 145 908 146 384 400 667 265 818 217 766 217 988 264 1040 500 779 735 1040 783 988 783 766 734 818 599 667 853 384 854 908 994 752 995 5 500 555Z"/><g class="ga-eyes"><path class="ga-halo" d="M783 576 693 665 738 710 783 670ZM217 576 217 670 261 710 306 665Z"/><path class="ga-eye" d="M783 576 693 665 738 710 783 670ZM217 576 217 670 261 710 306 665Z"/></g></svg></div></div>
     <div class="modal">
       <div class="modal-head">
         <h3 id="authTitle">Welcome 💙💗</h3>
@@ -2941,8 +2826,8 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
         </div>
 
         <div class="hint" style="margin-top:11px;">
-          This HTML build is still a browser-only prototype. Real online accounts, secure PIN storage,
-          moderation and cross-device notifications require a backend such as Supabase.
+          Your SPILL account, posts, reactions, replies, reports, and settings are designed to sync through Supabase.
+          Never post passwords, phone numbers, addresses, or other private information in SPILL.
         </div>
       </div>
     </div>
@@ -4762,9 +4647,11 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
     window.removePendingImage = function(i) { pendingImages.splice(i, 1); window.renderImgPreview(); };
     window.handlePhotoFiles = async function(files) {
       const arr = [...files];
+      const allowed = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
       for (const file of arr) {
         if (pendingImages.length >= 5) { showToast("Maximum 5 photos."); break; }
-        if (!file.type.startsWith("image/")) continue;
+        if (!allowed.has(file.type)) { showToast("Use JPG, PNG, WEBP, or GIF images."); continue; }
+        if (file.size > 8 * 1024 * 1024) { showToast("Each photo must be 8 MB or smaller."); continue; }
         const data = await window.compressImage(file);
         if (data) pendingImages.push(data);
       }
@@ -4835,7 +4722,17 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
           if (activeSort === "loved") return (b.hearts || 0) - (a.hearts || 0);
           return new Date(b.createdAt) - new Date(a.createdAt);
         });
-      feed.innerHTML = list.length ? list.map(window.socialPostHTML).join("") : `<div class="no-results"><div style="font-size:32px;margin-bottom:8px;">💭</div><strong>No confessions found.</strong><div style="margin-top:4px;">Try another search or be the first to post.</div></div>`;
+      if (!list.length) {
+        const guest = !!window.__cloud && !currentUser;
+        feed.innerHTML = `<div class="no-results">
+          <div style="font-size:32px;margin-bottom:8px;">${guest ? "🔐" : "💭"}</div>
+          <strong>${guest ? "Sign in to load the community wall." : "No confessions found."}</strong>
+          <div style="margin-top:4px;">${guest ? "Your account is required to view and participate in the live SPILL community." : "Try another search or be the first to post."}</div>
+          ${guest ? `<button type="button" class="btn btn-primary" style="margin-top:12px;" onclick="showAuth('login')">Sign in</button>` : ""}
+        </div>`;
+        return;
+      }
+      feed.innerHTML = list.map(window.socialPostHTML).join("");
     };
     /* Override viewPost: carousel + edit + comments */
     window.viewPost = function(postId) {
@@ -5273,9 +5170,9 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
                     <button class="btn btn-outline" onclick="copyProfileLink('${u.id}')">↗ Share</button>`}
         </div>
         <div style="display:flex; gap:4px; border-top:1px solid var(--border); padding-top:10px; margin-bottom:10px;">
-          <button style="flex:1; padding:8px; border:0; background:${tab === "posts" ? "var(--blue-soft)" : "transparent"}; border-radius:10px; font-size:10px; font-weight:850; color:${tab === "posts" ? "var(--tab-on,var(--blue-dark))" : "var(--muted)"}; cursor:pointer;" onclick="openProfilePostTab('${u.id}','posts')">▦ POSTS</button>
-          <button style="flex:1; padding:8px; border:0; background:${tab === "shared" ? "var(--blue-soft)" : "transparent"}; border-radius:10px; font-size:10px; font-weight:850; color:${tab === "shared" ? "var(--tab-on,var(--blue-dark))" : "var(--muted)"}; cursor:pointer;" onclick="openProfilePostTab('${u.id}','shared')">↗ SHARED</button>
-          ${own ? `<button style="flex:1; padding:8px; border:0; background:${tab === "saved" ? "var(--blue-soft)" : "transparent"}; border-radius:10px; font-size:10px; font-weight:850; color:${tab === "saved" ? "var(--tab-on,var(--blue-dark))" : "var(--muted)"}; cursor:pointer;" onclick="openProfilePostTab('${u.id}','saved')">☆ SAVED</button>` : ""}
+          <button style="flex:1; padding:8px; border:0; background:${tab === "posts" ? "var(--blue-soft)" : "transparent"}; border-radius:10px; font-size:10px; font-weight:850; color:${tab === "posts" ? "var(--blue-dark)" : "var(--muted)"}; cursor:pointer;" onclick="openProfilePostTab('${u.id}','posts')">▦ POSTS</button>
+          <button style="flex:1; padding:8px; border:0; background:${tab === "shared" ? "var(--blue-soft)" : "transparent"}; border-radius:10px; font-size:10px; font-weight:850; color:${tab === "shared" ? "var(--blue-dark)" : "var(--muted)"}; cursor:pointer;" onclick="openProfilePostTab('${u.id}','shared')">↗ SHARED</button>
+          ${own ? `<button style="flex:1; padding:8px; border:0; background:${tab === "saved" ? "var(--blue-soft)" : "transparent"}; border-radius:10px; font-size:10px; font-weight:850; color:${tab === "saved" ? "var(--blue-dark)" : "var(--muted)"}; cursor:pointer;" onclick="openProfilePostTab('${u.id}','saved')">☆ SAVED</button>` : ""}
         </div>
         <div class="ig-grid-v2">
           ${shown.length ? shown.map(p => {
@@ -6429,7 +6326,7 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
     // --- Admin panel ---
     const fab = document.createElement("button"); fab.id = "adminFab"; fab.textContent = "🛡️"; fab.setAttribute("aria-label", "Admin panel"); document.body.appendChild(fab);
     const AD = document.createElement("div"); AD.id = "adm"; AD.innerHTML = `<div class="adm-h"><div id="admTabs"></div><button id="admX" aria-label="Close">✕</button></div><div id="admB"></div>`; document.body.appendChild(AD);
-    const TABS = [["stats", "📊 Stats"], ["reports", "🚩 Reports"], ["users", "👥 Users"], ["posts", "📝 Posts"], ["tools", "🧰 Tools"], ["bugs", "🐞 Bugs"]]; let tab = "stats";
+    const TABS = [["stats", "📊 Stats"], ["reports", "🚩 Reports"], ["users", "👥 Users"], ["posts", "📝 Posts"], ["bugs", "🐞 Bugs"]]; let tab = "stats";
     const E = escapeHTML, btn = (a, i, t, c) => `<button class="btn ${c || "btn-outline"}" data-a="${a}" data-i="${E(i)}">${t}</button>`;
     const row = (h, b) => `<div class="adm-r"><div class="adm-i">${h}</div><div class="adm-b">${b}</div></div>`;
     function view() {
@@ -6453,8 +6350,6 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
           return row(`${on(u) ? "🟢" : "⚪"} <b>@${E(u.username)}</b> <small>${E(u.grade || "")} ${E(u.section || "")} · ${E(u.role)}${u.banned ? " · 🚫 banned" : ""}</small>`, can ? btn("ban", u.id, u.banned ? "Unban" : "Ban") + (sa ? btn("role", u.id, u.role === "admin" ? "Remove admin" : "Make admin") : "") + btn("reset", u.id, "Reset PIN") + btn("udel", u.id, "Delete", "danger-btn") : ""); }).join("");
       } else if (tab === "posts") {
         h = [...posts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 40).map(p => row(`<small>@${E(p.username || "?")}${p.anonymous ? " (anon)" : ""} · ♥${p.hearts || 0} ↗${p.shares || 0}</small><br>${E(String(p.content || "").slice(0, 200))}`, btn("pdel", p.id, "Delete", "danger-btn"))).join("") || `<div class="hint">No posts.</div>`;
-      } else if (tab === "tools") {
-        h = window.__admTools ? window.__admTools(v) : "";
       } else {
         h = load(BK, []).map(b => row(`<small>@${E(b.username)} · ${E(new Date(b.createdAt).toLocaleString())}</small><br>${E(b.text)}`, btn("bdel", b.id, "Resolve"))).join("") || `<div class="hint">No bug reports 🎉</div>`;
       }
@@ -6466,28 +6361,31 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
       const b = e.target.closest("[data-a]"), v = me(); if (!b || !isAdm(v)) return;
       const a = b.dataset.a, i = b.dataset.i, u = users.find(x => x.id === i), sa = v.role === "superadmin", can = u && u.id !== v.id && u.role !== "superadmin" && (sa || u.role !== "admin");
       const dump = () => { save(STORAGE.users, users); save(STORAGE.posts, posts); save(STORAGE.reports, reports); };
-      if (a === "pdel") { if (!confirm("Delete this post?")) return; posts = posts.filter(p => p.id !== i); reports = reports.filter(r => r.postId !== i); }
+      if (a === "pdel" && window.__cloud) { if (!confirm("Delete this post?")) return; const r = await call("admin_delete_post", { postId: i }); if (!r.ok) return alert(r.error || "Could not delete the post."); posts = posts.filter(p => p.id !== i); reports = reports.filter(r => r.postId !== i); }
+      else if (a === "pdel") { if (!confirm("Delete this post?")) return; posts = posts.filter(p => p.id !== i); reports = reports.filter(r => r.postId !== i); }
+      else if (a === "rdel" && window.__cloud) { const r = await call("admin_delete_post", { postId: i }); if (!r.ok) return alert(r.error || "Could not delete the post."); posts = posts.filter(p => p.id !== i); reports = reports.filter(r => r.postId !== i); }
       else if (a === "rdel") { posts = posts.filter(p => p.id !== i); reports = reports.filter(r => r.postId !== i); }
+      else if (a === "rok" && window.__cloud) { const r = await call("admin_dismiss_reports", { postId: i }); if (!r.ok) return alert(r.error || "Could not dismiss the reports."); reports = reports.filter(r => r.postId !== i); }
       else if (a === "rok") reports = reports.filter(r => r.postId !== i);
-      else if (a === "rclr") { if (!confirm("Dismiss all reports?")) return; reports = []; }
+      else if (a === "rclr") { if (!confirm("Dismiss all reports?")) return; if (window.__cloud) { const r = await call("admin_dismiss_reports", { all: true }); if (!r.ok) return alert(r.error || "Could not dismiss all reports."); } reports = []; }
+      else if (a === "ban" && can && window.__cloud) { const next = !u.banned; const r = await call("admin_set_banned", { userId: u.id, banned: next }); if (!r.ok) return alert(r.error || "Could not update account status."); u.banned = next; }
       else if (a === "ban" && can) { u.banned = !u.banned; u.sv = (u.sv || 0) + 1; }
+      else if (a === "role" && can && sa && window.__cloud) { const nextRole = u.role === "admin" ? "user" : "admin"; const r = await call("admin_set_role", { userId: u.id, role: nextRole }); if (!r.ok) return alert(r.error || "Could not update account role."); u.role = nextRole; }
       else if (a === "role" && can && sa) u.role = u.role === "admin" ? "user" : "admin";
       else if (a === "reset" && can && window.__cloud) { await window.__resetPin(u); return; }
       else if (a === "reset" && can) { const p = String(100000 + crypto.getRandomValues(new Uint32Array(1))[0] % 900000); await setPin(u, p); u.mustChangePin = true; u.sv = (u.sv || 0) + 1; alert("Temporary PIN for @" + u.username + ": " + p + "\nThey must change it after logging in."); }
-      else if (a === "udel" && can) { if (!confirm("Delete @" + u.username + " and all their posts?")) return; users = users.filter(x => x.id !== i); users.forEach(x => { x.followers = (x.followers || []).filter(f => f !== i); x.following = (x.following || []).filter(f => f !== i); });
-        try { delete socialFollows[i]; Object.keys(socialFollows).forEach(k => { socialFollows[k] = (socialFollows[k] || []).filter(f => f !== i); }); save(STORAGE.follows, socialFollows); } catch (e) {}
-        posts = posts.filter(p => p.userId !== i);
-        if (!window.__cloud) posts.forEach(p => { // cloud mode: the server cascades these; local mode must clean them itself
-          if ((p.likedBy || []).includes(i)) { p.likedBy = p.likedBy.filter(x => x !== i); p.hearts = p.likedBy.length; }
-          p.savedBy = (p.savedBy || []).filter(x => x !== i);
-          if ((p.sharedBy || []).includes(i)) { p.sharedBy = p.sharedBy.filter(x => x !== i); p.shares = Math.max(0, (p.shares || 0) - 1); }
-          p.comments = (p.comments || []).filter(c => c.userId !== i);
-        });
-        reports = reports.filter(r => r.reporterId !== i && posts.some(p => p.id === r.postId));
-        stories = stories.filter(s => s.userId !== i); stories.forEach(s => { s.views = (s.views || []).filter(x => x !== i); s.reactions = (s.reactions || []).filter(x => !x || (x.userId || x.user || x.by) !== i); s.replies = (s.replies || []).filter(x => !x || (x.userId || x.user || x.by) !== i); });
-        try { delete allPreferences[i]; save(STORAGE.prefs, allPreferences); } catch (e) {}
-        save(STORAGE.stories, stories); }
-      else if (a === "bdel") { if (window.__cloud) await window.__delBug(i); else localStorage.setItem(BK, JSON.stringify(load(BK, []).filter(x => x.id !== i))); }
+      else if (a === "udel" && can) { if (!confirm("Delete @" + u.username + " and all their posts?")) return;
+        if (window.__cloud) { b.disabled = true; const ok = await window.__adminDelete(u); if (!ok) b.disabled = false; view(); return; }
+        const id = u.id; users = users.filter(x => x.id !== id); posts = posts.filter(p => p.userId !== id);
+        posts.forEach(p => { p.likedBy = (p.likedBy || []).filter(x => x !== id); p.savedBy = (p.savedBy || []).filter(x => x !== id); p.comments = (p.comments || []).filter(c => c.userId !== id); p.hearts = p.likedBy.length; });
+        users.forEach(x => { x.followers = (x.followers || []).filter(y => y !== id); x.following = (x.following || []).filter(y => y !== id); });
+        reports = reports.filter(r => r.reporterId !== id && posts.some(p => p.id === r.postId)); stories = stories.filter(s => s.userId !== id);
+        delete socialFollows[id]; Object.keys(socialFollows).forEach(k => socialFollows[k] = (socialFollows[k] || []).filter(y => y !== id)); delete allPreferences[id];
+        save(STORAGE.stories, stories); save(STORAGE.follows, socialFollows); save(STORAGE.prefs, allPreferences); showToast("Deleted @" + u.username); }
+      else if (a === "bdel") {
+        if (window.__cloud) { const r = await call("admin_delete_bug", { bugId: i }); if (!r.ok) return alert(r.error || "Could not resolve the bug report."); cloudBugs = cloudBugs.filter(x => x.id !== i); }
+        else localStorage.setItem(BK, JSON.stringify(load(BK, []).filter(x => x.id !== i)));
+      }
       else if (a === "csv") {
         const rows = ["date,new_posts,new_users,hearts,shares"];
         for (let n = 13; n >= 0; n--) { const k = todayKey(new Date(Date.now() - n * 864e5)), ps = posts.filter(p => todayKey(p.createdAt) === k); rows.push([`"${k}"`, ps.length, users.filter(x => !x.noLogin && todayKey(x.createdAt) === k).length, ps.reduce((s, p) => s + (p.hearts || 0), 0), ps.reduce((s, p) => s + (p.shares || 0), 0)].join(",")); }
@@ -6846,22 +6744,34 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
       const pull = async quiet => {
         if (!sb || !currentUser) return; if (pulling) { again = true; return; } pulling = true; const g0 = gen, me = currentUser.id;
         try {
-          const [pr, po, ow, st, fo] = await Promise.all([
-            page(() => sb.from("profiles").select("id,username,grade,section,bio,avatar,link,role,banned,created_at").order("created_at").order("id")),
+          const [prPublic, meSecure, po, ow, st, fo] = await Promise.all([
+            page(() => sb.from("profiles").select("id,username,grade,section,bio,avatar,link,created_at").order("created_at").order("id")),
+            rows(sb.from("profiles").select("id,role,banned,must_change_pin").eq("id", me).limit(1)),
             rows(sb.from("posts").select("*").order("created_at", { ascending: false }).limit(120)),
             page(() => sb.from("post_owners").select("post_id").order("post_id")),
             rows(sb.from("stories").select("*").order("created_at", { ascending: false }).limit(100)),
             page(() => sb.from("follows").select("follower,followee").order("created_at").order("follower"))]);
-          const ids = po.map(p => p.id), sids = st.map(s => s.id), meP = pr.find(p => p.id === me), adm = !!meP && ["admin", "superadmin"].includes(meP.role);
-          if (pr.length && (!meP || meP.banned)) { const gone = !meP; setTimeout(() => kick(gone ? "This account no longer exists." : "This account is suspended."), 0); return; }
-          const [he, co, sa, sh, sv, rp, bg] = await Promise.all([
+          const secureMe = meSecure[0] || {};
+          let pr = prPublic.map(p => p.id === me ? { ...p, role: secureMe.role || "user", banned: !!secureMe.banned, must_change_pin: !!secureMe.must_change_pin } : p);
+          const adm = ["admin", "superadmin", "super_admin"].includes(secureMe.role);
+          if (adm) {
+            const allSecure = await page(() => sb.from("profiles").select("id,role,banned,must_change_pin").order("created_at").order("id"));
+            const secureMap = new Map(allSecure.map(x => [x.id, x]));
+            pr = pr.map(p => ({ ...p, ...(secureMap.get(p.id) || {}) }));
+          }
+          const ids = po.map(p => p.id), sids = st.map(s => s.id), meP = pr.find(p => p.id === me);
+          const [he, co, sa, sh, sv] = await Promise.all([
             ids.length ? page(() => sb.from("hearts").select("post_id,user_id").in("post_id", ids).order("created_at").order("user_id")) : [],
             ids.length ? page(() => sb.from("comments").select("*").in("post_id", ids).order("created_at").order("id")) : [],
             ids.length ? rows(sb.from("saves").select("post_id").in("post_id", ids)) : [],
             ids.length ? page(() => sb.from("shares").select("post_id,user_id").in("post_id", ids).order("created_at").order("user_id")) : [],
-            sids.length ? rows(sb.from("story_views").select("story_id,user_id").in("story_id", sids)) : [],
-            rows(sb.from("reports").select("*").order("created_at", { ascending: false }).limit(200)),
-            adm ? rows(sb.from("bug_reports").select("*").order("created_at", { ascending: false }).limit(100)) : []]);
+            sids.length ? rows(sb.from("story_views").select("story_id,user_id").in("story_id", sids)) : []]);
+          const [rp, bg] = adm
+            ? await Promise.all([
+                rows(sb.from("reports").select("*").order("created_at", { ascending: false }).limit(200)),
+                rows(sb.from("bug_reports").select("*").order("created_at", { ascending: false }).limit(100))
+              ])
+            : [[], []];
           if (gen !== g0) { setTimeout(() => pushing.then(() => pull(quiet)), 80); return; }
           const oldIds = new Set(posts.map(p => p.id)), first = !ready, keep = new Map(stories.map(s => [s.id, s]));
           const fB = group(fo, "followee"), fO = group(fo, "follower"), H = group(he, "post_id"), C = group(co, "post_id"), SH = group(sh, "post_id"), V = group(sv, "story_id"), mine = new Set(ow.map(o => o.post_id)), S = new Set(sa.map(x => x.post_id)), name = new Map(pr.map(p => [p.id, p.username]));
@@ -6959,11 +6869,6 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
       });
       logout = window.logout = () => out(false);
       $("sxAll").onclick = () => { if (!currentUser) return showToast("You are not logged in."); out(true); };
-      const kick = guard(async msg => {
-        ["settingsModal", "activityModal", "notifModal", "acctModal"].forEach(id => { try { closeModal(id); } catch (e) {} });
-        const id = currentUser && currentUser.id; teardown(); try { await sb.auth.signOut({ scope: "local" }); } catch (e) {} if (id) Dev.del(id);
-        currentUser = null; wipe(); updateUI(); showAuth("login"); showToast(msg);
-      });
       window.__idleOut = guard(async () => { Dev.clear(); teardown(); try { await sb.auth.signOut({ scope: "local" }); } catch (e) {} currentUser = null; wipe(); updateUI(); });
       sb && sb.auth.onAuthStateChange((ev, s) => {
         if (s && currentUser && s.user.id === currentUser.id && (ev === "TOKEN_REFRESHED" || ev === "SIGNED_IN")) Dev.upd(s);
@@ -6999,6 +6904,14 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
         const nx = Dev.list()[0]; if (nx && (await switchTo(nx.id))) return; currentUser = null; wipe(); updateUI(); showToast("Account deleted.");
       }, true);
       window.__sendBug = t => sb.from("bug_reports").insert({ text: t }).then(r => r.error && showToast("Couldn't send the report."));
+      window.__adminDelete = async u => {
+        const r = await call("admin_delete_user", { userId: u.id });
+        if (!r || r.ok === false) { alert("Could not delete @" + u.username + ": " + ((r && r.error) || "no response from server") + "\n\nThe 'spill' Edge Function must allow the admin_delete_user action for admins."); return false; }
+        const id = u.id; users = users.filter(x => x.id !== id); posts = posts.filter(p => p.userId !== id); stories = stories.filter(x => x.userId !== id); reports = reports.filter(x => posts.some(p => p.id === x.postId));
+        users.forEach(x => { x.followers = (x.followers || []).filter(y => y !== id); x.following = (x.following || []).filter(y => y !== id); });
+        Object.keys(socialFollows).forEach(k => { if (k === id) delete socialFollows[k]; else socialFollows[k] = socialFollows[k].filter(y => y !== id); });
+        Dev.del(id); SNAP = snap(); updateUI(); showToast("Deleted @" + u.username); setTimeout(() => pull(true).then(() => updateUI()), 500); return true;
+      };
       window.__resetPin = async u => { const r = await call("admin_reset_pin", { userId: u.id }); alert(r.ok ? "Temporary PIN for @" + u.username + ": " + r.pin + "\nThey must change it after logging in." : r.error); };
       window.__delBug = id => { cloudBugs = cloudBugs.filter(x => x.id !== id); return sb.from("bug_reports").delete().eq("id", id); };
       const poll = () => { if (currentUser && !document.hidden && (!live || Date.now() - lastPull > 60000)) pull(); };
@@ -7025,47 +6938,35 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
   } catch (e) { console.error("SPILL v8 patch error:", e); } })();
 
 
-/* ===== v13: notifications (hearts, comments, replies, mentions, shares, follows) ===== */
+  /* ===== v12: notifications derived from synced data (work across users and devices) ===== */
   (function () { try {
-    const SK = id => "spill_notif_v2_" + id, DAY2 = 48 * 36e5, E = escapeHTML; let filt = "all";
+    const SK = id => "spill_notif_v2_" + id, DAY2 = 48 * 36e5;
     const nm = id => { const u = users.find(x => x.id === id); return u ? u.username : "Someone"; };
-    const RXR = /^\[\[r:([0-9a-f]{8})\]\]\s?/i;
-    const sv = s => { try { localStorage.setItem(SK(currentUser.id), JSON.stringify(s)); } catch (e) {} };
     function derive() {
-      const me = currentUser.id, out = [], my = String(currentUser.username || "").replace(/[^\w]/g, ""), mre = my.length > 1 ? new RegExp("@" + my + "\\b", "i") : null;
+      const me = currentUser.id, out = [];
       posts.forEach(p => {
-        if (p.archived) return; const mine = p.userId === me, cs = p.comments || [];
-        if (mine) {
-          (p.likedBy || []).forEach(u => { if (u !== me) out.push({ k: "h:" + p.id + ":" + u, t: "heart", f: p.anonymous ? "Someone" : nm(u), p: p.id, u: p.anonymous ? null : u, at: p.createdAt }); });
-          (p.sharedBy || []).forEach(u => { if (u !== me) out.push({ k: "s:" + p.id + ":" + u, t: "share", f: nm(u), p: p.id, u, at: p.createdAt }); });
-        }
-        cs.forEach(c => {
-          if (c.userId === me) return; const m = RXR.exec(c.content || ""), txt = m ? c.content.slice(m[0].length) : (c.content || "");
-          const par = m && cs.find(x => x.id.slice(0, 8).toLowerCase() === m[1].toLowerCase()), f = c.username || nm(c.userId);
-          const base = { f, p: p.id, c: c.id, u: c.userId, at: c.createdAt, x: txt };
-          if (par && par.userId === me) out.push({ ...base, k: "r:" + c.id, t: "reply" });
-          else if (mre && mre.test(txt)) out.push({ ...base, k: "m:" + c.id, t: "mention" });
-          else if (mine) out.push({ ...base, k: "c:" + c.id, t: "comment" });
-        });
+        if (p.userId !== me || p.archived) return;
+        (p.likedBy || []).forEach(u => { if (u !== me) out.push({ k: "h:" + p.id + ":" + u, t: "heart", f: p.anonymous ? "Someone" : nm(u), p: p.id, at: p.createdAt }); });
+        (p.comments || []).forEach(c => { if (c.userId !== me) out.push({ k: "c:" + c.id, t: "comment", f: c.username || nm(c.userId), p: p.id, at: c.createdAt }); });
       });
       const m = users.find(u => u.id === me);
-      ((m && m.followers) || []).forEach(f => out.push({ k: "f:" + f, t: "follow", f: nm(f), p: null, u: f, at: null }));
+      ((m && m.followers) || []).forEach(f => out.push({ k: "f:" + f, t: "follow", f: nm(f), p: null, at: null }));
       return out;
     }
     function list() {
       if (!currentUser || !users.length) return { items: [], s: null };
       let s = null; try { s = JSON.parse(localStorage.getItem(SK(currentUser.id))); } catch (e) {}
-      const fresh = !s; if (fresh) s = { seen: {}, first: {} }; s.del = s.del || {};
-      const items = derive().filter(n => !s.del[n.k]), now = Date.now(); let dirty = fresh;
+      const fresh = !s; if (fresh) s = { seen: {}, first: {} };
+      const items = derive(), now = Date.now(); let dirty = fresh;
       items.forEach(n => {
         if (s.first[n.k]) return; dirty = true;
         const t = n.at ? new Date(n.at).getTime() : 0;
         s.first[n.k] = fresh && t ? t : now;
         if (fresh && (!t || now - t > DAY2)) s.seen[n.k] = 1;
       });
-      if (dirty) sv(s);
+      if (dirty) try { localStorage.setItem(SK(currentUser.id), JSON.stringify(s)); } catch (e) {}
       items.sort((a, b) => (!!s.seen[a.k] - !!s.seen[b.k]) || s.first[b.k] - s.first[a.k]);
-      return { items: items.slice(0, 80), s };
+      return { items: items.slice(0, 60), s };
     }
     let last = -1;
     window.updateNotifBadge = function () {
@@ -7076,43 +6977,57 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
       if (last >= 0 && c > last && on && !document.hidden) showToast("🔔 New activity on your posts");
       last = currentUser ? c : -1;
     };
-    const IC = { heart: "💗", comment: "💬", reply: "↩️", mention: "＠", share: "↗", follow: "👥" };
-    const VB = { heart: "liked your confession", comment: "commented on your confession", reply: "replied to your comment", mention: "mentioned you in a comment", share: "shared your confession", follow: "started following you" };
-    const GR = { all: null, replies: ["comment", "reply", "mention"], likes: ["heart", "share"], follows: ["follow"] };
     window.renderNotifs = function () {
       const body = document.getElementById("notifBody"); if (!body) return;
-      const { items, s } = list(), shown = GR[filt] ? items.filter(n => GR[filt].includes(n.t)) : items;
-      const bar = '<div class="nf-bar">' + [["all", "All"], ["replies", "Comments"], ["likes", "Likes"], ["follows", "Follows"]].map(a => `<button data-nf="${a[0]}" class="${filt === a[0] ? "on" : ""}">${a[1]}</button>`).join("") + (items.length ? '<button class="nf-x" data-nf="clear">Clear all</button>' : "") + "</div>";
-      if (!shown.length) { body.innerHTML = bar + '<div class="no-results"><div style="font-size:30px;margin-bottom:8px;">🔔</div><strong>Nothing here yet.</strong><div style="margin-top:4px;">Hearts, comments, replies, mentions and follows will show up here.</div></div>'; return; }
-      body.innerHTML = bar + shown.map(n => `<div class="notif-item ${s.seen[n.k] ? "" : "unread"}" data-k="${E(n.k)}"><div class="notif-icon">${IC[n.t]}</div><div class="notif-text"><strong>${E(n.f)}</strong> ${VB[n.t]} <span>· ${formatTime(new Date(s.first[n.k]).toISOString())}</span>${n.x ? `<span class="nf-q">“${E(n.x.slice(0, 80))}”</span>` : ""}</div><button class="nf-d" data-nd="${E(n.k)}" aria-label="Dismiss">✕</button></div>`).join("");
+      const { items, s } = list();
+      if (!items.length) { body.innerHTML = '<div class="no-results"><div style="font-size:30px;margin-bottom:8px;">🔔</div><strong>No notifications yet.</strong><div style="margin-top:4px;">Hearts, replies and follows on your posts will show up here.</div></div>'; return; }
+      const IC = { heart: "💗", comment: "💬", follow: "👥" }, VB = { heart: "liked your confession", comment: "replied to your confession", follow: "started following you" };
+      body.innerHTML = items.map(n => `<div class="notif-item ${s.seen[n.k] ? "" : "unread"}"><div class="notif-icon">${IC[n.t]}</div><div class="notif-text"><strong>${escapeHTML(n.f)}</strong> ${VB[n.t]} <span>· ${formatTime(new Date(s.first[n.k]).toISOString())}</span></div>${n.p ? `<button class="action" onclick="closeModal('notifModal');viewPost('${n.p}')">View</button>` : ""}</div>`).join("");
     };
     window.openNotifs = function () {
       if (!currentUser) { showAuth("login"); return; }
       window.renderNotifs(); openModal("notifModal");
-      const { items, s } = list(); if (s) { items.forEach(n => { s.seen[n.k] = 1; }); sv(s); }
+      const { items, s } = list(); if (s) { items.forEach(n => { s.seen[n.k] = 1; }); try { localStorage.setItem(SK(currentUser.id), JSON.stringify(s)); } catch (e) {} }
       window.updateNotifBadge();
     };
-    const nbody = document.getElementById("notifBody");
-    if (nbody) nbody.addEventListener("click", e => {
-      if (!currentUser) return; const r = list(), s = r.s; if (!s) return;
-      const f = e.target.closest("[data-nf]"), d = e.target.closest("[data-nd]"), row = e.target.closest(".notif-item");
-      if (f) { if (f.dataset.nf === "clear") { r.items.forEach(n => { s.del[n.k] = 1; }); sv(s); } else filt = f.dataset.nf; window.renderNotifs(); window.updateNotifBadge(); return; }
-      if (d) { s.del[d.dataset.nd] = 1; sv(s); window.renderNotifs(); window.updateNotifBadge(); return; }
-      if (row) { const n = r.items.find(x => x.k === row.dataset.k); if (!n) return; closeModal("notifModal");
-        if (n.c && window.__focusCm) window.__focusCm(n.p, n.c); else if (n.p) window.viewPost(n.p); else if (n.u && window.openPublicProfile) window.openPublicProfile(n.u); }
-    });
     const nb = document.getElementById("notifBtn");
     if (nb) { const c = nb.cloneNode(true); nb.replaceWith(c); c.addEventListener("click", window.openNotifs); }
     const _uu = window.updateUI; window.updateUI = function () { const r = _uu.apply(this, arguments); try { window.updateNotifBadge(); } catch (e) {} return r; }; updateUI = window.updateUI;
     setInterval(() => { if (currentUser && !document.hidden) window.updateNotifBadge(); }, 20000);
     window.updateNotifBadge();
-  } catch (e) { console.error("SPILL v13 notif patch:", e); } })();
+  } catch (e) { console.error("SPILL v12 notif patch:", e); } })();
   window.updateUI();
   } catch (e) {
     if (window.console && window.console.error) window.console.error("SPILL v7 init error:", e);
   }
 })();
 
+</script>
+
+
+<script>
+/* ===== SPILL TRUST + SAFETY PATCH ===== */
+(function(){
+  "use strict";
+  const info = {
+    about: {title:"About CPGSHS SPILL", body:`<p><b>CPGSHS SPILL</b> is a community web app built for Carlos P. Garcia Senior High School students to share thoughts, stories, appreciation, and school-life posts.</p><p>Use SPILL as a community space, not as a replacement for official school announcements or emergency reporting.</p>`},
+    rules: {title:"Community Rules", body:`<p>Keep SPILL respectful, kind, and school-appropriate.</p><ul><li>No bullying, harassment, threats, hate, sexual content, or targeted humiliation.</li><li>Do not post passwords, phone numbers, home addresses, private messages, medical details, or other sensitive information.</li><li>Do not impersonate another student, teacher, or school official.</li><li>No spam, scams, malicious links, or attempts to expose another person's identity.</li><li>Use <b>Report</b> on a post when it breaks these rules.</li></ul>`},
+    privacy: {title:"Privacy Notice", body:`<p>Your account may contain a username, grade/section, profile information, posts, images, reactions, replies, follows, and reports needed to operate SPILL.</p><p>Anonymous posts are displayed as <b>Anonymous</b>. Do not assume that posting anonymous text makes private information safe—avoid identifying details in the post itself.</p><p>Do not submit passwords, financial information, or government IDs. Account deletion and moderation actions are handled through the app's available controls and its backend configuration.</p><p>This notice is a product disclosure, not legal advice. Because the site is intended for a school community, the final privacy terms should be reviewed by the school before public launch.</p>`},
+    terms: {title:"Terms of Use", body:`<p>By using SPILL, you agree to use it lawfully and responsibly, follow the Community Rules, and respect other students.</p><p>Moderators may review reports and remove content or suspend accounts that violate the rules. Do not use SPILL to threaten, stalk, bully, impersonate, or expose private information about another person.</p><p>SPILL is a community service for school-related interaction and may be changed, restricted, or taken offline for maintenance or safety reasons.</p>`},
+    safety: {title:"Safety & Reports", body:`<p>Every post includes a <b>Report</b> action when reporting is available. Choose the reason that best matches the problem and add details only when they are helpful.</p><p>For immediate danger, threats, self-harm risk, or a serious school incident, use the school's established emergency or safeguarding channels instead of relying only on an app report.</p><button type="button" class="btn btn-primary" onclick="document.querySelector('#spillInfoModal [data-close]')?.click(); document.getElementById('feedSection')?.scrollIntoView({behavior:'smooth',block:'start'});">Go to the community wall</button>`}
+  };
+  function ensureModal(){
+    if(document.getElementById('spillInfoModal')) return;
+    const m=document.createElement('div'); m.className='modal-backdrop'; m.id='spillInfoModal'; m.setAttribute('role','dialog'); m.setAttribute('aria-modal','true'); m.setAttribute('aria-labelledby','spillInfoTitle');
+    m.innerHTML=`<div class="modal"><div class="modal-head"><h3 id="spillInfoTitle">SPILL Information</h3><button class="close-btn" type="button" data-close>✕</button></div><div class="modal-body" id="spillInfoBody"></div></div>`;
+    document.body.appendChild(m);
+    m.querySelector('[data-close]').onclick=()=>m.classList.remove('open');
+    m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')});
+  }
+  window.openSpillInfo=function(kind){ ensureModal(); const x=info[kind]||info.about; document.getElementById('spillInfoTitle').textContent=x.title; document.getElementById('spillInfoBody').innerHTML=x.body; document.getElementById('spillInfoModal').classList.add('open'); };
+  ensureModal();
+  const f=document.getElementById('siteFooter'); if(f&&!document.getElementById('spillFooterStyle')){const st=document.createElement('style');st.id='spillFooterStyle';st.textContent=`footer{display:grid!important;gap:10px;text-align:center!important;padding:22px 8px 10px!important;color:var(--muted);font-size:10px}.footer-links{display:flex;justify-content:center;gap:7px;flex-wrap:wrap}.footer-links button{background:transparent;border:0;color:var(--blue-dark);font-size:10px;font-weight:800;padding:5px 7px;border-radius:8px}.footer-links button:hover{background:var(--blue-soft)}`;document.head.appendChild(st);}
+})();
 </script>
 
 <script>
@@ -7284,122 +7199,101 @@ if(sd>110){m.style.transform='translateY(100%)';var bd=m.closest('.modal-backdro
 else{m.style.transform='';setTimeout(function(){m.style.transition=''},420)}},{passive:true});
 })();
 </script>
-
 <script>
-/* ===== v13: themes ===== */
-(function(){try{
-var h=document.documentElement,TC={light:'#e6e8ec',darkblue:'#06142e',pink:'#fff0f6',yellow:'#fff8dc',clear:'#0b1020'},
-SKN=[['light','Light','#ffffff,#d9deea'],['darkblue','Dark blue','#2f7bff,#06142e'],['pink','Pink','#ffd0e4,#ff5fa2'],['yellow','Yellow','#fff0a8,#ffc700'],['clear','Glass Clear','#6ee7ff,#a78bfa,#ff9bd2']];
-function tc(){var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',TC[h.getAttribute('data-skin')||'light'])}
-function mark(){var c=h.getAttribute('data-skin')||'light';document.querySelectorAll('#skinBox .sk-o').forEach(function(b){b.classList.toggle('on',b.dataset.s===c)})}
-function setSkin(s){var dark=s==='darkblue'||s==='clear',glass=s==='clear';
- try{localStorage.setItem('cpgshs_skin_v1',s);localStorage.setItem('cpgshs_theme_v1',dark?'dark':'light');localStorage.setItem('cpgshs_glass_v1',glass?'1':'0')}catch(e){}
- if(s==='light')h.removeAttribute('data-skin');else h.setAttribute('data-skin',s);
- var gb=document.getElementById('glassToggleBtn');
- if(h.hasAttribute('data-glass')!==glass){if(gb)gb.click();else if(glass)h.setAttribute('data-glass','1');else h.removeAttribute('data-glass')}
- if(window.applyTheme)window.applyTheme();else h.setAttribute('data-theme',dark?'dark':'light');
- mark();setTimeout(tc,40)}
-function build(){var l=document.querySelector('#settingsModal .setting-list');if(!l||document.getElementById('skinBox'))return;
- var d=document.createElement('div');d.id='skinBox';
- d.innerHTML='<div class="sk-t">🎨 Theme</div><div class="sk-g">'+SKN.map(function(k){return '<button type="button" class="sk-o" data-s="'+k[0]+'"><i style="background:linear-gradient(135deg,'+k[2]+')"></i>'+k[1]+(k[0]==='clear'?'<em>9.0</em>':'')+'</button>'}).join('')+'</div>';
- l.insertBefore(d,l.firstChild);d.addEventListener('click',function(e){var b=e.target.closest('.sk-o');if(b)setSkin(b.dataset.s)});mark()}
-build();tc();
-var sm=document.getElementById('settingsModal');
-if(sm){new MutationObserver(function(){build();mark()}).observe(sm,{attributes:true,attributeFilter:['class']});
- sm.addEventListener('change',function(e){if(/^sp(Dark|Glass)$/.test(e.target.id)&&h.hasAttribute('data-skin'))setTimeout(function(){h.removeAttribute('data-skin');try{localStorage.setItem('cpgshs_skin_v1','light')}catch(x){}mark();tc()},0)},true)}
-}catch(e){console.error('v13 themes',e)}})();
+/* v13: any signed-in student can open any profile and see followers / following */
+(function () { try {
+  window.socialCanViewProfile = function (id) { return !!socialUser(id); };
+  const prev = window.openPublicProfile;
+  window.openPublicProfile = function (id) {
+    if (!socialUser(id)) { showToast("That profile isn't available."); return; }
+    return prev.apply(this, arguments);
+  };
+  const E = x => escapeHTML(String(x == null ? "" : x));
+  window.openRelationshipList = function (userId, type) {
+    const u = socialUser(userId); if (!u) return showToast("That profile isn't available.");
+    type = type === "followers" ? "followers" : "following";
+    const v = currentUser && socialUser(currentUser.id), isA = !!v && (v.role === "admin" || v.role === "superadmin");
+    const people = [...new Set(u[type] || [])].map(socialUser).filter(p => p && (isA || !p.banned));
+    const tab = (t, l) => `<button class="ig-tab ${type === t ? "active" : ""}" onclick="openRelationshipList('${E(u.id)}','${t}')">${l}</button>`;
+    const rows = people.map(p => {
+      const mine = currentUser && currentUser.id === p.id, f = socialFollowing(p.id), av = p.avatar && /^data:image\//.test(p.avatar);
+      return `<div class="profile-person"><div class="profile-person-avatar">${av ? `<img src="${p.avatar}" alt="" style="width:100%;height:100%;border-radius:inherit;object-fit:cover">` : E(getInitial(p.username))}</div><div class="profile-person-info" onclick="openPublicProfile('${E(p.id)}')"><strong>${E(p.username)}</strong><span>${E(socialSchool(p))}</span></div>${mine ? `<span class="profile-link-btn" style="opacity:.6">You</span>` : currentUser ? `<button class="profile-link-btn" onclick="__follow('${E(p.id)}');openRelationshipList('${E(u.id)}','${type}')">${f ? "Following" : "Follow"}</button>` : ""}</div>`;
+    }).join("");
+    document.getElementById("publicProfileBody").innerHTML = `<div class="ig-profile"><div class="section-head" style="padding:0 0 12px"><div><h2>@${E(u.username)}</h2><p>${people.length} ${type}</p></div></div><div class="ig-profile-tabs">${tab("followers", "FOLLOWERS")}${tab("following", "FOLLOWING")}</div><div class="profile-people-list" style="margin-top:12px">${rows || `<div class="no-results">No ${type} yet.</div>`}</div><div class="form-actions" style="margin-top:14px"><button class="btn btn-outline" onclick="openPublicProfile('${E(u.id)}')">Back to profile</button></div></div>`;
+    openModal("profileViewModal");
+  };
+} catch (e) { console.error("SPILL v13 patch error:", e); } })();
+</script>
+<script>
+/* ============================================================
+   CPGSHS SPILL v10.0.0 — PRODUCTION HARDENING
+   ============================================================ */
+(function () {
+  "use strict";
+  try {
+    window.SPILL_RELEASE = "10.0.0";
+    const style = document.createElement("style");
+    style.id = "spill-v10-style";
+    style.textContent = `#spillReleaseBadge{display:inline-flex;align-items:center;gap:6px;margin:8px auto 0;padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:var(--white);color:var(--muted);font-size:9px;font-weight:900;letter-spacing:.04em}#spillNetworkBanner{position:fixed;left:12px;right:12px;bottom:calc(72px + env(safe-area-inset-bottom));z-index:9998;display:none;padding:10px 12px;border-radius:14px;background:#1e2340;color:#fff;font-size:11px;font-weight:800;box-shadow:0 12px 30px rgba(0,0,0,.18);text-align:center}#spillNetworkBanner.show{display:block}@media (min-width:700px){#spillNetworkBanner{left:auto;right:18px;bottom:18px;max-width:360px}}`;
+    document.head.appendChild(style);
 
-/* ===== v13: threaded comments (replies stored as comments with a hidden parent tag, so no database change is needed) ===== */
-(function(){try{
-var $=function(i){return document.getElementById(i)},RX=/^\[\[r:([0-9a-f]{8})\]\]\s?/i,exp={},rep={},cur=null;
-var isA=function(u){return !!u&&(u.role==='admin'||u.role==='superadmin')},meU=function(){return currentUser&&users.find(function(u){return u.id===currentUser.id})};
-var parse=function(c){var m=RX.exec(c.content||'');return m?{pid:m[1].toLowerCase(),text:c.content.slice(m[0].length)}:{pid:null,text:c.content||''}};
-function tHTML(p){
- var me=currentUser&&currentUser.id,adm=isA(meU()),root=[],nodes=(p.comments||[]).map(function(c){var q=parse(c);return{c:c,pid:q.pid,text:q.text,kids:[]}});
- nodes.forEach(function(n){var par=n.pid&&nodes.find(function(x){return x!==n&&!x.pid&&x.c.id.slice(0,8).toLowerCase()===n.pid});(par?par.kids:root).push(n)});
- if(!root.length)return '<div class="no-results" style="padding:18px 10px">No comments yet. Start the conversation. 💬</div>';
- function one(n,rootId){var c=n.c,tx=window.renderContent?window.renderContent(n.text):escapeHTML(n.text);
-  tx=tx.replace(/(^|\s)@(\w{2,30})/g,'$1<span class="mn">@$2</span>');
-  var orphan=(n.pid&&!rootId)?'<span class="mn">↪ replying to a deleted comment</span> ':'',rt=rootId||c.id,k=p.id+':'+c.id,out='';
-  if(!rootId&&n.kids.length){out=exp[k]?'<div class="cm-k">'+n.kids.map(function(x){return one(x,c.id)}).join('')+'</div><button class="cm-more" data-cm="more" data-id="'+c.id+'">Hide replies</button>':'<button class="cm-more" data-cm="more" data-id="'+c.id+'">— View '+n.kids.length+' repl'+(n.kids.length>1?'ies':'y')+'</button>'}
-  return '<div class="cm" id="cm-'+c.id+'"><div class="comment-avatar">'+getInitial(c.username)+'</div><div class="cm-b"><div class="cm-bub"><b>'+escapeHTML(c.username)+'</b>'+orphan+tx+'</div><div class="cm-m"><span>'+formatTime(c.createdAt)+'</span>'+(me?'<button data-cm="reply" data-id="'+c.id+'" data-root="'+rt+'">Reply</button>':'')+((me&&c.userId===me)||adm?'<button data-cm="del" data-id="'+c.id+'">Delete</button>':'')+'</div>'+out+'</div></div>'}
- return root.map(function(n){return one(n,null)}).join('')}
-function chip(id){var ch=$('rpChip'),r=rep[id],inp=$('commentInput-'+id);if(!ch)return;
- if(!r){ch.style.display='none';if(inp)inp.placeholder='Write a supportive comment...';return}
- ch.style.display='flex';ch.innerHTML='<span>Replying to <b>@'+escapeHTML(r.name)+'</b></span><button data-cm="x" aria-label="Cancel reply">✕</button>';if(inp)inp.placeholder='Write a reply...'}
-var _vp=window.viewPost;
-window.viewPost=function(id){_vp.apply(this,arguments);cur=id;try{var p=posts.find(function(x){return x.id===id}),bd=$('viewBody');if(!p||!bd)return;
- var L=bd.querySelector('.comment-list');if(L)L.innerHTML=tHTML(p);
- var F=bd.querySelector('.comment-form');if(F){var bt=F.querySelector('button');if(bt)bt.textContent='Post';var ch=document.createElement('div');ch.id='rpChip';ch.style.display='none';F.parentNode.insertBefore(ch,F);chip(id)}}catch(e){console.error(e)}};
-try{viewPost=window.viewPost}catch(e){}
-window.addComment=function(postId){requireLogin(function(){
- var p=posts.find(function(x){return x.id===postId}),inp=$('commentInput-'+postId);if(!p||!inp)return;
- var t=inp.value.trim(),r=rep[postId],max=r?280:300;if(!t)return showToast('Write a comment first.');
- if(t.length>max)return showToast('Comment must be '+max+' characters or less.');
- (p.comments=p.comments||[]).push({id:makeId(),userId:currentUser.id,username:currentUser.username,content:r?'[[r:'+r.to.slice(0,8)+']] '+t:t,createdAt:new Date().toISOString()});
- if(r)exp[postId+':'+r.to]=1;delete rep[postId];save(STORAGE.posts,posts);window.viewPost(postId);updateUI();showToast(r?'Reply sent. 💬':'Comment added. 💬')})};
-window.deleteComment=function(pid,cid){if(!currentUser)return;var p=posts.find(function(x){return x.id===pid});if(!p)return;
- var c=(p.comments||[]).find(function(x){return x.id===cid});if(!c)return;
- if(c.userId!==currentUser.id&&!isA(meU()))return showToast('You can only delete your own comments.');
- p.comments=p.comments.filter(function(x){return x.id!==cid});save(STORAGE.posts,posts);window.viewPost(pid);updateUI();showToast('Comment deleted.')};
-window.__focusCm=function(pid,cid){var p=posts.find(function(x){return x.id===pid});if(!p)return;
- var c=(p.comments||[]).find(function(x){return x.id===cid});if(c){var q=parse(c);if(q.pid){var par=p.comments.find(function(x){return x.id.slice(0,8).toLowerCase()===q.pid});if(par)exp[pid+':'+par.id]=1}}
- window.viewPost(pid);setTimeout(function(){var el=$('cm-'+cid);if(el){el.scrollIntoView({block:'center',behavior:'smooth'});el.classList.add('flash')}},150)};
-var vb=$('viewBody');
-if(vb)vb.addEventListener('click',function(e){var t=e.target.closest('[data-cm]');if(!t||!cur)return;var p=posts.find(function(x){return x.id===cur});if(!p)return;
- var a=t.dataset.cm,L=vb.querySelector('.comment-list'),inp=$('commentInput-'+cur);
- if(a==='reply'){var c=p.comments.find(function(x){return x.id===t.dataset.id});if(!c)return;rep[cur]={to:t.dataset.root,name:c.username};exp[cur+':'+t.dataset.root]=1;
-  if(L)L.innerHTML=tHTML(p);chip(cur);if(inp){inp.value=t.dataset.root!==t.dataset.id?'@'+c.username+' ':'';inp.focus()}}
- else if(a==='more'){var k=cur+':'+t.dataset.id;exp[k]=!exp[k];if(L)L.innerHTML=tHTML(p)}
- else if(a==='del'){if(confirm('Delete this comment?'))window.deleteComment(cur,t.dataset.id)}
- else if(a==='x'){delete rep[cur];if(inp&&/^@\S+\s*$/.test(inp.value))inp.value='';chip(cur)}});
-}catch(e){console.error('v13 comments',e)}})();
+    const footer = document.getElementById("siteFooter");
+    if (footer && !document.getElementById("spillReleaseBadge")) {
+      const b = document.createElement("div");
+      b.id = "spillReleaseBadge";
+      b.textContent = "✓ CPGSHS SPILL · Version 10.0.0";
+      footer.appendChild(b);
+    }
 
-/* ===== v13: admin tools ===== */
-(function(){try{
-var E=escapeHTML,isA=function(u){return !!u&&(u.role==='admin'||u.role==='superadmin')},meU=function(){return currentUser&&users.find(function(u){return u.id===currentUser.id})};
-var strip=function(s){return String(s||'').replace(/^\[\[r:[0-9a-f]{8}\]\]\s?/i,'↪ ')};
-var bt=function(x,i,t,c,p){return '<button class="btn '+(c||'btn-outline')+'" data-x="'+x+'" data-i="'+E(i)+'"'+(p?' data-p="'+E(p)+'"':'')+'>'+t+'</button>'};
-var rw=function(h,b){return '<div class="adm-r"><div class="adm-i">'+h+'</div><div class="adm-b">'+b+'</div></div>'};
-var canU=function(v,u){return u&&u.id!==v.id&&u.role!=='superadmin'&&(v.role==='superadmin'||u.role!=='admin')};
-function uRow(v,u){return rw('<b>@'+E(u.username)+'</b> <small>'+E(u.grade||'')+' '+E(u.section||'')+' · '+E(u.role)+(u.banned?' · 🚫 banned':'')+'</small>',canU(v,u)?bt('ban',u.id,u.banned?'Unban':'Ban')+bt('purge',u.id,'Ban + wipe posts','danger-btn'):'')}
-function cRow(p,c){return rw('<small>@'+E(c.username)+' · '+E(new Date(c.createdAt).toLocaleString())+'</small><br>'+E(strip(c.content).slice(0,200)),bt('cdel',c.id,'Delete','danger-btn',p.id))}
-function pRow(p){return rw('<small>@'+E(p.username||'?')+(p.anonymous?' (anon)':'')+' · ♥'+(p.hearts||0)+'</small><br>'+E(String(p.content||'').slice(0,160)),bt('pdel',p.id,'Delete','danger-btn'))}
-window.__admTools=function(v){
- var real=users.filter(function(u){return !u.noLogin}),bans=real.filter(function(u){return u.banned}),cms=[];
- posts.forEach(function(p){(p.comments||[]).forEach(function(c){cms.push({p:p,c:c})})});
- cms.sort(function(a,b){return new Date(b.c.createdAt)-new Date(a.c.createdAt)});
- var heavy=posts.filter(function(p){return reports.filter(function(r){return r.postId===p.id}).length>=3}).length,stale=reports.filter(function(r){return !posts.some(function(p){return p.id===r.postId})}).length;
- return '<input id="xq" placeholder="Search users, posts, comments…" autocomplete="off"><div id="xr"></div>'
- +'<b class="adm-t">⚡ Quick clean-up</b>'+bt('flag','x','Delete posts with 3+ reports ('+heavy+')','danger-btn')+' '+bt('rclean','x','Clear reports on removed posts ('+stale+')')
- +'<b class="adm-t">⬇ Export</b>'+bt('ucsv','x','Users CSV')+' '+bt('ccsv','x','Comments CSV')
- +'<b class="adm-t">🚫 Banned ('+bans.length+')</b>'+(bans.map(function(u){return uRow(v,u)}).join('')||'<div class="hint">Nobody is banned.</div>')
- +'<b class="adm-t">💬 Latest comments</b>'+(cms.slice(0,25).map(function(x){return cRow(x.p,x.c)}).join('')||'<div class="hint">No comments yet.</div>')};
-function xs(q){q=q.trim().toLowerCase();if(q.length<2)return '';var v=meU(),h='',lc=function(s){return String(s||'').toLowerCase()};
- users.filter(function(u){return !u.noLogin&&lc(u.username).indexOf(q)>-1}).slice(0,6).forEach(function(u){h+=uRow(v,u)});
- posts.filter(function(p){return lc(p.content).indexOf(q)>-1||(!p.anonymous&&lc(p.username).indexOf(q)>-1)}).slice(0,6).forEach(function(p){h+=pRow(p)});
- var n=0;posts.forEach(function(p){(p.comments||[]).forEach(function(c){if(n<6&&lc(c.content).indexOf(q)>-1){n++;h+=cRow(p,c)}})});
- return h||'<div class="hint">No matches.</div>'}
-function csv(a){var q=function(s){s=String(s==null?'':s);if(/^[=+\-@]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'},rows;
- if(a==='ucsv'){rows=['username,grade,section,role,banned,joined'];users.filter(function(u){return !u.noLogin}).forEach(function(u){rows.push([u.username,u.grade,u.section,u.role,!!u.banned,u.createdAt].map(q).join(','))})}
- else{rows=['post_id,comment_id,user,created,content'];posts.forEach(function(p){(p.comments||[]).forEach(function(c){rows.push([p.id,c.id,c.username,c.createdAt,strip(c.content)].map(q).join(','))})})}
- var l=document.createElement('a');l.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}));l.download=a==='ucsv'?'spill-users.csv':'spill-comments.csv';l.click();setTimeout(function(){URL.revokeObjectURL(l.href)},4000)}
-var A=document.getElementById('adm');
-if(A){
- A.addEventListener('input',function(e){if(e.target.id==='xq'){var r=document.getElementById('xr');if(r)r.innerHTML=xs(e.target.value)}});
- A.addEventListener('click',function(e){var t=e.target.closest('[data-x]');if(!t)return;var v=meU();if(!isA(v))return;
-  var a=t.dataset.x,i=t.dataset.i,pid=t.dataset.p,u=users.find(function(x){return x.id===i});
-  if(a==='cdel'){var P=posts.find(function(x){return x.id===pid});if(!P)return;P.comments=(P.comments||[]).filter(function(c){return c.id!==i})}
-  else if(a==='ban'&&canU(v,u)){u.banned=!u.banned;u.sv=(u.sv||0)+1}
-  else if(a==='purge'&&canU(v,u)){if(!confirm('Ban @'+u.username+' and delete all of their posts?'))return;u.banned=true;u.sv=(u.sv||0)+1;posts=posts.filter(function(x){return x.userId!==i});reports=reports.filter(function(r){return posts.some(function(x){return x.id===r.postId})})}
-  else if(a==='pdel'){if(!confirm('Delete this post?'))return;posts=posts.filter(function(x){return x.id!==i});reports=reports.filter(function(r){return r.postId!==i})}
-  else if(a==='flag'){var ids={};posts.forEach(function(x){if(reports.filter(function(r){return r.postId===x.id}).length>=3)ids[x.id]=1});var n=Object.keys(ids).length;if(!n||!confirm('Delete '+n+' heavily reported post(s)?'))return;posts=posts.filter(function(x){return !ids[x.id]});reports=reports.filter(function(r){return !ids[r.postId]})}
-  else if(a==='rclean'){reports=reports.filter(function(r){return posts.some(function(x){return x.id===r.postId})})}
-  else if(a==='ucsv'||a==='ccsv'){csv(a);return}
-  else return;
-  save(STORAGE.users,users);save(STORAGE.posts,posts);save(STORAGE.reports,reports);updateUI();
-  var on=document.querySelector('#admTabs button.on');if(on)on.click()})}
-}catch(e){console.error('v13 admin',e)}})();
+    const banner = document.createElement("div");
+    banner.id = "spillNetworkBanner";
+    banner.setAttribute("role", "status");
+    banner.textContent = "You are offline. Changes will sync when your connection returns.";
+    document.body.appendChild(banner);
+    const networkState = () => banner.classList.toggle("show", navigator.onLine === false && !!window.__cloud && !!currentUser);
+    addEventListener("online", networkState, { passive: true });
+    addEventListener("offline", networkState, { passive: true });
+    setTimeout(networkState, 2500);
+
+    // Do not expose raw exception strings to students.
+    addEventListener("error", () => { try { showToast("SPILL recovered from an unexpected error. Please try again."); } catch (_) {} });
+    addEventListener("unhandledrejection", () => { try { showToast("That action did not finish. Check your connection and try again."); } catch (_) {} });
+
+    // Safer default: only the account owner sees exact grade/section.
+    const originalSchool = window.socialSchool;
+    if (typeof originalSchool === "function") {
+      window.socialSchool = function (user, force) {
+        if (user && currentUser && user.id === currentUser.id) return originalSchool(user, true);
+        if (user && force) return originalSchool(user, true);
+        return "CPGSHS student";
+      };
+      try { socialSchool = window.socialSchool; } catch (_) {}
+    }
+
+    // Prevent oversized source images from being read into memory.
+    const originalCompress = window.compressImage;
+    if (typeof originalCompress === "function") {
+      window.compressImage = function (file) {
+        if (!file || file.size > 8 * 1024 * 1024) return Promise.resolve(null);
+        return originalCompress(file);
+      };
+    }
+
+    // Prevent accidental repeated report submissions.
+    let lastReportSubmit = 0;
+    const originalSubmitReport = window.submitReport;
+    if (typeof originalSubmitReport === "function") {
+      window.submitReport = function () {
+        const now = Date.now();
+        if (now - lastReportSubmit < 1800) return;
+        lastReportSubmit = now;
+        return originalSubmitReport.apply(this, arguments);
+      };
+    }
+  } catch (e) {
+    console.error("SPILL v10 hardening patch:", e);
+  }
+})();
 </script>
 </body>
 </html>
