@@ -2542,7 +2542,7 @@ body.gated #authModal .modal-body{padding:14px 20px 22px}
 @media(max-width:350px){#glassToggleBtn{display:none!important}}
 
 /* v15: version label at the very bottom (change the text in --app-version) */
-:root{--app-version:"Version 11.0"}
+:root{--app-version:"Version 11.4"}
 /* v8.0 fixes: close button was 36 wide but min-height 44 (oblong); tall avatar photos ignored height:100% inside the grid and became ovals; active tab text was dark on dark */
 .modal-head .close-btn{width:36px;height:36px;min-width:36px;min-height:36px;padding:0;flex:none;align-self:center;border-radius:50%!important}
 .ig-avatar-xl{overflow:hidden}
@@ -5559,21 +5559,21 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
     closeShareSheet();
     const W = 1080, H = 1920, c = document.createElement("canvas"); c.width = W; c.height = H;
     const x = c.getContext("2d"), F = '"Inter", -apple-system, system-ui, sans-serif';
-    const g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, "#ff9a5a"); g.addColorStop(.5, "#ff4f9a"); g.addColorStop(1, "#7c5cff");
+    const P = window.__spillPal(), g = x.createLinearGradient(0, 0, W, H); P.bg.forEach((c, i) => g.addColorStop(i / (P.bg.length - 1), c));
     x.fillStyle = g; x.fillRect(0, 0, W, H);
     [[160, 260, 460, .28], [940, 1560, 560, .2], [900, 180, 300, .16]].forEach(([cx, cy, r, a]) => { const q = x.createRadialGradient(cx, cy, 0, cx, cy, r); q.addColorStop(0, `rgba(255,255,255,${a})`); q.addColorStop(1, "rgba(255,255,255,0)"); x.fillStyle = q; x.fillRect(0, 0, W, H); });
     x.font = `800 58px ${F}`; const words = String(p.content || "").slice(0, 320).split(/\s+/).flatMap(w => w.match(/.{1,18}/g) || []), lines = []; let ln = "";
     words.forEach(w => { const t = ln ? ln + " " + w : w; if (x.measureText(t).width > 780 && ln) { lines.push(ln); ln = w; } else ln = t; }); if (ln) lines.push(ln);
     const lh = 78, cw = 900, ch = 170 + lines.length * lh + 190, cx0 = 90, cy0 = Math.max(160, Math.round((H - ch) / 2) - 40);
-    x.save(); x.shadowColor = "rgba(70,20,110,.38)"; x.shadowBlur = 80; x.shadowOffsetY = 36; x.fillStyle = "#fff"; roundRect(x, cx0, cy0, cw, ch, 76); x.fill(); x.restore();
-    x.save(); roundRect(x, cx0, cy0, cw, ch, 76); x.clip(); const hg = x.createLinearGradient(cx0, 0, cx0 + cw, 0); hg.addColorStop(0, "#5b7cfa"); hg.addColorStop(1, "#ff6fae"); x.fillStyle = hg; x.fillRect(cx0, cy0, cw, 170); x.restore();
+    x.save(); x.shadowColor = P.shadow; x.shadowBlur = 80; x.shadowOffsetY = 36; x.fillStyle = P.card; roundRect(x, cx0, cy0, cw, ch, 76); x.fill(); x.restore(); if (P.stroke) { x.save(); x.strokeStyle = P.stroke; x.lineWidth = 3; roundRect(x, cx0, cy0, cw, ch, 76); x.stroke(); x.restore(); }
+    x.save(); roundRect(x, cx0, cy0, cw, ch, 76); x.clip(); const hg = x.createLinearGradient(cx0, 0, cx0 + cw, 0); P.hdr.forEach((c, i) => hg.addColorStop(i / (P.hdr.length - 1), c)); x.fillStyle = hg; x.fillRect(cx0, cy0, cw, 170); x.restore();
     x.fillStyle = "#fff"; x.beginPath(); x.arc(cx0 + 100, cy0 + 85, 52, 0, 7); x.fill();
-    x.textBaseline = "middle"; x.save(); x.translate(cx0 + 100, cy0 + 92); x.fillStyle = "#ff4f9a"; x.beginPath(); x.moveTo(0, 22); x.bezierCurveTo(-46, -8, -22, -40, 0, -14); x.bezierCurveTo(22, -40, 46, -8, 0, 22); x.fill(); x.restore();
-    x.textAlign = "left"; x.fillStyle = "#fff"; x.font = `900 46px ${F}`; x.fillText("CPGSHS SPILL", cx0 + 180, cy0 + 66); x.font = `700 30px ${F}`; x.globalAlpha = .9; x.fillText(p.anonymous ? "anonymous spill" : "spilled by @" + p.username, cx0 + 180, cy0 + 112); x.globalAlpha = 1;
-    x.fillStyle = "#1e2340"; x.font = `800 58px ${F}`; lines.forEach((l, i) => x.fillText(l, cx0 + 60, cy0 + 170 + 90 + i * lh));
-    x.fillStyle = "#ff4f9a"; x.font = `800 38px ${F}`; x.fillText("— " + (p.anonymous ? "Anonymous" : p.username), cx0 + 60, cy0 + ch - 70);
+    x.textBaseline = "middle"; x.save(); x.translate(cx0 + 100, cy0 + 92); x.fillStyle = P.heart; x.beginPath(); x.moveTo(0, 22); x.bezierCurveTo(-46, -8, -22, -40, 0, -14); x.bezierCurveTo(22, -40, 46, -8, 0, 22); x.fill(); x.restore();
+    x.textAlign = "left"; x.fillStyle = P.hdrInk; x.font = `900 46px ${F}`; x.fillText("CPGSHS SPILL", cx0 + 180, cy0 + 66); x.font = `700 30px ${F}`; x.globalAlpha = .9; x.fillText(p.anonymous ? "anonymous spill" : "spilled by @" + p.username, cx0 + 180, cy0 + 112); x.globalAlpha = 1;
+    x.fillStyle = P.ink; x.font = `800 58px ${F}`; lines.forEach((l, i) => x.fillText(l, cx0 + 60, cy0 + 170 + 90 + i * lh));
+    x.fillStyle = P.acc; x.font = `800 38px ${F}`; x.fillText("— " + (p.anonymous ? "Anonymous" : p.username), cx0 + 60, cy0 + ch - 70);
     const pill = `♥ ${p.hearts || 0}    ↗ ${p.shares || 0}`; x.font = `800 44px ${F}`; const pw = x.measureText(pill).width + 110, py = cy0 + ch + 60;
-    x.fillStyle = "rgba(255,255,255,.26)"; roundRect(x, (W - pw) / 2, py, pw, 96, 48); x.fill(); x.fillStyle = "#fff"; x.textAlign = "center"; x.fillText(pill, W / 2, py + 50);
+    x.fillStyle = P.pill; roundRect(x, (W - pw) / 2, py, pw, 96, 48); x.fill(); x.fillStyle = P.foot; x.textAlign = "center"; x.fillText(pill, W / 2, py + 50);
     x.font = `900 52px ${F}`; x.fillText("CPGSHS SPILL", W / 2, H - 150); x.font = `700 32px ${F}`; x.globalAlpha = .85; x.fillText("spill yours — it's anonymous", W / 2, H - 92); x.globalAlpha = 1;
     c.toBlob(async b => {
       const f = new File([b], "spill-post.png", { type: "image/png" });
@@ -7640,7 +7640,7 @@ html.v11-fade *,html.v11-fade *::before,html.v11-fade *::after{transition:backgr
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
 </style>
 <script id="v11-script">
-(function(){'use strict';if(window.__v11)return;window.__v11=1;window.SPILL_VERSION='11.0';
+(function(){'use strict';if(window.__v11)return;window.__v11=1;window.SPILL_VERSION='11.4';
 var h=document.documentElement,$=function(i){return document.getElementById(i)},K='cpgshs_skin_v1',AT='cpgshs_skin_at',RL='cpgshs_rl',PV='cpgshs_pview_v11',
 OK=['light','darkblue','pink','yellow','brown','clear','crystal'],
 TCm={light:'#e6e8ec',darkblue:'#06142e',pink:'#fff0f6',yellow:'#fff8dc',brown:'#e9d2ba',clear:'#0b1020',crystal:'#dfe9f7'},
@@ -7771,6 +7771,22 @@ document.querySelectorAll('#viewModal .close-btn,#profileViewModal .close-btn').
 new MutationObserver(function(){if(m.classList.contains('open')){if(!m._o){m._o=1;m.classList.add('v11-enter');setTimeout(function(){m.classList.remove('v11-enter')},900)}}else m._o=0}).observe(m,{attributes:true,attributeFilter:['class']});
 var _v=window.viewPost;if(typeof _v==='function'){window.viewPost=function(){var r=_v.apply(this,arguments);try{var t=document.querySelector('#viewBody .post-text');if(t&&t.textContent.length>220)t.classList.add('v11-long')}catch(e){}return r};try{viewPost=window.viewPost}catch(e){}}
 }catch(e){console.error('v11b',e)}})();
+</script>
+
+<script id="v114-pal">
+/* v11.4: share/save card follows the theme the user is using */
+window.__spillPal=function(){
+ var h=document.documentElement,s=h.getAttribute('data-skin')||(h.getAttribute('data-theme')==='dark'?'dark':'light'),
+ B={bg:['#ff9a5a','#ff4f9a','#7c5cff'],hdr:['#5b7cfa','#ff6fae'],hdrInk:'#fff',card:'#fff',ink:'#1e2340',acc:'#ff4f9a',heart:'#ff4f9a',shadow:'rgba(70,20,110,.38)',pill:'rgba(255,255,255,.26)',foot:'#fff',stroke:null},
+ T={light:{},
+  dark:{bg:['#2a2f6e','#5b3fd0','#ff4f9a'],card:'#1b2040',ink:'#eef0ff',acc:'#ff7ab8',shadow:'rgba(0,0,0,.5)'},
+  darkblue:{bg:['#06142e','#12357a','#2f7bff'],hdr:['#1e5bff','#4da3ff'],card:'#0d2147',ink:'#eaf2ff',acc:'#4da3ff',heart:'#2f7bff',shadow:'rgba(0,8,30,.6)',pill:'rgba(255,255,255,.14)'},
+  pink:{bg:['#ffc2dc','#ff7fb5','#c04cff'],hdr:['#ff5fa2','#c04cff'],card:'#fff8fb',ink:'#3a1228',acc:'#e0357f',heart:'#e0357f',shadow:'rgba(150,20,90,.35)'},
+  yellow:{bg:['#fff1a8','#ffc700','#ff9f1a'],hdr:['#ffd000','#ff9f1a'],hdrInk:'#2e2400',card:'#fffdf2',ink:'#2e2400',acc:'#c98a00',heart:'#c98a00',shadow:'rgba(140,90,0,.35)',pill:'rgba(255,255,255,.4)',foot:'#2e2400'},
+  brown:{bg:['#e9c9a3','#a66e3a','#5e3a1c'],hdr:['#a66e3a','#5e3a1c'],card:'#f7ebdd',ink:'#2e1c0e',acc:'#8a4f1d',heart:'#8a4f1d',shadow:'rgba(50,25,5,.45)'},
+  clear:{bg:['#3b82f6','#ec4899','#8b5cf6'],hdr:['#22d3ee','#a78bfa','#ff9bd2'],hdrInk:'#0b1020',card:'rgba(255,255,255,.16)',ink:'#fff',acc:'#9fe3ff',heart:'#ec4899',shadow:'rgba(0,0,0,0)',pill:'rgba(255,255,255,.2)',stroke:'rgba(255,255,255,.55)'},
+  crystal:{bg:['#bcd7ff','#d9ccff','#ffd5ec'],hdr:['#0a84ff','#6e56ff'],card:'rgba(255,255,255,.6)',ink:'#0e1630',acc:'#0a84ff',heart:'#0a84ff',shadow:'rgba(0,0,0,0)',pill:'rgba(255,255,255,.5)',foot:'#0e1630',stroke:'rgba(255,255,255,.95)'}};
+ return Object.assign({},B,T[s]||{})};
 </script>
 
 </body>
