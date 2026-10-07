@@ -2541,7 +2541,7 @@ body.gated #authModal .modal-body{padding:14px 20px 22px}
 @media(max-width:350px){#glassToggleBtn{display:none!important}}
 
 /* v15: version label at the very bottom (change the text in --app-version) */
-:root{--app-version:"Version 8.0"}
+:root{--app-version:"Version 9.0"}
 /* v8.0 fixes: close button was 36 wide but min-height 44 (oblong); tall avatar photos ignored height:100% inside the grid and became ovals; active tab text was dark on dark */
 .modal-head .close-btn{width:36px;height:36px;min-width:36px;min-height:36px;padding:0;flex:none;align-self:center;border-radius:50%!important}
 .ig-avatar-xl{overflow:hidden}
@@ -7301,7 +7301,7 @@ function setSkin(s){var dark=s==='darkblue'||s==='clear',glass=s==='clear';
  mark();setTimeout(tc,40)}
 function build(){var l=document.querySelector('#settingsModal .setting-list');if(!l||document.getElementById('skinBox'))return;
  var d=document.createElement('div');d.id='skinBox';
- d.innerHTML='<div class="sk-t">🎨 Theme</div><div class="sk-g">'+SKN.map(function(k){return '<button type="button" class="sk-o" data-s="'+k[0]+'"><i style="background:linear-gradient(135deg,'+k[2]+')"></i>'+k[1]+(k[0]==='clear'?'<em>9.0 β</em>':'')+'</button>'}).join('')+'</div>';
+ d.innerHTML='<div class="sk-t">🎨 Theme</div><div class="sk-g">'+SKN.map(function(k){return '<button type="button" class="sk-o" data-s="'+k[0]+'"><i style="background:linear-gradient(135deg,'+k[2]+')"></i>'+k[1]+(k[0]==='clear'?'<em>9.0</em>':'')+'</button>'}).join('')+'</div>';
  l.insertBefore(d,l.firstChild);d.addEventListener('click',function(e){var b=e.target.closest('.sk-o');if(b)setSkin(b.dataset.s)});mark()}
 build();tc();
 var sm=document.getElementById('settingsModal');
