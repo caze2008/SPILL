@@ -7537,7 +7537,14 @@ if(A){
   else if(a==='purge'&&canU(v,u)){if(!confirm('Ban @'+u.username+' and delete all of their posts?'))return;u.banned=true;u.sv=(u.sv||0)+1;posts=posts.filter(function(x){return x.userId!==i});reports=reports.filter(function(r){return posts.some(function(x){return x.id===r.postId})})}
   else if(a==='pdel'){
     if(v.role!=='superadmin')return showToast('Super admin access required for post removal.');
-    if(window.__cloud&&window.__adminDeletePost){window.__adminDeletePost(i).then(function(){var on=document.querySelector('#admTabs button.on');if(on)on.click()});return}
+    if(window.__cloud){
+      if(typeof window.__adminDeletePost!=='function')return showToast('Moderation server is not ready. Deploy the updated spill Edge Function.');
+      window.__adminDeletePost(i,{confirm:true}).then(function(ok){
+        if(!ok)return;
+        var on=document.querySelector('#admTabs button.on');if(on)on.click();
+      }).catch(function(err){showToast(err&&err.message?err.message:'Unable to remove the post.');});
+      return;
+    }
     if(!confirm('Delete this post for anti-cyberbullying moderation?'))return;
     posts=posts.filter(function(x){return x.id!==i});reports=reports.filter(function(r){return r.postId!==i})
   }
