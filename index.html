@@ -2651,6 +2651,20 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
 #xq{width:100%;height:42px;margin:0 0 10px}.adm-t{display:block;margin:14px 0 6px}
 #admTabs{overflow-x:auto;-webkit-overflow-scrolling:touch}
 </style>
+<style id="v17-comment-fullscreen-fix">
+/* v17: keep the confession/comment view full-width on phones.
+   Preserve the existing UI; only remove the inner max-width gutter. */
+#viewModal #viewBody{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+}
+#viewModal .ig .post-card{
+  width:100%!important;
+  margin-left:0!important;
+  margin-right:0!important;
+}
+</style>
 </head>
 
 <body>
