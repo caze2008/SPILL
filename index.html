@@ -1846,6 +1846,10 @@
 
 /* ---- Post more-menu (archive/delete) ---- */
 .post-more { position: relative; }
+.more-menu .safety-delete { color:#9f1239 !important; font-weight:900; }
+.more-menu .safety-delete:hover { background:#fff1f5 !important; }
+.safety-delete-action { color:#9f1239 !important; background:#fff1f5 !important; border:1px solid #ffd4e2 !important; font-weight:900 !important; }
+.safety-delete-action:hover { background:#ffe4ec !important; }
 .more-menu {
   position: absolute; right: 0; top: 34px; z-index: 30; background: white; border: 1px solid var(--border);
   border-radius: 14px; box-shadow: var(--shadow-lg); padding: 6px; min-width: 160px; display: none;
@@ -5474,6 +5478,37 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
     menu.classList.toggle("open");
   };
 
+  // Superadmin-only post removal for anti-cyberbullying moderation.
+  window.superadminDeletePost = async function (postId) {
+    const actor = currentUser && users.find(u => u.id === currentUser.id);
+    if (!actor || actor.role !== "superadmin") {
+      showToast("Super admin access required.");
+      return false;
+    }
+    if (!posts.some(p => p.id === postId)) {
+      showToast("Post no longer exists.");
+      return false;
+    }
+    if (!confirm("Remove this post for anti-cyberbullying moderation? This permanently removes the post and its related likes, comments, shares, and reports.")) return false;
+
+    if (window.__cloud) {
+      if (typeof window.__adminDeletePost !== "function") {
+        showToast("Moderation server is not ready. Deploy the updated spill Edge Function.");
+        return false;
+      }
+      return await window.__adminDeletePost(postId, { confirm: false });
+    }
+
+    posts = posts.filter(p => p.id !== postId);
+    reports = reports.filter(r => r.postId !== postId);
+    save(STORAGE.posts, posts);
+    save(STORAGE.reports, reports);
+    closeModal("viewModal");
+    window.updateUI();
+    showToast("Post removed for safety 🛡️");
+    return true;
+  };
+
   // Override feed render to exclude archived posts
   const _origRenderFeed = window.renderFeed;
   window.renderFeed = function () {
@@ -5504,13 +5539,20 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
     const authorName = post.anonymous ? "Anonymous" : (post.username || "Student");
     const nameHTML = profileOpen ? `<button class="post-author-button" onclick="openPublicProfile('${author.id}')"><strong>${escapeHTML(authorName)}</strong></button>` : `<strong>${escapeHTML(authorName)}</strong>`;
     const school = post.anonymous ? `Anonymous · ${socialSchool(author)}` : socialSchool(author);
-    const isMine = currentUser && post.userId === currentUser.id, n = (post.comments || []).length, media = (post.images || []).length;
+    const isMine = currentUser && post.userId === currentUser.id;
+    const currentActor = currentUser ? socialUser(currentUser.id) : null;
+    const isSuperAdmin = !!currentActor && currentActor.role === "superadmin";
+    const n = (post.comments || []).length, media = (post.images || []).length;
+    const moreMenu = (isMine || isSuperAdmin) ? `<div class="post-more" style="position:relative;"><button class="action more-btn" aria-label="More" onclick="togglePostMore('${post.id}', this)">⋯</button><div class="more-menu">
+      ${isMine ? `<button onclick="archivePost('${post.id}')">📦 Archive</button><button onclick="openEditPost('${post.id}')">✏️ Edit</button><button class="danger" onclick="deletePostFromFeed('${post.id}')">🗑️ Delete</button>` : ""}
+      ${isSuperAdmin ? `<button class="danger safety-delete" onclick="superadminDeletePost('${post.id}')">🛡️ Remove post</button>` : ""}
+    </div></div>` : "";
     return `<article class="post-card ${post.category === "Love" ? "love" : ""} ${media ? "has-media" : "text-only"}" id="post-${post.id}">
       <div class="post-top">
         <div class="post-avatar">${userAvatar(post.userId, authorName)}</div>
         <div class="post-meta">${nameHTML}<span>${escapeHTML(school)} · ${formatTime(post.createdAt)}</span></div>
         <span class="category">${escapeHTML(post.category)}</span>
-        ${isMine ? `<div class="post-more" style="position:relative;"><button class="action more-btn" aria-label="More" onclick="togglePostMore('${post.id}', this)">⋯</button><div class="more-menu"><button onclick="archivePost('${post.id}')">📦 Archive</button><button onclick="openEditPost('${post.id}')">✏️ Edit</button><button class="danger" onclick="deletePostFromFeed('${post.id}')">🗑️ Delete</button></div></div>` : ""}
+        ${moreMenu}
       </div>
       ${window.carouselHTML(post)}
       <div class="post-text">${window.renderContent(post.content)}</div>
@@ -5519,6 +5561,7 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
         <button class="action" aria-label="Comments" onclick="viewPost('${post.id}')">💬<span>${n}</span></button>
         <button class="action" aria-label="Share" onclick="openShareSheet('${post.id}')">↗<span>${post.shares || 0}</span></button>
         <button class="action save-action ${saved ? "hearted" : ""}" aria-label="Save" onclick="toggleSave('${post.id}')">${saved ? "★" : "☆"}</button>
+        ${isSuperAdmin ? `<button class="action safety-delete-action" aria-label="Remove post for safety" onclick="superadminDeletePost('${post.id}')">🛡️ Remove</button>` : ""}
       </div>
       ${n ? `<button class="view-comments" onclick="viewPost('${post.id}')">${n === 1 ? "View 1 comment" : "View all " + n + " comments"}</button>` : ""}</article>`;
   };
@@ -6523,8 +6566,19 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
       const b = e.target.closest("[data-a]"), v = me(); if (!b || !isAdm(v)) return;
       const a = b.dataset.a, i = b.dataset.i, u = users.find(x => x.id === i), sa = v.role === "superadmin", can = u && u.id !== v.id && u.role !== "superadmin" && (sa || u.role !== "admin");
       const dump = () => { save(STORAGE.users, users); save(STORAGE.posts, posts); save(STORAGE.reports, reports); };
-      if (a === "pdel") { if (!confirm("Delete this post?")) return; posts = posts.filter(p => p.id !== i); reports = reports.filter(r => r.postId !== i); }
-      else if (a === "rdel") { posts = posts.filter(p => p.id !== i); reports = reports.filter(r => r.postId !== i); }
+      if (a === "pdel" || a === "rdel") {
+        if (!sa) return showToast("Super admin access required for post removal.");
+        if (!window.__adminDeletePost) {
+          if (window.__cloud) return showToast("Moderation server is not ready. Deploy the updated spill Edge Function.");
+          if (!confirm("Delete this post for anti-cyberbullying moderation?")) return;
+          posts = posts.filter(p => p.id !== i);
+          reports = reports.filter(r => r.postId !== i);
+          dump(); updateUI(); view(); return;
+        }
+        const ok = await window.__adminDeletePost(i);
+        if (!ok) return;
+        dump(); updateUI(); view(); return;
+      }
       else if (a === "rok") reports = reports.filter(r => r.postId !== i);
       else if (a === "rclr") { if (!confirm("Dismiss all reports?")) return; reports = []; }
       else if (a === "ban" && can) { u.banned = !u.banned; u.sv = (u.sv || 0) + 1; }
@@ -7057,6 +7111,37 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
       }, true);
       window.__sendBug = t => sb.from("bug_reports").insert({ text: t }).then(r => r.error && showToast("Couldn't send the report."));
       window.__resetPin = async u => { const r = await call("admin_reset_pin", { userId: u.id }); alert(r.ok ? "Temporary PIN for @" + u.username + ": " + r.pin + "\nThey must change it after logging in." : r.error); };
+
+      // The browser never receives the service-role key. Destructive moderation is
+      // performed by the Supabase Edge Function after checking the logged-in role.
+      window.__adminDeletePost = async function (postId, options) {
+        options = options || {};
+        const actor = users.find(u => u.id === (currentUser || {}).id);
+        if (!actor || actor.role !== "superadmin") {
+          showToast("Super admin access required.");
+          return false;
+        }
+        if (!postId || String(postId).length > 100) {
+          showToast("Invalid post ID.");
+          return false;
+        }
+        if (options.confirm !== false && !confirm("Remove this post for anti-cyberbullying moderation? This permanently removes the post and its related likes, comments, shares, and reports.")) return false;
+
+        const result = await call("admin_delete_post", { postId });
+        if (!result || result.ok !== true) {
+          showToast((result && result.error) || "Unable to remove the post.");
+          return false;
+        }
+
+        posts = posts.filter(p => p.id !== postId);
+        reports = reports.filter(r => r.postId !== postId);
+        try { SNAP = snap(); } catch (e) {}
+        try { closeModal("viewModal"); } catch (e) {}
+        updateUI();
+        showToast("Post removed for safety 🛡️");
+        return true;
+      };
+
       window.__delBug = id => { cloudBugs = cloudBugs.filter(x => x.id !== id); return sb.from("bug_reports").delete().eq("id", id); };
       const poll = () => { if (currentUser && !document.hidden && (!live || Date.now() - lastPull > 60000)) pull(); };
       setInterval(poll, 15000); document.addEventListener("visibilitychange", () => { if (!document.hidden && currentUser) pull(); }); addEventListener("online", () => { if (currentUser) pull(); });
@@ -7450,8 +7535,21 @@ if(A){
   if(a==='cdel'){var P=posts.find(function(x){return x.id===pid});if(!P)return;P.comments=(P.comments||[]).filter(function(c){return c.id!==i})}
   else if(a==='ban'&&canU(v,u)){u.banned=!u.banned;u.sv=(u.sv||0)+1}
   else if(a==='purge'&&canU(v,u)){if(!confirm('Ban @'+u.username+' and delete all of their posts?'))return;u.banned=true;u.sv=(u.sv||0)+1;posts=posts.filter(function(x){return x.userId!==i});reports=reports.filter(function(r){return posts.some(function(x){return x.id===r.postId})})}
-  else if(a==='pdel'){if(!confirm('Delete this post?'))return;posts=posts.filter(function(x){return x.id!==i});reports=reports.filter(function(r){return r.postId!==i})}
-  else if(a==='flag'){var ids={};posts.forEach(function(x){if(reports.filter(function(r){return r.postId===x.id}).length>=3)ids[x.id]=1});var n=Object.keys(ids).length;if(!n||!confirm('Delete '+n+' heavily reported post(s)?'))return;posts=posts.filter(function(x){return !ids[x.id]});reports=reports.filter(function(r){return !ids[r.postId]})}
+  else if(a==='pdel'){
+    if(v.role!=='superadmin')return showToast('Super admin access required for post removal.');
+    if(window.__cloud&&window.__adminDeletePost){window.__adminDeletePost(i).then(function(){var on=document.querySelector('#admTabs button.on');if(on)on.click()});return}
+    if(!confirm('Delete this post for anti-cyberbullying moderation?'))return;
+    posts=posts.filter(function(x){return x.id!==i});reports=reports.filter(function(r){return r.postId!==i})
+  }
+  else if(a==='flag'){
+    if(v.role!=='superadmin')return showToast('Super admin access required for bulk post removal.');
+    var ids={};posts.forEach(function(x){if(reports.filter(function(r){return r.postId===x.id}).length>=3)ids[x.id]=1});var list=Object.keys(ids),n=list.length;if(!n||!confirm('Delete '+n+' heavily reported post(s) for anti-cyberbullying moderation?'))return;
+    if(window.__cloud&&window.__adminDeletePost){
+      Promise.all(list.map(function(pid){return window.__adminDeletePost(pid,{confirm:false})})).then(function(){var on=document.querySelector('#admTabs button.on');if(on)on.click()});
+      return;
+    }
+    posts=posts.filter(function(x){return !ids[x.id]});reports=reports.filter(function(r){return !ids[r.postId]})
+  }
   else if(a==='rclean'){reports=reports.filter(function(r){return posts.some(function(x){return x.id===r.postId})})}
   else if(a==='ucsv'||a==='ccsv'){csv(a);return}
   else return;
