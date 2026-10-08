@@ -2543,7 +2543,7 @@ body.gated #authModal .modal-body{padding:14px 20px 22px}
 @media(max-width:350px){#glassToggleBtn{display:none!important}}
 
 /* v15: version label at the very bottom (change the text in --app-version) */
-:root{--app-version:"Version 14.0"}
+:root{--app-version:"Version 16.0"}
 /* v8.0 fixes: close button was 36 wide but min-height 44 (oblong); tall avatar photos ignored height:100% inside the grid and became ovals; active tab text was dark on dark */
 .modal-head .close-btn{width:36px;height:36px;min-width:36px;min-height:36px;padding:0;flex:none;align-self:center;border-radius:50%!important}
 .ig-avatar-xl{overflow:hidden}
@@ -5573,7 +5573,7 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
     x.fillStyle = "#fff"; x.beginPath(); x.arc(cx0 + 100, cy0 + 85, 52, 0, 7); x.fill();
     x.textBaseline = "middle"; x.save(); x.translate(cx0 + 100, cy0 + 92); x.fillStyle = P.heart; x.beginPath(); x.moveTo(0, 22); x.bezierCurveTo(-46, -8, -22, -40, 0, -14); x.bezierCurveTo(22, -40, 46, -8, 0, 22); x.fill(); x.restore();
     x.textAlign = "left"; x.fillStyle = P.hdrInk; x.font = `900 46px ${F}`; x.fillText("CPGSHS SPILL", cx0 + 180, cy0 + 66); x.font = `700 30px ${F}`; x.globalAlpha = .9; x.fillText(p.anonymous ? "anonymous spill" : "spilled by @" + p.username, cx0 + 180, cy0 + 112); x.globalAlpha = 1;
-    x.fillStyle = P.ink; x.font = `800 58px ${F}`; lines.forEach((l, i) => x.fillText(l, cx0 + 60, cy0 + 170 + 90 + i * lh));
+    x.fillStyle = P.ink; x.font = `800 58px ${F}`; lines.forEach((l, i) => { let px = cx0 + 60; const py = cy0 + 170 + 90 + i * lh; l.split(/(@\w{2,30})/g).forEach(sg => { if (!sg) return; const w = x.measureText(sg).width; if (/^@\w{2,30}$/.test(sg) && (!window.__isUser || window.__isUser(sg.slice(1)))) { x.save(); x.globalAlpha = .18; x.fillStyle = P.acc; roundRect(x, px - 8, py - 40, w + 16, 80, 24); x.fill(); x.restore(); x.fillStyle = P.acc; x.fillText(sg, px, py); x.fillStyle = P.ink; } else x.fillText(sg, px, py); px += w; }); });
     x.fillStyle = P.acc; x.font = `800 38px ${F}`; x.fillText("— " + (p.anonymous ? "Anonymous" : p.username), cx0 + 60, cy0 + ch - 70);
     const pill = `♥ ${p.hearts || 0}    ↗ ${p.shares || 0}`; x.font = `800 44px ${F}`; const pw = x.measureText(pill).width + 110, py = cy0 + ch + 60;
     x.fillStyle = P.pill; roundRect(x, (W - pw) / 2, py, pw, 96, 48); x.fill(); x.fillStyle = P.foot; x.textAlign = "center"; x.fillText(pill, W / 2, py + 50);
@@ -6506,8 +6506,8 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
           h += row(`<b>${n} report${n > 1 ? "s" : ""}</b> · ${E(r.reason || r.category || "no reason")}<br>${p ? `<small>@${E(p.username || "?")}${p.anonymous ? " (anon)" : ""}</small> ${E(String(p.content || "").slice(0, 160))}` : "<small>Post already removed</small>"}`, (p ? btn("rdel", r.postId, "Delete post", "danger-btn") : "") + btn("rok", r.postId, "Dismiss")); });
         h = h || `<div class="hint">No open reports 🎉</div>`;
       } else if (tab === "users") {
-        h = [...real].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map(u => { const can = u.id !== v.id && u.role !== "superadmin" && (sa || u.role !== "admin");
-          return row(`${on(u) ? "🟢" : "⚪"} <b>@${E(u.username)}</b> <small>${E(u.grade || "")} ${E(u.section || "")} · ${E(u.role)}${u.banned ? " · 🚫 banned" : ""}</small>`, can ? btn("ban", u.id, u.banned ? "Unban" : "Ban") + (sa ? btn("role", u.id, u.role === "admin" ? "Remove admin" : "Make admin") : "") + btn("reset", u.id, "Reset PIN") + btn("udel", u.id, "Delete", "danger-btn") : ""); }).join("");
+        h = [...real].sort((a, b) => (on(b) - on(a)) || (window.__lastSeen ? window.__lastSeen(b, on(b)).ts - window.__lastSeen(a, on(a)).ts : 0) || (new Date(b.createdAt) - new Date(a.createdAt))).map(u => { const can = u.id !== v.id && u.role !== "superadmin" && (sa || u.role !== "admin");
+          return row(`${on(u) ? "🟢" : "⚪"} <b>@${E(u.username)}</b> <small class="seen">${window.__seenLabel ? window.__seenLabel(u, on(u)) : ""}</small> <small>${E(u.grade || "")} ${E(u.section || "")} · ${E(u.role)}${u.banned ? " · 🚫 banned" : ""}</small>`, can ? btn("ban", u.id, u.banned ? "Unban" : "Ban") + (sa ? btn("role", u.id, u.role === "admin" ? "Remove admin" : "Make admin") : "") + btn("reset", u.id, "Reset PIN") + btn("udel", u.id, "Delete", "danger-btn") : ""); }).join("");
       } else if (tab === "posts") {
         h = [...posts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 40).map(p => row(`<small>@${E(p.username || "?")}${p.anonymous ? " (anon)" : ""} · ♥${p.hearts || 0} ↗${p.shares || 0}</small><br>${E(String(p.content || "").slice(0, 200))}`, btn("pdel", p.id, "Delete", "danger-btn"))).join("") || `<div class="hint">No posts.</div>`;
       } else if (tab === "tools") {
@@ -6603,7 +6603,7 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
     const pres = f => { if (!currentUser || (f !== 2 && document.hidden)) return; if (f !== 2 && Date.now() - lb < 10000) return; lb = Date.now(); try { const P = load(PK, {}); if (f === 2) delete P[currentUser.id]; else P[currentUser.id] = lb; localStorage.setItem(PK, JSON.stringify(P)); } catch (e) {} };
     setInterval(pres, 30000); document.addEventListener("visibilitychange", () => pres(document.hidden ? 2 : 0)); addEventListener("pagehide", () => pres(2));
     const _lo = logout; logout = window.logout = function () { pres(2); _lo(); };
-    setInterval(() => { if (AD.classList.contains("open") && tab === "stats") view(); }, 15000);
+    setInterval(() => { if (AD.classList.contains("open") && (tab === "stats" || tab === "users")) view(); }, 15000);
     document.addEventListener("click", e => {
       const b = e.target.closest("[data-adel]"); if (!b || !isAdm(me())) return; const id = b.dataset.adel;
       if (!confirm("Delete this post for everyone?")) return;
@@ -6847,7 +6847,7 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
     if (CLOUD) {
       document.body.classList.add("cloud", "booting");
       const sp = document.createElement("div"); sp.id = "splash"; sp.textContent = "SPILL"; document.body.appendChild(sp);
-      try { sb = window.supabase.createClient(CFG.url, CFG.key, { auth: { storageKey: "spill-auth", persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }, realtime: { params: { eventsPerSecond: 10 } } }); } catch (e) { CERR = true; }
+      try { sb = window.supabase.createClient(CFG.url, CFG.key, { auth: { storageKey: "spill-auth", persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }, realtime: { params: { eventsPerSecond: 10 } } }); window.__sb = sb; } catch (e) { CERR = true; }
       wipe(); currentUser = null; window.__online = new Set();
       [STORAGE.users, STORAGE.posts, STORAGE.reports, STORAGE.currentUser, STORAGE.stories, STORAGE.follows, STORAGE.storyArchive].forEach(k => k && localStorage.removeItem(k));
       const em = u => u.toLowerCase() + "@spill.cpgshs.app", pw = (p, u) => `spill-${p}-${u.toLowerCase()}`;
@@ -7086,20 +7086,21 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
   (function () { try {
     const SK = id => "spill_notif_v2_" + id, DAY2 = 48 * 36e5, E = escapeHTML; let filt = "all";
     const nm = id => { const u = users.find(x => x.id === id); return u ? u.username : "Someone"; };
-    const RXR = /^\[\[r:([0-9a-f]{8})\]\]\s?/i;
+    const RXR = /^\[\[r:([0-9a-f]{8})\]\]\s?/i, AN = t => /^\[\[a\]\]/.test(t);
     const sv = s => { try { localStorage.setItem(SK(currentUser.id), JSON.stringify(s)); } catch (e) {} };
     function derive() {
       const me = currentUser.id, out = [], my = String(currentUser.username || "").replace(/[^\w]/g, ""), mre = my.length > 1 ? new RegExp("@" + my + "\\b", "i") : null;
       posts.forEach(p => {
         if (p.archived) return; const mine = p.userId === me, cs = p.comments || [];
+        if (mre && !mine && mre.test(p.content || "")) out.push({ k: "mp:" + p.id, t: "pmention", f: p.anonymous ? "Someone" : (p.username || nm(p.userId)), p: p.id, u: p.anonymous ? null : p.userId, at: p.createdAt });
         if (mine) {
           (p.likedBy || []).forEach(u => { if (u !== me) out.push({ k: "h:" + p.id + ":" + u, t: "heart", f: p.anonymous ? "Someone" : nm(u), p: p.id, u: p.anonymous ? null : u, at: p.createdAt }); });
           (p.sharedBy || []).forEach(u => { if (u !== me) out.push({ k: "s:" + p.id + ":" + u, t: "share", f: nm(u), p: p.id, u, at: p.createdAt }); });
         }
         cs.forEach(c => {
           if (c.userId === me) return; const m = RXR.exec(c.content || ""), txt = m ? c.content.slice(m[0].length) : (c.content || "");
-          const par = m && cs.find(x => x.id.slice(0, 8).toLowerCase() === m[1].toLowerCase()), f = c.username || nm(c.userId);
-          const base = { f, p: p.id, c: c.id, u: c.userId, at: c.createdAt, x: txt };
+          const par = m && cs.find(x => x.id.slice(0, 8).toLowerCase() === m[1].toLowerCase()), f = AN(txt) ? "Anonymous" : (c.username || nm(c.userId));
+          const base = { f, p: p.id, c: c.id, u: AN(txt) ? null : c.userId, at: c.createdAt, x: txt.replace(/^\[\[a\]\]/, "") };
           if (par && par.userId === me) out.push({ ...base, k: "r:" + c.id, t: "reply" });
           else if (mre && mre.test(txt)) out.push({ ...base, k: "m:" + c.id, t: "mention" });
           else if (mine) out.push({ ...base, k: "c:" + c.id, t: "comment" });
@@ -7133,9 +7134,9 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
       if (last >= 0 && c > last && on && !document.hidden) showToast("🔔 New activity on your posts");
       last = currentUser ? c : -1;
     };
-    const IC = { heart: "💗", comment: "💬", reply: "↩️", mention: "＠", share: "↗", follow: "👥" };
-    const VB = { heart: "liked your confession", comment: "commented on your confession", reply: "replied to your comment", mention: "mentioned you in a comment", share: "shared your confession", follow: "started following you" };
-    const GR = { all: null, replies: ["comment", "reply", "mention"], likes: ["heart", "share"], follows: ["follow"] };
+    const IC = { heart: "💗", comment: "💬", reply: "↩️", mention: "＠", pmention: "＠", share: "↗", follow: "👥" };
+    const VB = { heart: "liked your confession", comment: "commented on your confession", reply: "replied to your comment", mention: "mentioned you in a comment", pmention: "mentioned you in a confession", share: "shared your confession", follow: "started following you" };
+    const GR = { all: null, replies: ["comment", "reply", "mention", "pmention"], likes: ["heart", "share"], follows: ["follow"] };
     window.renderNotifs = function () {
       const body = document.getElementById("notifBody"); if (!body) return;
       const { items, s } = list(), shown = GR[filt] ? items.filter(n => GR[filt].includes(n.t)) : items;
@@ -7372,14 +7373,14 @@ var $=function(i){return document.getElementById(i)},RX=/^\[\[r:([0-9a-f]{8})\]\
 var isA=function(u){return !!u&&(u.role==='admin'||u.role==='superadmin')},meU=function(){return currentUser&&users.find(function(u){return u.id===currentUser.id})};
 var parse=function(c){var m=RX.exec(c.content||'');return m?{pid:m[1].toLowerCase(),text:c.content.slice(m[0].length)}:{pid:null,text:c.content||''}};
 function tHTML(p){
- var me=currentUser&&currentUser.id,adm=isA(meU()),root=[],nodes=(p.comments||[]).map(function(c){var q=parse(c);return{c:c,pid:q.pid,text:q.text,kids:[]}});
+ var me=currentUser&&currentUser.id,adm=isA(meU()),root=[],nodes=(p.comments||[]).map(function(c){var q=parse(c),an=/^\[\[a\]\]/.test(q.text);return{c:c,pid:q.pid,text:q.text.replace(/^\[\[a\]\]/,''),an:an,kids:[]}});
  nodes.forEach(function(n){var par=n.pid&&nodes.find(function(x){return x!==n&&!x.pid&&x.c.id.slice(0,8).toLowerCase()===n.pid});(par?par.kids:root).push(n)});
  if(!root.length)return '<div class="no-results" style="padding:18px 10px">No comments yet. Start the conversation. 💬</div>';
  function one(n,rootId){var c=n.c,tx=window.renderContent?window.renderContent(n.text):escapeHTML(n.text);
   tx=tx.replace(/(^|\s)@(\w{2,30})/g,'$1<span class="mn">@$2</span>');
   var orphan=(n.pid&&!rootId)?'<span class="mn">↪ replying to a deleted comment</span> ':'',rt=rootId||c.id,k=p.id+':'+c.id,out='';
   if(!rootId&&n.kids.length){out=exp[k]?'<div class="cm-k">'+n.kids.map(function(x){return one(x,c.id)}).join('')+'</div><button class="cm-more" data-cm="more" data-id="'+c.id+'">Hide replies</button>':'<button class="cm-more" data-cm="more" data-id="'+c.id+'">— View '+n.kids.length+' repl'+(n.kids.length>1?'ies':'y')+'</button>'}
-  return '<div class="cm" id="cm-'+c.id+'"><div class="comment-avatar">'+getInitial(c.username)+'</div><div class="cm-b"><div class="cm-bub"><b>'+escapeHTML(c.username)+'</b>'+orphan+tx+'</div><div class="cm-m"><span>'+formatTime(c.createdAt)+'</span>'+(me?'<button data-cm="reply" data-id="'+c.id+'" data-root="'+rt+'">Reply</button>':'')+((me&&c.userId===me)||adm?'<button data-cm="del" data-id="'+c.id+'">Delete</button>':'')+'</div>'+out+'</div></div>'}
+  return '<div class="cm" id="cm-'+c.id+'"><div class="comment-avatar">'+getInitial(n.an?'Anonymous':c.username)+'</div><div class="cm-b"><div class="cm-bub"><b>'+escapeHTML(n.an?'Anonymous':c.username)+'</b>'+orphan+tx+'</div><div class="cm-m"><span>'+formatTime(c.createdAt)+'</span>'+(me?'<button data-cm="reply" data-id="'+c.id+'" data-root="'+rt+'">Reply</button>':'')+((me&&c.userId===me)||adm?'<button data-cm="del" data-id="'+c.id+'">Delete</button>':'')+'</div>'+out+'</div></div>'}
  return root.map(function(n){return one(n,null)}).join('')}
 function chip(id){var ch=$('rpChip'),r=rep[id],inp=$('commentInput-'+id);if(!ch)return;
  if(!r){ch.style.display='none';if(inp)inp.placeholder='Write a supportive comment...';return}
@@ -7393,7 +7394,7 @@ window.addComment=function(postId){requireLogin(function(){
  var p=posts.find(function(x){return x.id===postId}),inp=$('commentInput-'+postId);if(!p||!inp)return;
  var t=inp.value.trim(),r=rep[postId],max=r?280:300;if(!t)return showToast('Write a comment first.');
  if(t.length>max)return showToast('Comment must be '+max+' characters or less.');
- (p.comments=p.comments||[]).push({id:makeId(),userId:currentUser.id,username:window.__cmAnon?'Anonymous':currentUser.username,anon:!!window.__cmAnon,content:r?'[[r:'+r.to.slice(0,8)+']] '+t:t,createdAt:new Date().toISOString()});
+ (p.comments=p.comments||[]).push({id:makeId(),userId:currentUser.id,username:currentUser.username,anon:!!window.__cmAnon,content:(r?'[[r:'+r.to.slice(0,8)+']] ':'')+(window.__cmAnon?'[[a]]':'')+t,createdAt:new Date().toISOString()});
  if(r)exp[postId+':'+r.to]=1;delete rep[postId];save(STORAGE.posts,posts);window.viewPost(postId);updateUI();showToast(r?'Reply sent. 💬':'Comment added. 💬')})};
 window.deleteComment=function(pid,cid){if(!currentUser)return;var p=posts.find(function(x){return x.id===pid});if(!p)return;
  var c=(p.comments||[]).find(function(x){return x.id===cid});if(!c)return;
@@ -7691,7 +7692,7 @@ html.v11-fade *,html.v11-fade *::before,html.v11-fade *::after{transition:backgr
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
 </style>
 <script id="v11-script">
-(function(){'use strict';if(window.__v11)return;window.__v11=1;window.SPILL_VERSION='14.0';
+(function(){'use strict';if(window.__v11)return;window.__v11=1;window.SPILL_VERSION='16.0';
 var h=document.documentElement,$=function(i){return document.getElementById(i)},K='cpgshs_skin_v1',AT='cpgshs_skin_at',RL='cpgshs_rl',PV='cpgshs_pview_v11',
 OK=['light','darkblue','pink','yellow','brown','clear','crystal','red','maroon','espresso','orange','cappuccino','black','matcha'],
 TCm={light:'#e6e8ec',darkblue:'#06142e',pink:'#fff0f6',yellow:'#fff8dc',brown:'#e9d2ba',espresso:'#1b0f09',orange:'#fff0e0',cappuccino:'#efe2d2',black:'#000000',matcha:'#e4ecd2',clear:'#0b1020',crystal:'#dfe9f7',red:'#fff1f1',maroon:'#1e0509'},
@@ -8022,6 +8023,104 @@ window.copyProfileLink=async function(uid){var u=new URL(location.href);u.hash='
 var K='spill_pending_profile',id=null;try{var mm=/[#&?]profile=([^&]+)/.exec(location.hash+location.search);if(mm){id=decodeURIComponent(mm[1]);sessionStorage.setItem(K,id);ls(K,id)}else id=sessionStorage.getItem(K)||ls(K)}catch(e){}
 if(id){var tr=0,iv=setInterval(function(){if(++tr>240)return clearInterval(iv);if(typeof currentUser==='undefined'||!currentUser)return;var u=(typeof socialUser==='function'?socialUser(id):null)||users.find(function(x){return x.id===id});if(!u)return;clearInterval(iv);try{sessionStorage.removeItem(K);localStorage.removeItem(K);history.replaceState(null,'',location.pathname)}catch(e){}window.openPublicProfile(id)},500)}
 })();
+</script>
+<style id="v16css">
+#mnPop{position:fixed;z-index:100000;background:var(--sheet,#fff);color:var(--ink,#111);border:1px solid var(--border,#ddd);border-radius:18px;box-shadow:0 16px 40px rgba(0,0,0,.3);padding:6px;display:grid;gap:2px;max-width:360px;animation:mnin .12s ease-out}@keyframes mnin{from{opacity:0;transform:translateY(6px)}}#mnPop[hidden]{display:none}
+#mnPop button{display:flex;gap:11px;align-items:center;width:100%;text-align:left;padding:8px 10px;border:0;border-radius:13px;background:none;color:inherit;font:inherit;min-width:0}#mnPop button.on{background:var(--fill)}
+#mnPop i{position:relative;width:36px;height:36px;border-radius:50%;background:var(--ig,#7c5ce6) center/cover;color:#fff;display:grid;place-items:center;font-style:normal;font-weight:900;flex:none}#mnPop i em{position:absolute;right:-1px;bottom:-1px;width:11px;height:11px;border-radius:50%;background:#31c653;border:2px solid var(--sheet,#fff)}
+#mnPop span{min-width:0;display:block}#mnPop b{display:block;font-size:14px;font-weight:600}#mnPop b strong{font-weight:900}#mnPop small{display:block;font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mn-mir{position:absolute;margin:0;overflow:hidden;color:transparent;-webkit-text-fill-color:transparent;background:transparent;pointer-events:none;z-index:2;border-style:solid;border-color:transparent}
+.mn-mir mark{background:var(--acc,#7c5ce6);opacity:.26;color:transparent;border-radius:6px;box-shadow:0 0 0 1px var(--acc,#7c5ce6)}
+.mn[data-u]{cursor:pointer;color:var(--acc,#7c5ce6)!important;font-weight:800}
+.anon-strip{margin:8px 0 2px;padding:7px 12px;border-radius:12px;background:var(--fill);color:var(--muted);font-size:11.5px;font-weight:700;border:1px dashed var(--border)}
+.bottom-nav .nav-item[data-scroll=home]{position:relative}.nav-badge{position:absolute;top:2px;left:calc(50% + 5px);min-width:18px;height:18px;padding:0 5px;border-radius:99px;background:#ff3b30;color:#fff;font-size:10.5px;font-weight:900;display:grid;place-items:center;box-shadow:0 0 0 2px var(--bg,#fff);line-height:1;animation:nbpop .35s}.nav-badge[hidden]{display:none}@keyframes nbpop{40%{transform:scale(1.35)}}
+#adm .seen{font-weight:700;color:var(--muted)}
+</style>
+<script id="v16">
+(function(){try{
+var esc=escapeHTML,ME=function(){return typeof currentUser!=='undefined'&&currentUser},sn=function(u){return String(u&&u.username||'').replace(/[^\w]/g,'')},
+L=function(k,d){try{return JSON.parse(localStorage.getItem(k)||'')||d}catch(e){return d}},W=function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},
+byName=function(n){n=String(n).toLowerCase();return users.find(function(u){return sn(u).toLowerCase()===n})};
+window.__isUser=function(n){return!!byName(n)};
+/* own anonymous posts keep their owner locally (so reactions/comments always reach the author) */
+var anonSet=new Set(),lastU=null;
+function own(){var u=ME();if(!u||typeof posts==='undefined')return;var K='spill_my_anon_'+u.id;if(lastU!==u.id){anonSet=new Set(L(K,[]));lastU=u.id}var ch=0;
+ posts.forEach(function(p){if(!p.anonymous)return;if(p.userId===u.id){if(!anonSet.has(p.id)){anonSet.add(p.id);ch=1}}else if(!p.userId&&anonSet.has(p.id))p.userId=u.id});if(ch)W(K,Array.from(anonSet))}
+setInterval(own,800);
+/* keep the 🔥 reactions when cloud sync rebuilds posts */
+var FK='spill_fires_v1';function hyd(){var m=L(FK,{});posts.forEach(function(p){if(m[p.id]&&(!p.fires||p.fires.length!==m[p.id].length))p.fires=m[p.id].slice()})}
+var tf=window.toggleFire;if(tf)window.toggleFire=function(id,e){tf(id,e);var p=posts.find(function(x){return x.id===id});if(p){var m=L(FK,{});m[id]=p.fires||[];W(FK,m)}};
+function strip(){var u=ME();if(!u)return;document.querySelectorAll('button.action[onclick*=toggleHeart]').forEach(function(b){var c=b.closest('.post-card');if(!c||c.dataset.as)return;var m=/toggleHeart\('([^']+)'/.exec(b.getAttribute('onclick')||''),p=m&&posts.find(function(x){return x.id===m[1]}),t=c.querySelector('.post-text');if(!p||!t||!p.anonymous||p.userId!==u.id)return;c.dataset.as=1;var d=document.createElement('div');d.className='anon-strip';d.textContent='🕶 Only you know this is yours · ♥ '+(p.hearts||0)+' · 🔥 '+(p.fires||[]).length+' · 💬 '+(p.comments||[]).length;t.after(d)})}
+/* @mentions in rendered text: highlight + tap opens the profile */
+function hlHTML(t){return esc(t).replace(/(^|\s)@(\w{2,30})/g,function(s,p,n){return byName(n)?p+'<span class="mn">@'+n+'</span>':s})}
+function mn(){document.querySelectorAll('.post-text:not([data-m])').forEach(function(el){el.dataset.m=1;var w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),a=[],n;while(n=w.nextNode())if(/(^|\s)@\w{2,30}/.test(n.nodeValue))a.push(n);
+ a.forEach(function(t){var s=document.createElement('span');s.innerHTML=hlHTML(t.nodeValue);t.replaceWith.apply(t,[].slice.call(s.childNodes))})});
+ var st=document.getElementById('sheetText');if(st&&st.dataset.t!==st.textContent){st.dataset.t=st.textContent;if(st.textContent.indexOf('@')>-1)st.innerHTML=hlHTML(st.textContent)}
+ document.querySelectorAll('.mn:not([data-u])').forEach(function(e){var u=byName(e.textContent.replace(/^@/,''));if(u)e.dataset.u=u.id})}
+document.addEventListener('click',function(e){var m=e.target.closest('.mn[data-u]');if(!m)return;e.preventDefault();e.stopPropagation();window.openPublicProfile(m.dataset.u)},true);
+/* ===== Facebook-style @mention picker with ranking algorithm ===== */
+var MF='spill_mn_stats_v1';function learn(id){var s=L(MF,{}),r=s[id]||{n:0,t:0};r.n++;r.t=Date.now();s[id]=r;W(MF,s)}
+function fuzzy(h,q){var i=0;for(var j=0;j<h.length&&i<q.length;j++)if(h[j]===q[i])i++;return i===q.length}
+function mscore(h,q){if(!q)return 0;if(h===q)return 130;if(h.indexOf(q)===0)return 100;if(new RegExp('[_\\d]'+q.replace(/[^\w]/g,'')).test(h))return 70;if(h.indexOf(q)>-1)return 45;if(q.length>2&&fuzzy(h,q))return 20;return-1}
+function cands(q,el){var u=ME();if(!u)return[];var mu=users.find(function(x){return x.id===u.id})||{},fo=mu.following||[],on=window.__online||new Set(),st=L(MF,{}),now=Date.now(),pid=(/^commentInput-(.+)$/.exec(el.id||'')||[])[1],post=pid&&posts.find(function(p){return p.id===pid}),ctx={},out=[];
+ if(post){if(!post.anonymous&&post.userId&&post.userId!==u.id)ctx[post.userId]=45;(post.comments||[]).slice().reverse().forEach(function(c,i){if(c.userId&&c.userId!==u.id&&!/\[\[a\]\]/.test(c.content||''))ctx[c.userId]=Math.max(ctx[c.userId]||0,30-Math.min(i,10))})}
+ q=q.toLowerCase();users.forEach(function(x){if(x.id===u.id||x.banned||x.noLogin)return;var h=sn(x).toLowerCase();if(!h)return;var m=mscore(h,q);if(m<0)return;
+  var iF=fo.indexOf(x.id)>-1,fM=(x.following||[]).indexOf(u.id)>-1,s=m*100+(ctx[x.id]||0)+(iF?25:0)+(fM?15:0)+(iF&&fM?10:0)+(x.grade&&x.grade===mu.grade?(x.section&&x.section===mu.section?12:6):0)+(on.has&&on.has(x.id)?18:0),r=st[x.id];
+  if(r)s+=Math.min(30,8*Math.log(1+r.n))+25*Math.exp(-(now-r.t)/(14*864e5));
+  var why=ctx[x.id]?'In this conversation':iF&&fM?'Mutual · following':iF?'Following':fM?'Follows you':[x.grade&&'Grade '+x.grade,x.section].filter(Boolean).join(' · ')||'Student';
+  out.push({u:x,s:s,h:h,on:on.has&&on.has(x.id),why:why})});
+ return out.sort(function(a,b){return b.s-a.s||a.h.localeCompare(b.h)}).slice(0,6)}
+var pop=document.createElement('div');pop.id='mnPop';pop.hidden=true;pop.setAttribute('role','listbox');document.body.appendChild(pop);var cur=null,items=[],sel=0;
+function okEl(el){return!!el&&(el.id==='postText'||el.id==='editPostText'||(el.id&&el.id.indexOf('commentInput-')===0)||(el.tagName==='INPUT'&&el.closest&&!!el.closest('.comment-form')))}
+function tok(el){var c=el.selectionStart;if(c==null)return null;var m=/(^|[\s(])@(\w{0,24})$/.exec(el.value.slice(0,c));return m?{q:m[2],s:c-m[2].length-1,e:c}:null}
+function hide(){pop.hidden=true;cur=null}
+function show(el,q){items=cands(q,el);if(!items.length)return hide();sel=0;cur=el;pop.textContent='';
+ items.forEach(function(c,i){var b=document.createElement('button'),a=document.createElement('i'),t=document.createElement('span'),n=document.createElement('b'),w=document.createElement('small'),k=q?c.h.indexOf(q.toLowerCase()):-1,nm=sn(c.u);
+  b.type='button';b.dataset.i=i;b.setAttribute('role','option');if(!i)b.className='on';
+  if(/^(data:image|https?:)/.test(c.u.avatar||''))a.style.backgroundImage='url("'+c.u.avatar+'")';else a.textContent=getInitial(c.u.username);
+  if(c.on){a.appendChild(document.createElement('em'))}
+  n.appendChild(document.createTextNode('@'));if(k>-1){n.appendChild(document.createTextNode(nm.slice(0,k)));var g=document.createElement('strong');g.textContent=nm.slice(k,k+q.length);n.appendChild(g);n.appendChild(document.createTextNode(nm.slice(k+q.length)))}else n.appendChild(document.createTextNode(nm));
+  w.textContent=c.why+(c.on?' · Online':'');t.appendChild(n);t.appendChild(w);b.appendChild(a);b.appendChild(t);pop.appendChild(b)});
+ var cb=getComputedStyle(document.documentElement).getPropertyValue('--card').trim();pop.style.background=/^#[0-9a-f]{6}$/i.test(cb)?cb:(document.documentElement.getAttribute('data-theme')==='dark'?'#1d1d24':'#fff');pop.hidden=false;var r=el.getBoundingClientRect(),h=pop.offsetHeight,w2=Math.min(Math.max(r.width,240),360),tp=r.top-h-8;pop.style.width=w2+'px';pop.style.left=Math.max(8,Math.min(r.left,innerWidth-w2-8))+'px';pop.style.top=(tp<8?r.bottom+8:tp)+'px'}
+function pick(c){var el=cur;if(!el||!c)return;var t=tok(el);if(!t)return hide();el.setRangeText('@'+sn(c.u)+' ',t.s,t.e,'end');learn(c.u.id);hide();el.focus();el.dispatchEvent(new Event('input',{bubbles:true}))}
+/* highlight the picked names inside the text box (mirror layer) */
+var MK=['fontFamily','fontSize','fontWeight','fontStyle','letterSpacing','lineHeight','textTransform','textIndent','wordSpacing','paddingTop','paddingRight','paddingBottom','paddingLeft','borderTopWidth','borderRightWidth','borderBottomWidth','borderLeftWidth','boxSizing','tabSize','textAlign'];
+function mir(el){var m=el._mir;if(m)return m;m=el._mir=document.createElement('div');m.className='mn-mir';m.setAttribute('aria-hidden','true');el.parentNode.insertBefore(m,el.nextSibling);
+ var T=el.tagName==='TEXTAREA'?HTMLTextAreaElement:HTMLInputElement,d=Object.getOwnPropertyDescriptor(T.prototype,'value');try{Object.defineProperty(el,'value',{configurable:true,get:function(){return d.get.call(el)},set:function(v){d.set.call(el,v);msync(el)}})}catch(e){}
+ el.addEventListener('scroll',function(){m.scrollTop=el.scrollTop;m.scrollLeft=el.scrollLeft});if(window.ResizeObserver)new ResizeObserver(function(){msync(el)}).observe(el);return m}
+function msync(el){var m=mir(el),cs=getComputedStyle(el),p=el.parentNode;if(getComputedStyle(p).position==='static')p.style.position='relative';MK.forEach(function(k){m.style[k]=cs[k]});
+ m.style.whiteSpace=el.tagName==='TEXTAREA'?'pre-wrap':'pre';m.style.overflowWrap=cs.overflowWrap;m.style.wordBreak=cs.wordBreak;m.style.top=el.offsetTop+'px';m.style.left=el.offsetLeft+'px';m.style.width=el.offsetWidth+'px';m.style.height=el.offsetHeight+'px';
+ m.innerHTML=esc(el.value).replace(/(^|[\s(])@(\w{2,30})/g,function(s,p,n){return byName(n)?p+'<mark>@'+n+'</mark>':s})+'\u200b';m.scrollTop=el.scrollTop;m.scrollLeft=el.scrollLeft}
+document.addEventListener('input',function(e){var el=e.target;if(!okEl(el))return;msync(el);var t=tok(el);if(t)show(el,t.q);else hide()},true);
+document.addEventListener('focusin',function(e){if(okEl(e.target))msync(e.target)});
+document.addEventListener('keydown',function(e){var el=e.target;
+ if(!pop.hidden){var k=e.key;if(k==='ArrowDown'||k==='ArrowUp'){e.preventDefault();sel=(sel+(k==='ArrowDown'?1:items.length-1))%items.length;pop.querySelectorAll('button').forEach(function(b,i){b.classList.toggle('on',i===sel)});return}if(k==='Enter'||k==='Tab'){e.preventDefault();e.stopImmediatePropagation();pick(items[sel]);return}if(k==='Escape'){hide();return}}
+ if(e.key==='Backspace'&&okEl(el)&&el.selectionStart===el.selectionEnd){var c=el.selectionStart,m=/(^|[\s(])(@\w{2,30}) $/.exec(el.value.slice(0,c));if(m&&byName(m[2].slice(1))){e.preventDefault();el.setRangeText('',c-m[2].length-1,c,'end');el.dispatchEvent(new Event('input',{bubbles:true}))}}},true);
+['pointerdown','mousedown'].forEach(function(n){pop.addEventListener(n,function(e){var b=e.target.closest('button');e.preventDefault();if(b&&n==='pointerdown')pick(items[+b.dataset.i])})});
+document.addEventListener('focusout',function(e){if(okEl(e.target))setTimeout(hide,220)});addEventListener('resize',hide);
+/* Home icon: Facebook-style count of new posts */
+var HB=null,lastN=0,title0=document.title,bt=0;
+function hb(){if(HB)return HB;var b=document.querySelector('.bottom-nav .nav-item[data-scroll="home"]');if(!b)return null;HB=document.createElement('b');HB.className='nav-badge';HB.hidden=true;b.appendChild(HB);return HB}
+function atHome(){var m=document.getElementById('home'),top=m?m.getBoundingClientRect().top+(window.scrollY||0):0;return!document.hidden&&(window.scrollY||document.documentElement.scrollTop||0)<top+160&&!document.querySelector('.modal-backdrop.open')&&!document.body.classList.contains('tab-profile')}
+function badge(){var u=ME(),b=hb();if(!b)return;if(!u||typeof posts==='undefined'){b.hidden=true;return}var K='spill_feed_wm_'+u.id,w=+(localStorage.getItem(K)||0),m=0;
+ posts.forEach(function(p){if(p.archived)return;var t=Date.parse(p.createdAt);if(t>m)m=t});if(!w||atHome()){if(m>w){try{localStorage.setItem(K,m)}catch(e){}}w=Math.max(w,m)}
+ var n=0;if(w)posts.forEach(function(p){if(p.archived||p.userId===u.id||anonSet.has(p.id))return;if(Date.parse(p.createdAt)>w)n++});
+ b.hidden=!n;b.textContent=n>99?'99+':n;if(n!==lastN){if(n){b.style.animation='none';b.offsetWidth;b.style.animation=''}lastN=n;document.title=(n?'('+(n>99?'99+':n)+') ':'')+title0}}
+setInterval(badge,1000);document.addEventListener('visibilitychange',badge);addEventListener('scroll',function(){clearTimeout(bt);bt=setTimeout(badge,150)},{passive:true});document.addEventListener('click',function(e){if(e.target.closest('.nav-item[data-scroll="home"]'))setTimeout(badge,450)});
+/* presence for the superadmin: online now + last seen */
+var lastSent=0,tbl=null,cs={},seen=L('spill_seen_v2',{});
+function isAdm(){var u=ME(),m=u&&users.find(function(x){return x.id===u.id});return!!m&&(m.role==='admin'||m.role==='superadmin')}
+function noTbl(r){return r&&r.error&&/relation|42P01|PGRST205|schema cache|does not exist/i.test((r.error.code||'')+' '+(r.error.message||''))}
+function beat(f){var u=ME(),sb=window.__sb;if(!u||!sb||tbl===false)return;if(document.hidden&&!f)return;if(Date.now()-lastSent<(f?15000:110000))return;lastSent=Date.now();
+ try{sb.from('presence_seen').upsert({user_id:u.id,seen_at:new Date().toISOString()}).then(function(r){if(noTbl(r))tbl=false;else if(r&&!r.error)tbl=true},function(){})}catch(e){}}
+function pullSeen(){var sb=window.__sb;if(!sb||!isAdm()||tbl===false)return;try{sb.from('presence_seen').select('user_id,seen_at').then(function(r){if(noTbl(r)){tbl=false;return}if(r&&!r.error&&r.data)r.data.forEach(function(x){cs[x.user_id]=Date.parse(x.seen_at)||0})},function(){})}catch(e){}}
+setInterval(function(){beat(0)},30000);setTimeout(function(){beat(0)},6000);setInterval(pullSeen,30000);setTimeout(pullSeen,7000);document.addEventListener('visibilitychange',function(){if(document.hidden)beat(1)});addEventListener('pagehide',function(){beat(1)});
+setInterval(function(){var on=window.__online;if(!on||!on.size)return;var ch=0,n=Date.now();on.forEach(function(id){if(n-(seen[id]||0)>20000){seen[id]=n;ch=1}});if(ch)W('spill_seen_v2',seen)},5000);
+var am=null,at=0;function act(){if(am&&Date.now()-at<5000)return am;var m={};function b(id,t){t=Date.parse(t);if(id&&t&&t>(m[id]||0))m[id]=t}posts.forEach(function(p){if(p.userId&&!p.anonymous)b(p.userId,p.createdAt);(p.comments||[]).forEach(function(c){b(c.userId,c.createdAt)})});(typeof stories!=='undefined'?stories:[]).forEach(function(s){b(s.userId,s.createdAt)});at=Date.now();return am=m}
+window.__lastSeen=function(u,on){if(on)return{ts:Date.now(),src:'on'};var P=L('cpgshs_presence_v1',{}),b={ts:0,src:''};[[cs[u.id],'seen'],[seen[u.id],'seen'],[P[u.id],'seen'],[act()[u.id],'act']].forEach(function(x){if(x[0]&&x[0]>b.ts)b={ts:x[0],src:x[1]}});return b};
+window.__seenLabel=function(u,on){if(on)return'online now';var s=window.__lastSeen(u,0);if(!s.ts)return'no activity yet';var m=Math.max(0,Math.round((Date.now()-s.ts)/6e4));return(s.src==='act'?'last activity ':'last seen ')+(m<1?'just now':m<60?m+' min ago':m<1440?Math.floor(m/60)+' h ago':Math.floor(m/1440)+' d ago')};
+var q=0;new MutationObserver(function(){try{hyd()}catch(e){}if(q)return;q=requestAnimationFrame(function(){q=0;try{own();strip();mn();badge()}catch(e){}})}).observe(document.body,{childList:true,subtree:true});
+}catch(e){console.error('v16',e)}})();
 </script>
 </body>
 </html>
