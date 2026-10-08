@@ -8227,5 +8227,244 @@ window.__seenLabel=function(u,on){if(on)return'online now';var s=window.__lastSe
 var q=0;new MutationObserver(function(){try{hyd()}catch(e){}if(q)return;q=requestAnimationFrame(function(){q=0;try{own();strip();mn();badge()}catch(e){}})}).observe(document.body,{childList:true,subtree:true});
 }catch(e){console.error('v16',e)}})();
 </script>
+
+<style id="v17-style">
+/* ===== SPILL v17 ===== */
+:root{--jade:#176b3a;--jade-dark:#0b3d24;--jade-lite:#d9f0df;--jade-gold:#c8a85a}
+html[data-skin="jade"]:root{--bg:#dceee4;--card:#f5fbf7;--ink:#10281c;--muted:#4e6f5d;--border:#b8d8c4;--sep:rgba(23,107,58,.22);--fill:rgba(23,107,58,.10);--glass:#dceee4e8;--sheet:#f5fbf7f5;--acc:#176b3a;--tint:#176b3a;--blue:#176b3a;--blue-dark:#0b3d24;--pink:#3a9a67;--pink-dark:#0b3d24;--ig:linear-gradient(135deg,#2a8c56,#176b3a 58%,#0b3d24);--glow:rgba(23,107,58,.26);--rgb:23,107,58;--rgb2:200,168,90}
+html[data-skin="jade"] body{background:radial-gradient(62% 34% at 50% 0,rgba(87,164,117,.34),transparent 70%) top/100% 520px no-repeat,radial-gradient(42% 30% at 100% 100%,rgba(200,168,90,.22),transparent 72%) bottom right/100% 64% no-repeat,#dceee4!important}
+html[data-skin="jade"] .post-card,html[data-skin="jade"] .section-card{box-shadow:0 14px 34px rgba(11,61,36,.16),0 0 0 1px rgba(200,168,90,.22),inset 0 1px 0 rgba(255,255,255,.95)}
+html[data-skin="jade"] .highlight-circle{background:linear-gradient(135deg,#63b883,#c8a85a)!important}
+html[data-skin="jade"] .ig-avatar-xl,html[data-skin="jade"] .ig-avatar,.v17-avatar-ring{box-shadow:0 0 0 3px var(--bg),0 0 0 6px var(--acc),0 0 0 9px rgba(200,168,90,.72),0 14px 30px var(--glow)!important}
+html[data-skin="jade"] .v17-required-card{box-shadow:0 18px 55px rgba(11,61,36,.28),0 0 0 1px rgba(200,168,90,.28)}
+.v17-required{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(8,24,16,.48);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);animation:v17Fade .22s ease}
+.v17-required[hidden]{display:none!important}
+.v17-required-card{width:min(520px,100%);border-radius:28px;padding:24px;background:var(--card,#fff);border:1px solid var(--border,#e7e9f1);color:var(--ink);text-align:center}
+.v17-required-badge{display:inline-flex;padding:7px 10px;border-radius:999px;background:var(--fill);color:var(--acc);font-weight:900;font-size:11px}
+.v17-required-card h3{margin:12px 0 8px;font-size:22px}.v17-required-card p{margin:0 auto 18px;max-width:410px;color:var(--muted);font-size:12px;line-height:1.65}
+.v17-required-preview{width:92px;height:92px;border-radius:50%;margin:0 auto 14px;display:grid;place-items:center;overflow:hidden;background:var(--fill);border:4px solid rgba(200,168,90,.55);font-size:32px;font-weight:900;color:var(--acc)}
+.v17-required-preview img{width:100%;height:100%;object-fit:cover}.v17-required-card .btn{width:100%}.v17-flash{animation:v17Flash 1.4s ease-in-out 2}
+@keyframes v17Fade{from{opacity:0}to{opacity:1}}@keyframes v17Flash{0%,100%{box-shadow:0 0 0 0 rgba(23,107,58,0)}40%{box-shadow:0 0 0 10px rgba(23,107,58,.10),0 0 0 20px rgba(23,107,58,.04)}}
+.v17-profile-photo-row{display:flex;gap:12px;align-items:center;padding:12px;border:1px solid var(--border);background:var(--fill);border-radius:16px;margin-bottom:15px}.v17-profile-photo{width:58px;height:58px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:var(--ig);color:#fff;font-weight:900;flex:0 0 auto}.v17-profile-photo img{width:100%;height:100%;object-fit:cover}.v17-profile-photo-copy{min-width:0;flex:1}.v17-profile-photo-copy strong{display:block;font-size:12px}.v17-profile-photo-copy span{display:block;margin-top:3px;color:var(--muted);font-size:10px;line-height:1.45}
+.v17-cooldown{margin-top:6px;color:var(--muted);font-size:10px;line-height:1.4}.v17-cooldown.bad{color:#b4234d;font-weight:800}.v17-required-pill{display:inline-flex;margin-left:6px;padding:3px 7px;border-radius:999px;background:#fff1f5;color:#b4234d;font-size:9px;font-weight:900;vertical-align:middle}
+.v17-tools{margin-top:14px;padding:14px;border:1px solid var(--border);background:var(--fill);border-radius:18px}.v17-tools h4{margin:0 0 4px;font-size:13px}.v17-tools p{margin:0 0 10px;color:var(--muted);font-size:10px;line-height:1.5}.v17-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px}.v17-metric{padding:9px 6px;border-radius:13px;background:var(--card);border:1px solid var(--border);text-align:center}.v17-metric b{display:block;font-size:15px}.v17-metric span{display:block;margin-top:2px;color:var(--muted);font-size:9px}.v17-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}.v17-actions button{min-height:38px;padding:0 10px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--ink);font-size:10px;font-weight:850}.v17-actions button.danger{color:#b4234d;background:#fff1f5;border-color:#ffd2df}.v17-queue{display:grid;gap:8px;margin-top:10px}.v17-queue-item{padding:10px;border:1px solid var(--border);border-radius:13px;background:var(--card)}.v17-queue-item strong{font-size:11px}.v17-queue-item span{display:block;margin-top:4px;color:var(--muted);font-size:9px;line-height:1.45}.v17-risk{display:inline-flex;float:right;padding:4px 7px;border-radius:999px;font-size:8px;font-weight:900}.v17-risk.high{background:#fff1f5;color:#b4234d}.v17-risk.med{background:#fff7e8;color:#9a6700}.v17-risk.low{background:#ecfdf3;color:#157347}
+.v17-fire{color:#df5a14!important}.v17-fire.on{background:rgba(223,90,20,.10)!important;box-shadow:0 6px 14px rgba(223,90,20,.12)}.v17-fire:active{transform:scale(.92)}
+.v17-comment-report{margin-left:6px;border:0;background:transparent;color:var(--muted);font-size:9px;font-weight:800;padding:0 4px;cursor:pointer}.v17-comment-report:hover{color:var(--pink-dark)}
+.v17-comment-warn{display:inline-flex;margin:6px 0 0;padding:5px 8px;border-radius:9px;background:#fff8e6;color:#8a6512;font-size:9px;font-weight:800}
+.v17-jade-swatch{background:linear-gradient(135deg,#2a8c56,#176b3a 58%,#0b3d24)!important;box-shadow:0 0 0 2px rgba(200,168,90,.7)}
+@media(max-width:560px){.v17-actions{grid-template-columns:1fr}.v17-metrics{grid-template-columns:repeat(3,1fr)}.v17-required-card{padding:20px}.v17-required-card h3{font-size:20px}}
+</style>
+<script id="v17">
+(function(){'use strict';
+if(window.__v17)return;window.__v17=1;window.SPILL_VERSION='17.0';
+var H=document.documentElement,$=function(id){return document.getElementById(id)},now=function(){return Date.now()},DAY3=72*60*60*1000,
+  safe=window.escapeHTML||function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]})},
+  ls={g:function(k,f){try{var v=localStorage.getItem(k);return v==null?f:v}catch(e){return f}},s:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}},
+  U=function(){return typeof currentUser!=='undefined'&&currentUser?users.find(function(x){return x.id===currentUser.id})||null:null},
+  SB=function(){return window.__sb||null};
+
+/* ---------- Jade / premium green skin ---------- */
+function jadeButtons(){
+  document.querySelectorAll('.sk-g').forEach(function(g){
+    if(g.querySelector('[data-s="jade"]'))return;
+    var b=document.createElement('button');b.type='button';b.className='sk-o';b.dataset.s='jade';b.innerHTML='<i class="v17-jade-swatch"></i>Jade';g.appendChild(b);
+  });
+}
+function setJade(){
+  H.setAttribute('data-skin','jade');
+  ls.s('cpgshs_skin_v1','jade');ls.s('cpgshs_skin_at',String(now()));
+  document.querySelectorAll('.sk-o').forEach(function(b){b.classList.toggle('on',b.dataset.s==='jade')});
+  try{if(window.__spillPal){var o=window.__spillPal;window.__spillPal=function(){var p=o();if(H.getAttribute('data-skin')==='jade'){p.bg=['#1b6b43','#2a8c56','#c8a85a'];p.hdr=['#176b3a','#0b3d24'];p.card='#f5fbf7';p.ink='#10281c';p.acc='#176b3a';p.heart='#176b3a';p.shadow='rgba(11,61,36,.35)';p.pill='rgba(255,255,255,.34)';}return p;}}
+  }catch(e){}
+}
+jadeButtons();setTimeout(jadeButtons,700);setTimeout(jadeButtons,1800);document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.sk-o[data-s="jade"]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();setJade()},true);
+
+/* ---------- legacy profile-photo requirement ---------- */
+var req,$reqPrev,$reqCopy;
+function ensureReq(){
+  if(req)return;
+  req=document.createElement('div');req.id='v17Required';req.className='v17-required';req.hidden=true;req.innerHTML='<div class="v17-required-card"><span class="v17-required-badge">SPILL profile requirement</span><div class="v17-required-preview" id="v17ReqPrev">👤</div><h3>Add a profile picture</h3><p>Your SPILL account needs a profile picture before you continue. You can crop it before saving, and you can change it later from Edit Profile.</p><button class="btn btn-primary" id="v17ReqBtn">Add profile picture</button></div>';
+  document.body.appendChild(req);$reqPrev=$('v17ReqPrev');$reqCopy=req.querySelector('p');
+  $('v17ReqBtn').addEventListener('click',function(){if(window.openProfilePicUpload)window.openProfilePicUpload();else $('profilePicInput')?.click()});
+}
+function hasAvatar(){var u=U();return !!(u&&u.avatar&&/^data:image\//.test(String(u.avatar)))}
+function isDemo(){var u=U();return !!(u&&u.noLogin)||!!(U()&&/^demo-/.test(U().id||''))}
+function enforcePhoto(){
+  if(!document.body)return;if(typeof currentUser==='undefined'||!currentUser||!Array.isArray(users))return;
+  if(isDemo()){if(req)req.hidden=true;return}
+  ensureReq();if(hasAvatar()){req.hidden=true;return}
+  req.hidden=false;req.classList.add('v17-flash');setTimeout(function(){if(req)req.classList.remove('v17-flash')},2200);
+}
+var _u17=window.updateUI; if(_u17){window.updateUI=function(){var r=_u17.apply(this,arguments);setTimeout(enforcePhoto,80);return r;};try{updateUI=window.updateUI}catch(e){}}
+setInterval(enforcePhoto,1800);setTimeout(enforcePhoto,1200);
+
+/* ---------- Edit Profile: photo card + 3-day username window ---------- */
+function injectProfileCard(){
+  var body=document.querySelector('#editProfileModal .modal-body');if(!body||body.querySelector('.v17-profile-photo-row'))return;
+  var row=document.createElement('div');row.className='v17-profile-photo-row';row.innerHTML='<div class="v17-profile-photo" id="v17EditPhoto">👤</div><div class="v17-profile-photo-copy"><strong>Profile picture <span class="v17-required-pill">Required</span></strong><span>Use a clear school-safe photo. Your crop is optimized for SPILL.</span></div><button type="button" class="btn btn-outline" id="v17EditPhotoBtn" style="flex:0 0 auto;min-height:38px">Change</button>';
+  var u=U();if(u&&u.avatar)row.querySelector('#v17EditPhoto').innerHTML='<img src="'+safe(u.avatar)+'" alt="">';
+  body.insertBefore(row,body.firstElementChild);
+  row.querySelector('#v17EditPhotoBtn').addEventListener('click',function(){window.openProfilePicUpload&&window.openProfilePicUpload()});
+  var input=$('editUsername');if(input){input.readOnly=false;input.removeAttribute('readonly');}
+}
+function unameLast(){
+  var u=U();if(!u)return 0;var k='spill_username_changed_'+u.id,local=+ls.g(k,'0')||0,meta=0;
+  try{var s=window.__sb&&window.__sb.auth&&window.__sb.auth.getSession?null:null;var sess=JSON.parse(ls.g('spill-auth','null')||'null');meta=+(sess&&sess.user&&sess.user.user_metadata&&sess.user.user_metadata.spill_username_changed_at||0)||0}catch(e){}
+  try{var raw;for(var i=0;i<localStorage.length;i++){var key=localStorage.key(i);if(/^sb-.*-auth-token$/.test(key)){raw=JSON.parse(localStorage.getItem(key)||'{}');if(raw&&raw.user&&raw.user.user_metadata)meta=Math.max(meta,+(raw.user.user_metadata.spill_username_changed_at||0));}}}catch(e){}
+  return Math.max(local,meta);
+}
+function coolLabel(){var last=unameLast(),left=last?DAY3-(now()-last):0;return left>0?Math.ceil(left/86400000)+' day'+(Math.ceil(left/86400000)===1?'':'s')+' left before you can change username again.':'Username can be changed now.'}
+function syncCooldownHint(){var input=$('editUsername');if(!input)return;var p=input.parentNode;if(!p)return;var h=p.querySelector('.v17-cooldown');if(!h){h=document.createElement('div');h.className='v17-cooldown';p.appendChild(h)}h.textContent=coolLabel();h.classList.toggle('bad',/left/.test(h.textContent));}
+var _oe=window.openEditProfile;window.openEditProfile=function(){var r=_oe?_oe.apply(this,arguments):undefined;setTimeout(function(){injectProfileCard();syncCooldownHint();var input=$('editUsername');if(input){input.readOnly=false;input.disabled=false}},30);return r};
+
+/* username persistence: profile + auth identity must move together */
+var _sp=window.saveProfileChanges;
+window.saveProfileChanges=async function(){
+  var u=U();if(!u||!_sp)return;
+  var input=$('editUsername');if(!input)return _sp();var next=input.value.trim(),old=u.username;
+  if(next.toLowerCase()!==old.toLowerCase()){
+    var last=unameLast();if(last&&now()-last<DAY3)return showToast(coolLabel());
+    if(!/^[A-Za-z0-9_]{3,20}$/.test(next))return showToast('Username: 3–20 letters, numbers, or _ only.');
+    if(users.some(function(x){return x.id!==u.id&&String(x.username||'').toLowerCase()===next.toLowerCase()}))return showToast('That username is already taken.');
+    var pin=($('currentPin')?.value||'').trim();if(!/^\d{6}$/.test(pin))return showToast('Enter your current 6-digit PIN to change username.');
+    if(!hasAvatar())return showToast('Add a profile picture before changing your username.');
+    var newPin=($('newPin')?.value||'').trim(),effectivePin=newPin||pin;
+    var before=old;
+    try{
+      await _sp();
+      var changed=U();if(!changed)return;
+      if(window.__cloud&&SB()){
+        var email=next.toLowerCase()+'@spill.cpgshs.app',pw='spill-'+effectivePin+'-'+next.toLowerCase();
+        var ar=await SB().auth.updateUser({email:email,password:pw,data:{username:next,spill_username_changed_at:now()}});
+        if(ar&&ar.error)throw ar.error;
+        if(ar&&ar.data&&ar.data.user&&ar.data.user.email&&ar.data.user.email.toLowerCase()!==email){throw new Error('Username change needs email confirmation; no change was applied.')}
+        var pr=await SB().from('profiles').update({username:next}).eq('id',u.id);if(pr&&pr.error)throw pr.error;
+        try{await SB().from('posts').update({author_name:next}).eq('author_id',u.id)}catch(e){}
+        try{await SB().from('comments').update({username:next}).eq('user_id',u.id)}catch(e){}
+      }
+      ls.s('spill_username_changed_'+u.id,String(now()));
+      syncCooldownHint();showToast('Username changed. You can change it again in 3 days.');
+    }catch(err){
+      var changedBack=U();if(changedBack){changedBack.username=before;try{currentUser.username=before;save(STORAGE.users,users);save(STORAGE.currentUser,currentUser)}catch(e){}}
+      showToast(err&&err.message?err.message:'Username change failed. Your old username was restored.');
+      return;
+    }
+  }else{await _sp();}
+  enforcePhoto();
+};
+
+/* ---------- Better comments: validation, cooldown, duplicate protection ---------- */
+var _add=window.addComment,commentCooldown={};
+if(_add){window.addComment=function(postId){
+  var u=U(),p=Array.isArray(posts)?posts.find(function(x){return x.id===postId}):null;if(!u||!p)return;
+  if(u.banned)return showToast('Your account is restricted from commenting.');
+  var input=$('commentInput-'+postId);if(!input)return;
+  var text=String(input.value||'').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g,'').trim();if(!text)return showToast('Write a comment first.');
+  if(text.length>300)return showToast('Comment must be 300 characters or less.');
+  if(!hasAvatar())return showToast('Add a profile picture before commenting.');
+  var k=u.id+'|'+postId,t=now();if(t-(commentCooldown[k]||0)<3500)return showToast('Slow down a little before posting another comment.');
+  var duplicate=(p.comments||[]).some(function(c){return c.userId===u.id&&String(c.content||'').replace(/^\[\[r:[^\]]+\]\]\s*/,'').trim().toLowerCase()===text.toLowerCase()&&t-Date.parse(c.createdAt||0)<120000});
+  if(duplicate)return showToast('That comment was already posted.');
+  input.value=text;commentCooldown[k]=t;return _add(postId);
+}};
+
+/* ---------- Comment report controls ---------- */
+window.reportCommentV17=function(postId,commentId){
+  var u=U(),p=posts.find(function(x){return x.id===postId}),c=p&&((p.comments||[]).find(function(x){return x.id===commentId}));if(!u||!p||!c)return showToast('Please sign in first.');
+  if(c.userId===u.id)return showToast('You cannot report your own comment.');
+  var key='v17-repc-'+u.id,items=ls.g(key,[]);items=Array.isArray(items)?items:[];var dayAgo=now()-86400000;items=items.filter(function(x){return x.t>dayAgo});if(items.length>=8)return showToast('Report limit reached for today.');
+  if(items.some(function(x){return x.pid===postId&&x.cid===commentId}))return showToast('You already reported this comment.');
+  items.push({pid:postId,cid:commentId,t:now()});ls.s(key,items);
+  reports.unshift({id:makeId(),postId:postId,reporterId:u.id,reason:'[COMMENT][High] '+String(c.content||'').slice(0,180),createdAt:new Date().toISOString(),status:'pending',commentId:commentId});
+  save(STORAGE.reports,reports);showToast('Comment reported for review.');
+};
+function decorateComments(){
+  var vb=$('viewBody');if(!vb||!window.__v17CurrentPost)return;var p=posts.find(function(x){return x.id===window.__v17CurrentPost});if(!p)return;
+  var rows=vb.querySelectorAll('.comment-list .comment-item');rows.forEach(function(row,i){var c=(p.comments||[])[i];if(!c||row.querySelector('[data-v17-comment-report]'))return;if(U()&&c.userId!==U().id){var parent=row.querySelector('.comment-bubble')||row.querySelector('div[style*="flex:1"]')||row.lastElementChild;if(!parent)return;var b=document.createElement('button');b.type='button';b.className='v17-comment-report';b.dataset.v17CommentReport='1';b.textContent='Report';b.onclick=function(e){e.preventDefault();e.stopPropagation();window.reportCommentV17(p.id,c.id)};parent.appendChild(b)}});
+}
+var _vp=window.viewPost; if(_vp){window.viewPost=function(id){window.__v17CurrentPost=id;var r=_vp.apply(this,arguments);setTimeout(decorateComments,20);return r;};try{viewPost=window.viewPost}catch(e){}}
+
+/* ---------- Reporting algorithm ---------- */
+function reportLimitKey(){return U()?'spill_report_window_'+U().id:null}
+function reportCountToday(){var u=U();if(!u)return 0;var a=ls.g(reportLimitKey(),[]);var cutoff=now()-86400000;return (Array.isArray(a)?a:[]).filter(function(x){return x>cutoff}).length}
+function rememberReport(postId){var k=reportLimitKey();if(!k)return;var a=ls.g(k,[]);a=Array.isArray(a)?a:[];a.push(now());ls.s(k,a.slice(-24));}
+var _submit=window.submitReport;
+if(_submit){window.submitReport=function(){
+  var u=U();if(!u)return showToast('Please sign in to submit a report.');if(reportCountToday()>=8)return showToast('You have reached the daily report limit.');
+  var active=document.querySelector('.reason-btn.active'),reason=active&&active.dataset.reason||'';var input=$('reportNote'),note=(input&&input.value||'').trim();
+  var id=window.__v17CurrentPost;
+  if(id&&reports.some(function(r){return r.postId===id&&r.reporterId===u.id&&now()-Date.parse(r.createdAt||0)<86400000}))return showToast('You already reported this post today.');
+  var before=reports.length;var r=_submit.apply(this,arguments);
+  if(reports.length>before){var item=reports[0],score=/threat|violence|personal info/i.test(reason)?3:/harassment|bullying|inappropriate/i.test(reason)?2:1;item.reason='[POST][S'+score+'] '+(item.reason||reason)+(note?' — '+note:'');item.risk=score;item.createdAt=item.createdAt||new Date().toISOString();save(STORAGE.reports,reports);rememberReport(id);}
+  return r;
+}};
+
+/* ---------- Fire reaction: stable ledger + clean UI + aura refresh ---------- */
+var FIRE_KEY='spill_fires_v2';
+function fireMap(){var m=ls.g(FIRE_KEY,{});return m&&typeof m==='object'?m:{}}
+function syncFireLedger(){var m=fireMap();(posts||[]).forEach(function(p){if(Array.isArray(m[p.id]))p.fires=Array.from(new Set(m[p.id]));});}
+syncFireLedger();
+window.toggleFire=function(id,e){
+  var p=posts&&posts.find(function(x){return x.id===id});if(!p)return;if(!U())return window.requireLogin?window.requireLogin(function(){}):showAuth('login');
+  p.fires=Array.isArray(p.fires)?Array.from(new Set(p.fires)):[];var uid=U().id,idx=p.fires.indexOf(uid),on=idx<0;if(on)p.fires.push(uid);else p.fires.splice(idx,1);p.fires=Array.from(new Set(p.fires));
+  var m=fireMap();m[id]=p.fires.slice();ls.s(FIRE_KEY,m);try{save(STORAGE.posts,posts)}catch(e){}
+  document.querySelectorAll('.fire-btn[data-id="'+CSS.escape(String(id))+'"]').forEach(function(b){b.classList.toggle('on',on);b.classList.toggle('v17-fire',true);var n=b.querySelector('span');if(n)n.textContent=p.fires.length;b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop')});
+  if(on&&typeof FX==='function'){var t=(e&&e.currentTarget)||document.querySelector('.fire-btn[data-id="'+CSS.escape(String(id))+'"]');if(t){var r=t.getBoundingClientRect();FX(r.left+r.width/2,r.top+r.height/2,['🔥','🍊','✨','🧡'])}}
+  setTimeout(decorateComments,0);return on;
+};
+function addFireToView(){var bar=document.querySelector('#viewBody .ig-bar');if(!bar||!window.__v17CurrentPost||bar.querySelector('[data-v17-fire]'))return;var p=posts.find(function(x){return x.id===window.__v17CurrentPost});if(!p)return;var b=document.createElement('button');b.type='button';b.className='ig-b v17-fire';b.dataset.v17Fire='1';b.setAttribute('aria-label','Fire reaction');b.innerHTML='🔥 <span>'+(p.fires||[]).length+'</span>';if((p.fires||[]).indexOf(U()?.id)>-1)b.classList.add('on');b.onclick=function(e){e.stopPropagation();window.toggleFire(p.id,e);addFireToView()};bar.insertBefore(b,bar.querySelector('.ig-sp')||null)}
+var _igv=window.viewPost;if(_igv){window.viewPost=function(id){var r=_igv.apply(this,arguments);window.__v17CurrentPost=id;setTimeout(function(){syncFireLedger();addFireToView();decorateComments()},20);return r;};try{viewPost=window.viewPost}catch(e){}}
+
+/* ---------- Aura 2.0: stable score + fire weighting ---------- */
+window.__v17Aura=function(uid){var h=0,f=0,c=0,s=0,n=0;posts.forEach(function(p){if(p.userId!==uid)return;n++;h+=p.hearts||0;f+=(p.fires||[]).length;c+=(p.comments||[]).length;s+=(p.sharedBy||[]).length});var u=users.find(function(x){return x.id===uid})||{},followers=(u.followers||[]).length,pts=Math.round(Math.sqrt(Math.max(0,n*5+h+f*2.25+c*2.5+s*3.5+followers*2))*10);var levels=[[0,'New','☕'],[60,'Rising','🌱'],[140,'Glowing','🔥'],[260,'Radiant','✨'],[420,'Legend','👑']];var i=0;while(i<levels.length-1&&pts>=levels[i+1][0])i++;var next=levels[i+1];return{pts:pts,level:levels[i],next:next?next[0]-pts:0,pct:next?Math.min(100,Math.round((pts-levels[i][0])/(next[0]-levels[i][0])*100)):100}}
+function refreshAura(){var u=U();if(!u)return;var el=document.querySelector('.aura');if(!el)return;var a=window.__v17Aura(u.id);el.innerHTML='<b>'+a.level[2]+' Aura '+a.pts+'</b><span>'+a.level[1]+(a.next?' · '+a.next+' to next level':' · max level')+'</span><i><u style="width:'+a.pct+'%"></u></i>';}
+setInterval(function(){try{syncFireLedger();refreshAura();addFireToView()}catch(e){}},2500);
+
+/* ---------- Bug reporting: structured + deduped ---------- */
+function bugKey(){var u=U();return u?'spill_bug_last_'+u.id:null}
+function openBugV17(){
+  if(!U())return showToast('Log in to report a bug.');
+  var old=document.getElementById('v17BugModal');if(old){old.classList.add('open');return}
+  var m=document.createElement('div');m.id='v17BugModal';m.className='modal-backdrop open';m.innerHTML='<div class="modal"><div class="modal-head"><h3>Report a bug</h3><button class="close-btn" id="v17BugX">✕</button></div><div class="modal-body"><div class="field"><label>What happened?</label><select id="v17BugType"><option>Broken feature</option><option>Performance / lag</option><option>Login / account</option><option>Comment / reporting</option><option>Design / display</option><option>Other</option></select></div><div class="field"><label>How serious is it?</label><select id="v17BugSev"><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select></div><div class="field"><label for="v17BugText">Steps or details</label><textarea id="v17BugText" maxlength="500" placeholder="What did you tap, what did you expect, and what happened instead?"></textarea></div><div class="form-actions"><button class="btn btn-outline" id="v17BugCancel">Cancel</button><button class="btn btn-primary" id="v17BugSend">Send report</button></div></div></div>';
+  document.body.appendChild(m);var close=function(){m.remove()};m.querySelector('#v17BugX').onclick=close;m.querySelector('#v17BugCancel').onclick=close;m.addEventListener('click',function(e){if(e.target===m)close()});m.querySelector('#v17BugSend').onclick=function(){
+    var u=U(),last=+ls.g(bugKey(),'0')||0;if(now()-last<60000)return showToast('Please wait a minute between bug reports.');
+    var text=(m.querySelector('#v17BugText').value||'').trim();if(text.length<8)return showToast('Please give a little more detail.');
+    var type=m.querySelector('#v17BugType').value,sev=m.querySelector('#v17BugSev').value;
+    var fingerprint=(type+'|'+text.toLowerCase().replace(/\W+/g,' ').trim()).slice(0,180),local=ls.g('spill_bug_hashes_'+u.id,[]);local=Array.isArray(local)?local:[];if(local.indexOf(fingerprint)>-1)return showToast('That bug was already reported from this account.');
+    var payload='[v17]['+sev+']['+type+'] '+text;try{if(window.__cloud&&window.__sendBug)window.__sendBug(payload);else{var bk='cpgshs_bugs_v1',a=ls.g(bk,[]);a=Array.isArray(a)?a:[];a.unshift({id:makeId(),userId:u.id,username:u.username,text:payload,createdAt:new Date().toISOString()});ls.s(bk,a.slice(0,200))}}catch(e){}
+    local.push(fingerprint);ls.s('spill_bug_hashes_'+u.id,local.slice(-20));ls.s(bugKey(),String(now()));close();showToast('Bug report sent. Thanks for helping improve SPILL.');
+  };
+}
+var sxBug=$('sxBug');if(sxBug){sxBug.onclick=function(e){e.preventDefault();openBugV17()}}
+
+/* ---------- Superadmin v17 safety console ---------- */
+function reportRisk(r){var text=String(r.reason||'').toLowerCase(),score=0;if(/threat|violence|personal info|dox|leak/.test(text))score+=40;if(/harassment|bullying|inappropriate|hate/.test(text))score+=25;if(/spam/.test(text))score+=8;score+=Math.min(30,Math.max(0,Number(r.reports)||0)*8);var age=Math.max(0,(now()-Date.parse(r.createdAt||0))/3600000);score+=Math.max(0,10-age/4);return Math.round(score)}
+function riskClass(s){return s>=55?'high':s>=30?'med':'low'}
+function v17SafetyHtml(v){if(!v||v.role!=='superadmin')return'';var real=users.filter(function(u){return !u.noLogin}),missing=real.filter(function(u){return !u.avatar}).length;
+  var groups={};reports.forEach(function(r){var k=r.postId||'unknown';(groups[k]||(groups[k]=[])).push(r)});
+  var queue=Object.keys(groups).map(function(pid){var a=groups[pid],base=a[0],score=Math.max.apply(Math,a.map(function(r){return reportRisk(Object.assign({},r,{reports:a.length}))}))+Math.min(20,a.length*4);return{pid:pid,count:a.length,score:score,base:base}}).sort(function(a,b){return b.score-a.score}).slice(0,6);
+  return '<div class="v17-tools"><h4>🛡️ SPILL 17 Safety Console</h4><p>Moderation priority is based on report type, repeated reports, and recency. Destructive actions still use the existing superadmin backend checks.</p><div class="v17-metrics"><div class="v17-metric"><b>'+reports.length+'</b><span>Open reports</span></div><div class="v17-metric"><b>'+queue.filter(function(x){return x.score>=55}).length+'</b><span>High risk</span></div><div class="v17-metric"><b>'+missing+'</b><span>Missing photos</span></div></div><div class="v17-actions"><button data-v17="dedupe">Dedupe reports</button><button data-v17="stale">Clear stale reports</button><button data-v17="audit">Export safety audit</button><button data-v17="refresh">Refresh cloud</button></div><div class="v17-queue">'+(queue.length?queue.map(function(x){return '<div class="v17-queue-item"><span class="v17-risk '+riskClass(x.score)+'">RISK '+x.score+'</span><strong>'+x.count+' report'+(x.count===1?'':'s')+' · '+safe(String(x.base.reason||'').slice(0,70))+'</strong><span>Post: '+safe(String(x.pid))+' · Latest: '+safe(new Date(x.base.createdAt||Date.now()).toLocaleString())+'</span><button class="btn btn-outline" style="margin-top:7px;min-height:32px;font-size:10px" data-v17="delete-post" data-pid="'+safe(String(x.pid))+'">Remove post</button></div>'}).join(''):'<div class="hint">No active report clusters.</div>')+'</div></div>';
+}
+var _adm=window.__admTools;window.__admTools=function(v){var base=_adm?_adm(v):'';return base+v17SafetyHtml(v)};
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-v17]');if(!b)return;var a=b.dataset.v17,v=U();if(!v||v.role!=='superadmin')return showToast('Super admin access required.');
+  if(a==='delete-post'){var pid=b.dataset.pid;if(!pid)return;return window.__adminDeletePost?window.__adminDeletePost(pid,{confirm:true}).then(function(){var on=document.querySelector('#admTabs button.on');if(on)on.click()}):showToast('Moderation server is not ready.');}
+  if(a==='dedupe'){var seen={},keep=[];reports.slice().sort(function(a,b){return Date.parse(b.createdAt||0)-Date.parse(a.createdAt||0)}).forEach(function(r){var key=(r.postId||'')+'|'+(r.reporterId||'')+'|'+String(r.reason||'').replace(/\[S\d\]/,'').trim().toLowerCase();if(!seen[key]){seen[key]=1;keep.push(r)}});reports=keep;save(STORAGE.reports,reports);showToast('Duplicate reports cleaned.');}
+  else if(a==='stale'){var before=reports.length;reports=reports.filter(function(r){return posts.some(function(p){return p.id===r.postId})});save(STORAGE.reports,reports);showToast((before-reports.length)+' stale report'+(before-reports.length===1?'':'s')+' removed.');}
+  else if(a==='audit'){var data={version:'17.0',createdAt:new Date().toISOString(),stats:{users:users.filter(function(u){return !u.noLogin}).length,posts:posts.length,reports:reports.length,comments:posts.reduce(function(n,p){return n+(p.comments||[]).length},0),missingProfilePictures:users.filter(function(u){return !u.noLogin&&!u.avatar}).length},reportRisk:reports.map(function(r){return{id:r.id,postId:r.postId,reporterId:r.reporterId,risk:reportRisk(r),reason:r.reason,createdAt:r.createdAt}})};var link=document.createElement('a');link.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));link.download='spill-v17-safety-audit.json';link.click();setTimeout(function(){URL.revokeObjectURL(link.href)},4000);}
+  else if(a==='refresh'){try{var sb=SB();if(sb&&U())sb.from('profiles').select('id').eq('id',U().id).maybeSingle().then(function(){location.reload()});else location.reload()}catch(x){location.reload()}}
+  var on=document.querySelector('#admTabs button.on');if(on&&a!=='delete-post')on.click();
+},true);
+
+/* ---------- Persist username/avatar immediately in cloud ---------- */
+document.addEventListener('change',function(e){if(e.target&&e.target.id==='profilePicInput')setTimeout(function(){enforcePhoto();syncCooldownHint()},250)},false);
+
+/* ---------- Keep local fire ledger alive across cloud pulls ---------- */
+setInterval(function(){try{syncFireLedger();if(typeof users!=='undefined')users.forEach(function(u){if(u.avatar&&!/^data:image\//.test(u.avatar))u.avatar=null})}catch(e){}},3500);
+
+/* ---------- version badge for superadmins ---------- */
+setTimeout(function(){var v=U();if(v&&v.role==='superadmin'){var node=document.querySelector('#admB');if(node&&!document.getElementById('v17VersionPill')){var p=document.createElement('div');p.id='v17VersionPill';p.className='hint';p.style.margin='8px 0';p.textContent='SPILL v17.0 · safety console enabled';node.prepend(p)}}},1200);
+
+})();
+</script>
 </body>
 </html>
