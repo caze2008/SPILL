@@ -7797,9 +7797,9 @@ html.v11-fade *,html.v11-fade *::before,html.v11-fade *::after{transition:backgr
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
 </style>
 <script id="v11-script">
-(function(){'use strict';if(window.__v11)return;window.__v11=1;window.SPILL_VERSION='16.0';
+(function(){'use strict';if(window.__v11)return;window.__v11=1;window.SPILL_VERSION='17.0';
 var h=document.documentElement,$=function(i){return document.getElementById(i)},K='cpgshs_skin_v1',AT='cpgshs_skin_at',RL='cpgshs_rl',PV='cpgshs_pview_v11',
-OK=['light','darkblue','pink','yellow','brown','clear','crystal','red','maroon','espresso','orange','cappuccino','black','matcha'],
+OK=['light','darkblue','pink','yellow','brown','clear','crystal','red','maroon','espresso','orange','cappuccino','black','matcha','jade'],
 TCm={light:'#e6e8ec',darkblue:'#06142e',pink:'#fff0f6',yellow:'#fff8dc',brown:'#e9d2ba',espresso:'#1b0f09',orange:'#fff0e0',cappuccino:'#efe2d2',black:'#000000',matcha:'#e4ecd2',clear:'#0b1020',crystal:'#dfe9f7',red:'#fff1f1',maroon:'#1e0509'},
 ls={g:function(k){try{return localStorage.getItem(k)}catch(e){return null}},s:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}},
 SAFE=/^data:image\/(png|jpe?g|webp|gif);base64,[A-Za-z0-9+\/=]+$/,ID=/^[\w-]{6,64}$/,
@@ -8238,6 +8238,8 @@ html[data-skin="jade"] .highlight-circle{background:linear-gradient(135deg,#63b8
 html[data-skin="jade"] .ig-avatar-xl,html[data-skin="jade"] .ig-avatar,.v17-avatar-ring{box-shadow:0 0 0 3px var(--bg),0 0 0 6px var(--acc),0 0 0 9px rgba(200,168,90,.72),0 14px 30px var(--glow)!important}
 html[data-skin="jade"] .v17-required-card{box-shadow:0 18px 55px rgba(11,61,36,.28),0 0 0 1px rgba(200,168,90,.28)}
 .v17-required{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(8,24,16,.48);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);animation:v17Fade .22s ease}
+body.v17-photo-lock{overflow:hidden!important} body.v17-photo-lock .modal-backdrop{pointer-events:none!important} body.v17-photo-lock #v17Required{pointer-events:auto!important} body.v17-photo-lock #v11Crop{z-index:100001!important}
+.v17-username-lock{display:block;margin-top:5px;color:#b4234d;font-size:9px;font-weight:900}.v17-username-lock[hidden]{display:none!important}
 .v17-required[hidden]{display:none!important}
 .v17-required-card{width:min(520px,100%);border-radius:28px;padding:24px;background:var(--card,#fff);border:1px solid var(--border,#e7e9f1);color:var(--ink);text-align:center}
 .v17-required-badge{display:inline-flex;padding:7px 10px;border-radius:999px;background:var(--fill);color:var(--acc);font-weight:900;font-size:11px}
@@ -8283,7 +8285,7 @@ jadeButtons();setTimeout(jadeButtons,700);setTimeout(jadeButtons,1800);document.
 var req,$reqPrev,$reqCopy;
 function ensureReq(){
   if(req)return;
-  req=document.createElement('div');req.id='v17Required';req.className='v17-required';req.hidden=true;req.innerHTML='<div class="v17-required-card"><span class="v17-required-badge">SPILL profile requirement</span><div class="v17-required-preview" id="v17ReqPrev">👤</div><h3>Add a profile picture</h3><p>Your SPILL account needs a profile picture before you continue. You can crop it before saving, and you can change it later from Edit Profile.</p><button class="btn btn-primary" id="v17ReqBtn">Add profile picture</button></div>';
+  req=document.createElement('div');req.id='v17Required';req.className='v17-required';req.hidden=true;req.innerHTML='<div class="v17-required-card"><span class="v17-required-badge">SPILL profile requirement</span><div class="v17-required-preview" id="v17ReqPrev">👤</div><h3>Profile picture required</h3><p>Your SPILL account needs a profile picture before you continue. You can crop it before saving, and you can change it later from Edit Profile.</p><button class="btn btn-primary" id="v17ReqBtn">Add profile picture</button></div>';
   document.body.appendChild(req);$reqPrev=$('v17ReqPrev');$reqCopy=req.querySelector('p');
   $('v17ReqBtn').addEventListener('click',function(){if(window.openProfilePicUpload)window.openProfilePicUpload();else $('profilePicInput')?.click()});
 }
@@ -8292,8 +8294,8 @@ function isDemo(){var u=U();return !!(u&&u.noLogin)||!!(U()&&/^demo-/.test(U().i
 function enforcePhoto(){
   if(!document.body)return;if(typeof currentUser==='undefined'||!currentUser||!Array.isArray(users))return;
   if(isDemo()){if(req)req.hidden=true;return}
-  ensureReq();if(hasAvatar()){req.hidden=true;return}
-  req.hidden=false;req.classList.add('v17-flash');setTimeout(function(){if(req)req.classList.remove('v17-flash')},2200);
+  ensureReq();if(hasAvatar()){req.hidden=true;document.body.classList.remove('v17-photo-lock');return}
+  req.hidden=false;document.body.classList.add('v17-photo-lock');req.classList.add('v17-flash');setTimeout(function(){if(req)req.classList.remove('v17-flash')},2200);
 }
 var _u17=window.updateUI; if(_u17){window.updateUI=function(){var r=_u17.apply(this,arguments);setTimeout(enforcePhoto,80);return r;};try{updateUI=window.updateUI}catch(e){}}
 setInterval(enforcePhoto,1800);setTimeout(enforcePhoto,1200);
@@ -8318,40 +8320,89 @@ function syncCooldownHint(){var input=$('editUsername');if(!input)return;var p=i
 var _oe=window.openEditProfile;window.openEditProfile=function(){var r=_oe?_oe.apply(this,arguments):undefined;setTimeout(function(){injectProfileCard();syncCooldownHint();var input=$('editUsername');if(input){input.readOnly=false;input.disabled=false}},30);return r};
 
 /* username persistence: profile + auth identity must move together */
-var _sp=window.saveProfileChanges;
+/* ---------- v17 username/profile transaction ---------- */
+var _v17BaseSaveProfile=window.saveProfileChanges;
 window.saveProfileChanges=async function(){
-  var u=U();if(!u||!_sp)return;
-  var input=$('editUsername');if(!input)return _sp();var next=input.value.trim(),old=u.username;
-  if(next.toLowerCase()!==old.toLowerCase()){
-    var last=unameLast();if(last&&now()-last<DAY3)return showToast(coolLabel());
-    if(!/^[A-Za-z0-9_]{3,20}$/.test(next))return showToast('Username: 3–20 letters, numbers, or _ only.');
-    if(users.some(function(x){return x.id!==u.id&&String(x.username||'').toLowerCase()===next.toLowerCase()}))return showToast('That username is already taken.');
-    var pin=($('currentPin')?.value||'').trim();if(!/^\d{6}$/.test(pin))return showToast('Enter your current 6-digit PIN to change username.');
+  var u=U();
+  if(!u)return;
+  var usernameEl=$('editUsername'),gradeEl=$('editGrade'),sectionEl=$('editSection'),bioEl=$('editBio'),pinEl=$('currentPin'),newPinEl=$('newPin'),confirmPinEl=$('confirmNewPin');
+  if(!usernameEl)return _v17BaseSaveProfile&&_v17BaseSaveProfile.apply(this,arguments);
+  var next=String(usernameEl.value||'').trim(),old=String(u.username||''),same=next.toLowerCase()===old.toLowerCase();
+  var grade=gradeEl?String(gradeEl.value||'').trim():String(u.grade||'Grade 11'),section=sectionEl?String(sectionEl.value||'').trim():String(u.section||''),bio=bioEl?String(bioEl.value||'').trim():String(u.bio||'');
+  var currentPin=pinEl?String(pinEl.value||'').trim():'';
+  var newPin=newPinEl?String(newPinEl.value||'').trim():'';
+  var confirmPin=confirmPinEl?String(confirmPinEl.value||'').trim():'';
+  if(!validateUsername(next))return showToast('Username: 3–20 letters, numbers, or _ only.');
+  if(!['Grade 11','Grade 12'].includes(grade))return showToast('Please select Grade 11 or Grade 12.');
+  if(section && !/^[a-zA-Z0-9][a-zA-Z0-9 ._-]{1,29}$/.test(section))return showToast('Enter a valid section name.');
+  if(bio.length>160)return showToast('Bio must be 160 characters or less.');
+  if(users.some(function(x){return x.id!==u.id&&String(x.username||'').toLowerCase()===next.toLowerCase()}))return showToast('That username is already taken.');
+  var changingPin=!!(newPin||confirmPin);
+  if(changingPin){
+    if(!/^\d{6}$/.test(currentPin))return showToast('Enter your current 6-digit PIN.');
+    if(!window.pinOK||!(await window.pinOK(u,currentPin)))return showToast('Your current PIN is incorrect.');
+    if(!validatePin(newPin)||newPin!==confirmPin)return showToast('New PINs must match and be exactly 6 numbers.');
+  }
+  if(!same){
+    var last=unameLast();
+    if(last&&now()-last<DAY3)return showToast(coolLabel());
     if(!hasAvatar())return showToast('Add a profile picture before changing your username.');
-    var newPin=($('newPin')?.value||'').trim(),effectivePin=newPin||pin;
-    var before=old;
+    var stamp=now(),effectivePin=changingPin?newPin:currentPin;
+    if(!/^\d{6}$/.test(effectivePin))return showToast('Enter your current 6-digit PIN to change your username.');
+    var oldEmail=old.toLowerCase()+'@spill.cpgshs.app',newEmail=next.toLowerCase()+'@spill.cpgshs.app';
+    var oldPw='spill-'+effectivePin+'-'+old.toLowerCase(),newPw='spill-'+effectivePin+'-'+next.toLowerCase();
+    var cloud=!!window.__cloud&&!!SB();
     try{
-      await _sp();
-      var changed=U();if(!changed)return;
-      if(window.__cloud&&SB()){
-        var email=next.toLowerCase()+'@spill.cpgshs.app',pw='spill-'+effectivePin+'-'+next.toLowerCase();
-        var ar=await SB().auth.updateUser({email:email,password:pw,data:{username:next,spill_username_changed_at:now()}});
+      /* Cloud: change the auth identity first, then the profile. Roll back auth on profile failure. */
+      if(cloud){
+        var ar=await SB().auth.updateUser({email:newEmail,password:newPw,data:{username:next,spill_username_changed_at:stamp}});
         if(ar&&ar.error)throw ar.error;
-        if(ar&&ar.data&&ar.data.user&&ar.data.user.email&&ar.data.user.email.toLowerCase()!==email){throw new Error('Username change needs email confirmation; no change was applied.')}
-        var pr=await SB().from('profiles').update({username:next}).eq('id',u.id);if(pr&&pr.error)throw pr.error;
-        try{await SB().from('posts').update({author_name:next}).eq('author_id',u.id)}catch(e){}
-        try{await SB().from('comments').update({username:next}).eq('user_id',u.id)}catch(e){}
+        var emailNow=ar&&ar.data&&ar.data.user&&ar.data.user.email?String(ar.data.user.email).toLowerCase():newEmail;
+        if(emailNow!==newEmail)throw new Error('Username change requires email confirmation in the current Supabase auth settings. No local username change was saved.');
+        var pr=await SB().from('profiles').update({username:next,grade:grade,section:section,bio:bio}).eq('id',u.id);
+        if(pr&&pr.error)throw pr.error;
+      }else if(changingPin&&window.setPin){
+        await window.setPin(u,newPin);
       }
-      ls.s('spill_username_changed_'+u.id,String(now()));
-      syncCooldownHint();showToast('Username changed. You can change it again in 3 days.');
+      u.username=next;u.grade=grade;u.section=section;u.bio=bio;u.followers=u.followers||[];u.following=u.following||[];
+      if(!cloud&&changingPin&&window.setPin&&u.ph===undefined)await window.setPin(u,newPin);
+      posts.forEach(function(p){if(p.userId===u.id)p.username=next;(p.comments||[]).forEach(function(c){if(c.userId===u.id&&!c.anon)c.username=next;});});
+      currentUser.username=next;
+      ls.s('spill_username_changed_'+u.id,String(stamp));
+      save(STORAGE.users,users);save(STORAGE.posts,posts);save(STORAGE.currentUser,currentUser);
+      closeModal('editProfileModal');updateUI();syncCooldownHint();enforcePhoto();
+      showToast('Username changed. You can change it again in 3 days.');
+      return;
     }catch(err){
-      var changedBack=U();if(changedBack){changedBack.username=before;try{currentUser.username=before;save(STORAGE.users,users);save(STORAGE.currentUser,currentUser)}catch(e){}}
-      showToast(err&&err.message?err.message:'Username change failed. Your old username was restored.');
+      /* Best-effort rollback of an auth identity if the profile write failed. */
+      if(cloud){try{await SB().auth.updateUser({email:oldEmail,password:oldPw,data:{username:old}})}catch(_){} }
+      try{u.username=old;currentUser.username=old;save(STORAGE.users,users);save(STORAGE.currentUser,currentUser)}catch(_){}
+      showToast(err&&err.message?String(err.message):'Username change failed. Nothing was saved.');
       return;
     }
-  }else{await _sp();}
-  enforcePhoto();
+  }
+  /* No username change: delegate normal profile/PIN save, then enforce the photo rule. */
+  if(typeof _v17BaseSaveProfile==='function')await _v17BaseSaveProfile.apply(this,arguments);
+  syncCooldownHint();enforcePhoto();
 };
+
+/* More accurate cooldown copy and hard lock after the change. */
+function coolLabel(){
+  var last=unameLast(),left=last?Math.max(0,DAY3-(now()-last)):0;
+  if(!left)return 'Username can be changed now.';
+  var h=Math.floor(left/3600000),d=Math.floor(h/24);h%=24;
+  return 'Username change available in '+(d?d+'d ':'')+h+'h. You can update it again every 3 days.';
+}
+function syncCooldownHint(){
+  var input=$('editUsername');if(!input)return;
+  var p=input.parentNode;if(!p)return;
+  var h=p.querySelector('.v17-cooldown');if(!h){h=document.createElement('div');h.className='v17-cooldown';p.appendChild(h)}
+  h.textContent=coolLabel();h.classList.toggle('bad',/available in/.test(h.textContent));
+  var locked=!!unameLast()&&now()-unameLast()<DAY3;
+  input.disabled=false;input.readOnly=false;
+  var badge=p.querySelector('.v17-username-lock');if(!badge){badge=document.createElement('span');badge.className='v17-username-lock';p.appendChild(badge)}
+  badge.textContent=locked?'Username locked for 3 days after a change':'';badge.hidden=!locked;
+}
 
 /* ---------- Better comments: validation, cooldown, duplicate protection ---------- */
 var _add=window.addComment,commentCooldown={};
@@ -8401,6 +8452,7 @@ if(_submit){window.submitReport=function(){
 
 /* ---------- Fire reaction: stable ledger + clean UI + aura refresh ---------- */
 var FIRE_KEY='spill_fires_v2';
+function fireSelector(id){return '[data-id="'+String(id).replace(/([\\"'#.:[\],])/g,'\\$1')+'"]'}
 function fireMap(){var m=ls.g(FIRE_KEY,{});return m&&typeof m==='object'?m:{}}
 function syncFireLedger(){var m=fireMap();(posts||[]).forEach(function(p){if(Array.isArray(m[p.id]))p.fires=Array.from(new Set(m[p.id]));});}
 syncFireLedger();
@@ -8408,7 +8460,7 @@ window.toggleFire=function(id,e){
   var p=posts&&posts.find(function(x){return x.id===id});if(!p)return;if(!U())return window.requireLogin?window.requireLogin(function(){}):showAuth('login');
   p.fires=Array.isArray(p.fires)?Array.from(new Set(p.fires)):[];var uid=U().id,idx=p.fires.indexOf(uid),on=idx<0;if(on)p.fires.push(uid);else p.fires.splice(idx,1);p.fires=Array.from(new Set(p.fires));
   var m=fireMap();m[id]=p.fires.slice();ls.s(FIRE_KEY,m);try{save(STORAGE.posts,posts)}catch(e){}
-  document.querySelectorAll('.fire-btn[data-id="'+CSS.escape(String(id))+'"]').forEach(function(b){b.classList.toggle('on',on);b.classList.toggle('v17-fire',true);var n=b.querySelector('span');if(n)n.textContent=p.fires.length;b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop')});
+  document.querySelectorAll('.fire-btn'+fireSelector(id)).forEach(function(b){b.classList.toggle('on',on);b.classList.toggle('v17-fire',true);var n=b.querySelector('span');if(n)n.textContent=p.fires.length;b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop')});
   if(on&&typeof FX==='function'){var t=(e&&e.currentTarget)||document.querySelector('.fire-btn[data-id="'+CSS.escape(String(id))+'"]');if(t){var r=t.getBoundingClientRect();FX(r.left+r.width/2,r.top+r.height/2,['🔥','🍊','✨','🧡'])}}
   setTimeout(decorateComments,0);return on;
 };
@@ -8458,11 +8510,14 @@ document.addEventListener('click',function(e){var b=e.target.closest&&e.target.c
 /* ---------- Persist username/avatar immediately in cloud ---------- */
 document.addEventListener('change',function(e){if(e.target&&e.target.id==='profilePicInput')setTimeout(function(){enforcePhoto();syncCooldownHint()},250)},false);
 
+document.addEventListener('change',function(e){if(e.target&&e.target.id==='profilePicInput')setTimeout(function(){var u=U();if(u&&u.avatar){document.body.classList.remove('v17-photo-lock');if(req)req.hidden=true;var row=$('v17EditPhoto');if(row)row.innerHTML='<img src="'+safe(u.avatar)+'" alt="">'}enforcePhoto();syncCooldownHint()},500)},false);
+
 /* ---------- Keep local fire ledger alive across cloud pulls ---------- */
 setInterval(function(){try{syncFireLedger();if(typeof users!=='undefined')users.forEach(function(u){if(u.avatar&&!/^data:image\//.test(u.avatar))u.avatar=null})}catch(e){}},3500);
 
 /* ---------- version badge for superadmins ---------- */
 setTimeout(function(){var v=U();if(v&&v.role==='superadmin'){var node=document.querySelector('#admB');if(node&&!document.getElementById('v17VersionPill')){var p=document.createElement('div');p.id='v17VersionPill';p.className='hint';p.style.margin='8px 0';p.textContent='SPILL v17.0 · safety console enabled';node.prepend(p)}}},1200);
+setTimeout(function(){try{syncCooldownHint();enforcePhoto();syncFireLedger();refreshAura()}catch(e){}},600);
 
 })();
 </script>
