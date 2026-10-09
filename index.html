@@ -2547,7 +2547,7 @@ body.gated #authModal .modal-body{padding:14px 20px 22px}
 @media(max-width:350px){#glassToggleBtn{display:none!important}}
 
 /* v15: version label at the very bottom (change the text in --app-version) */
-:root{--app-version:"Version 17.0"}
+:root{--app-version:"Version 18.0"}
 /* v8.0 fixes: close button was 36 wide but min-height 44 (oblong); tall avatar photos ignored height:100% inside the grid and became ovals; active tab text was dark on dark */
 .modal-head .close-btn{width:36px;height:36px;min-width:36px;min-height:36px;padding:0;flex:none;align-self:center;border-radius:50%!important}
 .ig-avatar-xl{overflow:hidden}
@@ -5672,16 +5672,47 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
     if (bar) bar.insertAdjacentElement("afterend", tray);
     else document.querySelector(".app-shell main")?.insertAdjacentElement("afterbegin", tray);
   }
+  // ===== v18 story algorithm =====
+  // Who may see a story: "all" = everyone; "close" = the author and people the author follows back.
+  function storyAudienceOK(s) {
+    if (!currentUser) return s.audience !== "close";
+    if (s.userId === currentUser.id || s.audience !== "close") return true;
+    const a = socialUser(s.userId);
+    return !!(a && (a.following || []).includes(currentUser.id));
+  }
+  function storySeen(s) { return !!currentUser && (s.userId === currentUser.id || (s.views || []).includes(currentUser.id)); }
+  // Tray score (higher = earlier): unseen first, then freshness (6h decay), relationship, engagement.
+  function storyRank(list) {
+    const now = Date.now(), last = Math.max(...list.map(x => new Date(x.createdAt).getTime() || 0));
+    const unseen = list.filter(x => !storySeen(x)).length, fresh = Math.exp(-(now - last) / (6 * 3600e3));
+    const me = currentUser && socialUser(currentUser.id), au = socialUser(list[0].userId);
+    const rel = (me && (me.following || []).includes(list[0].userId) ? 1 : 0) + (me && au && (au.following || []).includes(me.id) ? 0.5 : 0);
+    const eng = Math.min(1, Math.log1p(list.reduce((n, x) => n + (x.views || []).length + 2 * (x.reactions || []).length, 0)) / 5);
+    return (unseen ? 100 : 0) + fresh * 40 + rel * 12 + eng * 8 + Math.min(unseen, 5);
+  }
+  function storyGroups(pool) {
+    const by = {};
+    pool.filter(storyAudienceOK).forEach(x => (by[x.userId] = by[x.userId] || []).push(x));
+    return Object.keys(by).map(uid => {
+      const l = by[uid].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      return { userId: uid, stories: l, score: storyRank(l) };
+    }).sort((a, b) => b.score - a.score);
+  }
+  // Longer text / more stickers = more time on screen (4.5s - 9s).
+  function storyDuration(x) {
+    if (!x) return 5000;
+    const words = (x.texts || []).reduce((n, t) => n + String(t.text || "").trim().split(/\s+/).filter(Boolean).length, 0);
+    return Math.min(9000, Math.max(4500, 4500 + words * 220 + (x.stickers || []).length * 700));
+  }
+  // ===== end v18 story algorithm =====
+
   window.renderStoryTray = function () {
     ensureTray(); pruneStories();
     const tray = document.getElementById("storyTray"); if (!tray) return;
     // group live stories by user
-    const byUser = {};
-    stories.filter(s => s.audience === "all" || currentUser).forEach(s => {
-      (byUser[s.userId] = byUser[s.userId] || []).push(s);
-    });
-    const myStories = currentUser ? (byUser[currentUser.id] || []) : [];
-    const viewedByMe = (list) => list.every(s => (s.views || []).includes(currentUser?.id || "guest"));
+    const groups = storyGroups(stories);
+    const myStories = currentUser ? ((groups.find(g => g.userId === currentUser.id) || {}).stories || []) : [];
+    const viewedByMe = (list) => list.every(storySeen);
     let html = "";
     // Your story
     html += `<div class="story-item yours" onclick="${currentUser ? (myStories.length ? "openStoryViewer('" + currentUser.id + "')" : "openStoryComposer()") : "showAuth('login')"}">
@@ -5691,10 +5722,10 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
       </div>
       <span class="story-name">${currentUser ? "Your story" : "Add story"}</span>
     </div>`;
-    Object.keys(byUser).forEach(uid => {
+    groups.forEach(g => {
+      const uid = g.userId, list = g.stories;
       if (currentUser && uid === currentUser.id) return;
       const u = socialUser(uid);
-      const list = byUser[uid].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
       const viewed = viewedByMe(list);
       const displayName = u ? u.username : (list[0].username || "Student");
       html += `<div class="story-item" onclick="openStoryViewer('${uid}')">
@@ -5712,16 +5743,20 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
   window.openStoryViewer = function (userId, fromArchive) {
     if (!currentUser) { showAuth("login"); return; }
     pruneStories();
-    const pool = fromArchive ? storyArchive : stories;
-    const byUser = {};
-    pool.forEach(s => { (byUser[s.userId] = byUser[s.userId] || []).push(s); });
-    Object.keys(byUser).forEach(uid => byUser[uid].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
-    const uids = Object.keys(byUser);
-    const start = uids.indexOf(userId);
-    svQueue = (start >= 0 ? uids.slice(start).concat(uids.slice(0, start)) : uids)
-      .map(uid => ({ userId: uid, stories: byUser[uid] }));
+    if (fromArchive) {
+      const by = {}; storyArchive.forEach(x => { (by[x.userId] = by[x.userId] || []).push(x); });
+      const ids = Object.keys(by), st = ids.indexOf(userId);
+      svQueue = (st >= 0 ? ids.slice(st).concat(ids.slice(0, st)) : ids)
+        .map(uid => ({ userId: uid, stories: by[uid].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)) }));
+    } else {
+      // tapped person first, then everyone else who still has unseen stories, best-ranked first
+      const groups = storyGroups(stories), first = groups.find(g => g.userId === userId);
+      svQueue = (first ? [first] : []).concat(groups.filter(g => g !== first && g.userId !== currentUser.id && g.stories.some(x => !storySeen(x))))
+        .map(g => ({ userId: g.userId, stories: g.stories }));
+    }
     if (!svQueue.length) { showToast("No stories available."); return; }
-    svUserIdx = 0; svStoryIdx = 0;
+    svUserIdx = 0;
+    svStoryIdx = fromArchive ? 0 : Math.max(0, svQueue[0].stories.findIndex(x => !storySeen(x))); // resume at first unseen
     document.getElementById("storyViewer").classList.add("open");
     document.body.style.overflow = "hidden";
     svRenderCurrent();
@@ -5770,6 +5805,7 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
   function svStartProgress() {
     const fill = document.getElementById("spf-" + svStoryIdx);
     if (!fill) return;
+    svDuration = storyDuration(svCurrent());
     let el = 0, last = performance.now();
     clearInterval(svTimer);
     svTimer = setInterval(() => {
@@ -5778,7 +5814,7 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
       el += dt;
       const pct = Math.min(100, (el / svDuration) * 100);
       fill.style.width = pct + "%";
-      if (pct >= 100) svAdvance();
+      if (pct >= 100) { clearInterval(svTimer); svAdvance(); }
     }, 50);
   }
   function svAdvance() {
@@ -7301,7 +7337,7 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
     if (nbody) nbody.addEventListener("click", e => {
       if (!currentUser) return; const r = list(), s = r.s; if (!s) return;
       const f = e.target.closest("[data-nf]"), d = e.target.closest("[data-nd]"), row = e.target.closest(".notif-item");
-      if (f) { if (f.dataset.nf === "clear") { r.items.forEach(n => { s.del[n.k] = 1; }); sv(s); } else filt = f.dataset.nf; window.renderNotifs(); window.updateNotifBadge(); return; }
+      if (f) { if (f.dataset.nf === "clear") { r.items.filter(n => !GR[filt] || GR[filt].includes(n.t)).forEach(n => { s.del[n.k] = 1; }); sv(s); } else filt = f.dataset.nf; window.renderNotifs(); window.updateNotifBadge(); return; }
       if (d) { s.del[d.dataset.nd] = 1; sv(s); window.renderNotifs(); window.updateNotifBadge(); return; }
       if (row) { const n = r.items.find(x => x.k === row.dataset.k); if (!n) return; closeModal("notifModal");
         if (n.c && window.__focusCm) window.__focusCm(n.p, n.c); else if (n.p) window.viewPost(n.p); else if (n.u && window.openPublicProfile) window.openPublicProfile(n.u); }
@@ -7854,7 +7890,7 @@ html.v11-fade *,html.v11-fade *::before,html.v11-fade *::after{transition:backgr
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
 </style>
 <script id="v11-script">
-(function(){'use strict';if(window.__v11)return;window.__v11=1;window.SPILL_VERSION='17.0';
+(function(){'use strict';if(window.__v11)return;window.__v11=1;window.SPILL_VERSION='18.0';
 var h=document.documentElement,$=function(i){return document.getElementById(i)},K='cpgshs_skin_v1',AT='cpgshs_skin_at',RL='cpgshs_rl',PV='cpgshs_pview_v11',
 OK=['light','darkblue','pink','yellow','brown','clear','crystal','red','maroon','espresso','orange','cappuccino','black','matcha','jade'],
 TCm={light:'#e6e8ec',darkblue:'#06142e',pink:'#fff0f6',yellow:'#fff8dc',brown:'#e9d2ba',espresso:'#1b0f09',orange:'#fff0e0',cappuccino:'#efe2d2',black:'#000000',matcha:'#e4ecd2',clear:'#0b1020',crystal:'#dfe9f7',red:'#fff1f1',maroon:'#1e0509'},
@@ -8337,7 +8373,7 @@ body.v17-photo-lock{overflow:hidden!important} body.v17-photo-lock .modal-backdr
 </style>
 <script id="v17">
 (function(){'use strict';
-if(window.__v17)return;window.__v17=1;window.SPILL_VERSION='17.0';
+if(window.__v17)return;window.__v17=1;window.SPILL_VERSION='18.0';
 var H=document.documentElement,$=function(id){return document.getElementById(id)},now=function(){return Date.now()},DAY3=72*60*60*1000,
   safe=window.escapeHTML||function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]})},
   ls={g:function(k,f){try{var v=localStorage.getItem(k);return v==null?f:v}catch(e){return f}},s:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}},
@@ -8589,7 +8625,7 @@ document.addEventListener('click',function(e){var b=e.target.closest&&e.target.c
   if(a==='delete-post'){var pid=b.dataset.pid;if(!pid)return;return window.__adminDeletePost?window.__adminDeletePost(pid,{confirm:true}).then(function(){var on=document.querySelector('#admTabs button.on');if(on)on.click()}):showToast('Moderation server is not ready.');}
   if(a==='dedupe'){var seen={},keep=[];reports.slice().sort(function(a,b){return Date.parse(b.createdAt||0)-Date.parse(a.createdAt||0)}).forEach(function(r){var key=(r.postId||'')+'|'+(r.reporterId||'')+'|'+String(r.reason||'').replace(/\[S\d\]/,'').trim().toLowerCase();if(!seen[key]){seen[key]=1;keep.push(r)}});reports=keep;save(STORAGE.reports,reports);showToast('Duplicate reports cleaned.');}
   else if(a==='stale'){var before=reports.length;reports=reports.filter(function(r){return posts.some(function(p){return p.id===r.postId})});save(STORAGE.reports,reports);showToast((before-reports.length)+' stale report'+(before-reports.length===1?'':'s')+' removed.');}
-  else if(a==='audit'){var data={version:'17.0',createdAt:new Date().toISOString(),stats:{users:users.filter(function(u){return !u.noLogin}).length,posts:posts.length,reports:reports.length,comments:posts.reduce(function(n,p){return n+(p.comments||[]).length},0),missingProfilePictures:users.filter(function(u){return !u.noLogin&&!u.avatar}).length},reportRisk:reports.map(function(r){return{id:r.id,postId:r.postId,reporterId:r.reporterId,risk:reportRisk(r),reason:r.reason,createdAt:r.createdAt}})};var link=document.createElement('a');link.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));link.download='spill-v17-safety-audit.json';link.click();setTimeout(function(){URL.revokeObjectURL(link.href)},4000);}
+  else if(a==='audit'){var data={version:'18.0',createdAt:new Date().toISOString(),stats:{users:users.filter(function(u){return !u.noLogin}).length,posts:posts.length,reports:reports.length,comments:posts.reduce(function(n,p){return n+(p.comments||[]).length},0),missingProfilePictures:users.filter(function(u){return !u.noLogin&&!u.avatar}).length},reportRisk:reports.map(function(r){return{id:r.id,postId:r.postId,reporterId:r.reporterId,risk:reportRisk(r),reason:r.reason,createdAt:r.createdAt}})};var link=document.createElement('a');link.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));link.download='spill-v17-safety-audit.json';link.click();setTimeout(function(){URL.revokeObjectURL(link.href)},4000);}
   else if(a==='refresh'){try{var sb=SB();if(sb&&U())sb.from('profiles').select('id').eq('id',U().id).maybeSingle().then(function(){location.reload()});else location.reload()}catch(x){location.reload()}}
   var on=document.querySelector('#admTabs button.on');if(on&&a!=='delete-post')on.click();
 },true);
@@ -8603,9 +8639,84 @@ document.addEventListener('change',function(e){if(e.target&&e.target.id==='profi
 setInterval(function(){try{syncFireLedger();if(typeof users!=='undefined')users.forEach(function(u){if(u.avatar&&!/^data:image\//.test(u.avatar))u.avatar=null})}catch(e){}},3500);
 
 /* ---------- version badge for superadmins ---------- */
-setTimeout(function(){var v=U();if(v&&v.role==='superadmin'){var node=document.querySelector('#admB');if(node&&!document.getElementById('v17VersionPill')){var p=document.createElement('div');p.id='v17VersionPill';p.className='hint';p.style.margin='8px 0';p.textContent='SPILL v17.0 · safety console enabled';node.prepend(p)}}},1200);
+setTimeout(function(){var v=U();if(v&&v.role==='superadmin'){var node=document.querySelector('#admB');if(node&&!document.getElementById('v17VersionPill')){var p=document.createElement('div');p.id='v17VersionPill';p.className='hint';p.style.margin='8px 0';p.textContent='SPILL v18.0 · safety console enabled';node.prepend(p)}}},1200);
 setTimeout(function(){try{syncCooldownHint();enforcePhoto();syncFireLedger();refreshAura()}catch(e){}},600);
 
+})();
+</script>
+<style id="v18-style">
+/* v18: comments were cropped on both sides because .post-card has content-visibility:auto (paint containment) */
+html #viewBody .post-card,html #viewModal .post-card{content-visibility:visible!important;contain:none!important;overflow:visible!important}
+html #viewBody .comment-list,html #viewBody .cm,html #viewBody .cm-bub{max-width:100%;box-sizing:border-box}
+
+/* v18: Jade fixes (readable title, dark sheet headers, gold accents) */
+html[data-skin="jade"] .brand-text strong{background:linear-gradient(90deg,#f6dc8e,#c8a85a 55%,#f6dc8e);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important}
+html[data-skin="jade"] .brand-text span{color:#91b29e!important}
+html[data-skin="jade"] .modal-head,html[data-skin="jade"] .sheet-head{background:linear-gradient(180deg,#0e3321,#0a2115)!important;color:var(--ink)!important;border-bottom:1px solid var(--border)!important}
+html[data-skin="jade"] .modal-head h3,html[data-skin="jade"] .modal-head strong{color:var(--ink)!important}
+html[data-skin="jade"] .close-btn{background:rgba(20,76,48,.55)!important;color:var(--ink)!important}
+html[data-skin="jade"] .shuffle-btn{color:#f2d98a!important}
+html[data-skin="jade"] .btn-primary,html[data-skin="jade"] .compose-button{background:linear-gradient(135deg,#2f8c57,#176b3a)!important;color:#fff!important;box-shadow:0 0 0 1px rgba(214,178,90,.5),0 8px 22px rgba(23,107,58,.45)!important}
+
+/* v18: DRAGON JADE ULTRA = Jade theme + Liquid Glass button ON */
+#v18Dragon{display:none;position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+html[data-skin="jade"][data-glass="1"] #v18Dragon{display:block}
+html[data-lite="1"] #v18Dragon{display:none!important}
+html[data-skin="jade"][data-glass="1"] body{background:radial-gradient(60% 30% at 88% -4%,rgba(214,40,40,.30),transparent 70%),radial-gradient(70% 40% at 6% 0,rgba(47,160,100,.42),transparent 72%),linear-gradient(180deg,#031a0f,#04130b 55%,#020b07)!important}
+html[data-skin="jade"][data-glass="1"] body :is(.post-card,.section-card,.compose-card,.modal){background:linear-gradient(160deg,rgba(14,64,40,.58),rgba(5,28,18,.66))!important;-webkit-backdrop-filter:blur(18px) saturate(170%);backdrop-filter:blur(18px) saturate(170%);box-shadow:0 0 0 1px rgba(214,178,90,.5),0 14px 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,235,170,.28)!important}
+html[data-skin="jade"][data-glass="1"] body .topbar,html[data-skin="jade"][data-glass="1"] body .bottom-nav{background:rgba(4,26,15,.72)!important;border-color:rgba(214,178,90,.45)!important;box-shadow:0 1px 0 rgba(214,178,90,.35),0 10px 30px rgba(0,0,0,.45)!important}
+html[data-skin="jade"][data-glass="1"] body :is(.sort-btn,.filter,.shuffle-btn):not(.v18x){background:rgba(20,76,48,.5)!important;color:#e9f7ee!important;border:1px solid rgba(214,178,90,.38)!important;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+html[data-skin="jade"][data-glass="1"] body :is(.sort-btn.active,.sort-btn.on,.filter.active):not(.v18x){background:linear-gradient(135deg,#2f8c57,#176b3a)!important;color:#fff!important;box-shadow:0 0 0 1px rgba(246,220,142,.6),0 6px 18px rgba(23,107,58,.5)!important}
+html[data-skin="jade"][data-glass="1"] body .shuffle-btn:not(.v18x){color:#f6dc8e!important}
+html[data-skin="jade"][data-glass="1"] body :is(.btn-outline,.btn-soft,.btn-light,.close-btn):not(.v18x){background:rgba(20,76,48,.55)!important;color:#e9f7ee!important;border:1px solid rgba(214,178,90,.38)!important}
+html[data-skin="jade"][data-glass="1"] body .brand-text strong{animation:v18Shine 4s linear infinite;filter:drop-shadow(0 0 8px rgba(246,220,142,.45))}
+html[data-skin="jade"][data-glass="1"] body .story-ring:not(.viewed){background:conic-gradient(from 0deg,#f6dc8e,#d62828,#f6dc8e,#2f8c57,#f6dc8e);animation:v18Spin 6s linear infinite}
+html[data-skin="jade"][data-glass="1"] body .fire-btn.on,html[data-skin="jade"][data-glass="1"] body .v17-fire.on{box-shadow:0 0 0 1px rgba(246,220,142,.6),0 0 22px rgba(255,90,30,.5)!important}
+#v18Dragon .d-waves{position:absolute;inset:-40px 0 0;opacity:.2;background:radial-gradient(circle at 50% 100%,transparent 52%,rgba(214,178,90,.7) 53% 55%,transparent 56%) 0 0/38px 19px,radial-gradient(circle at 50% 100%,transparent 52%,rgba(214,178,90,.7) 53% 55%,transparent 56%) 19px 9.5px/38px 19px;animation:v18Waves 50s linear infinite}
+#v18Dragon .d-cn{position:absolute;right:-6px;bottom:84px;font:900 230px/1 "Noto Serif SC","Songti SC","STSong",serif;color:rgba(214,178,90,.09);text-shadow:0 0 30px rgba(214,178,90,.12)}
+#v18Dragon .d-fly{position:absolute;top:88px;left:-90px;font-size:46px;filter:drop-shadow(0 0 12px rgba(255,200,80,.8));animation:v18Fly 18s linear infinite}
+#v18Dragon .d-l{position:absolute;top:50px;font-size:26px;transform-origin:50% -14px;filter:drop-shadow(0 0 10px rgba(255,60,40,.7));animation:v18Swing 4.2s ease-in-out infinite}
+#v18Dragon .d-l.a{left:6px}#v18Dragon .d-l.b{right:6px;animation-delay:-2s}
+@keyframes v18Waves{to{background-position:0 -380px,19px -370.5px}}
+@keyframes v18Fly{0%{transform:translate(0,0) scaleX(1)}25%{transform:translate(28vw,18px)}50%{transform:translate(58vw,-6px)}75%{transform:translate(88vw,20px)}100%{transform:translate(122vw,0)}}
+@keyframes v18Swing{0%,100%{transform:rotate(-9deg)}50%{transform:rotate(9deg)}}
+@keyframes v18Shine{to{background-position:200% 0}}
+@keyframes v18Spin{to{transform:rotate(360deg)}}
+/* the full-screen ultra burst (plays when Liquid Glass is switched on while Jade is active) */
+#v18Burst{position:fixed;inset:0;z-index:100000;pointer-events:none;display:grid;place-items:center;overflow:hidden}
+#v18Burst .b-ring{position:absolute;width:40px;height:40px;border-radius:50%;border:3px solid #f6dc8e;box-shadow:0 0 40px #f6dc8e,inset 0 0 30px rgba(246,220,142,.6);animation:v18Ring 1.3s ease-out forwards}
+#v18Burst .b-cn{font:900 190px/1 "Noto Serif SC","Songti SC",serif;background:linear-gradient(180deg,#fff2b8,#d6a93a 55%,#a8321f);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 26px rgba(255,190,60,.85));animation:v18Stamp 2s cubic-bezier(.2,.9,.2,1) forwards}
+#v18Burst .b-dr{position:absolute;top:34%;left:-20%;font-size:84px;filter:drop-shadow(0 0 22px rgba(255,200,80,.95));animation:v18Dash 1.7s cubic-bezier(.4,0,.2,1) forwards}
+#v18Burst b{position:absolute;left:50%;top:50%;font-weight:400;animation:v18Spark 1.5s ease-out var(--dl) forwards;opacity:0}
+@keyframes v18Ring{to{transform:scale(22);opacity:0}}
+@keyframes v18Stamp{0%{transform:scale(2.6);opacity:0}25%{transform:scale(1);opacity:1}70%{opacity:1}100%{transform:scale(1.15);opacity:0}}
+@keyframes v18Dash{0%{transform:translate(0,40px) rotate(-12deg)}100%{transform:translate(150vw,-30vh) rotate(8deg)}}
+@keyframes v18Spark{0%{opacity:1;transform:translate(-50%,-50%) scale(.4)}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.2) rotate(120deg)}}
+@media (prefers-reduced-motion:reduce){#v18Dragon *,#v18Burst *{animation:none!important}#v18Burst{display:none}}
+</style>
+<script id="v18-script">
+(function(){'use strict';if(window.__v18)return;window.__v18=1;
+/* fire: keep the full-screen reader's Fire button (and its count) in sync after a tap */
+var of=window.toggleFire;
+if(typeof of==='function')window.toggleFire=function(id){
+  var r=of.apply(this,arguments);
+  try{var p=posts.find(function(x){return x.id===id}),on=!!(p&&currentUser&&(p.fires||[]).indexOf(currentUser.id)>-1);
+    document.querySelectorAll('[data-v17-fire]').forEach(function(b){b.classList.toggle('on',on);var n=b.querySelector('.fire-count');if(n&&p)n.textContent=(p.fires||[]).length;b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop')})}catch(e){}
+  return r};
+/* dragon layer */
+var L=document.createElement('div');L.id='v18Dragon';L.setAttribute('aria-hidden','true');
+L.innerHTML='<i class="d-waves"></i><span class="d-cn">龍</span><span class="d-fly">🐉</span><i class="d-l a">🏮</i><i class="d-l b">🏮</i>';document.body.appendChild(L);
+function ultra(){var h=document.documentElement;return h.getAttribute('data-skin')==='jade'&&h.getAttribute('data-glass')==='1'}
+function burst(){var old=document.getElementById('v18Burst');if(old)old.remove();var r=document.createElement('div');r.id='v18Burst';r.setAttribute('aria-hidden','true');
+  r.innerHTML='<i class="b-ring"></i><span class="b-cn">龍</span><span class="b-dr">🐉</span>';
+  var ch=['✦','🔥','🧧','✨','🏮'];for(var i=0;i<28;i++){var s=document.createElement('b'),a=Math.random()*6.283,d=90+Math.random()*190;s.textContent=ch[i%5];s.style.cssText='--dx:'+Math.cos(a)*d+'px;--dy:'+Math.sin(a)*d+'px;--dl:'+(Math.random()*.35)+'s;font-size:'+(13+Math.random()*17)+'px';r.appendChild(s)}
+  document.body.appendChild(r);try{navigator.vibrate&&navigator.vibrate([18,40,18])}catch(e){}
+  if(window.showToast)showToast('🐉 Dragon Jade Ultra');setTimeout(function(){r.remove()},2400)}
+var was=ultra();
+new MutationObserver(function(){var now=ultra();if(now&&!was)burst();was=now}).observe(document.documentElement,{attributes:true,attributeFilter:['data-skin','data-glass']});
+window.__v18UltraBurst=burst;
+/* notifications: refresh the badge as soon as the app comes back to the foreground */
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&window.updateNotifBadge)try{updateNotifBadge()}catch(e){}});
 })();
 </script>
 </body>
