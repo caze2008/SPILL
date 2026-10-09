@@ -3427,10 +3427,12 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
 
     function showToast(message) {
       const toast = document.getElementById("toast");
+      message = message == null ? "" : String(message);
       toast.textContent = message;
       toast.classList.add("show");
       clearTimeout(showToast.timer);
-      showToast.timer = setTimeout(() => toast.classList.remove("show"), 1800);
+      // Short messages stay 1.8s as before; longer ones (e.g. server errors) stay long enough to read.
+      showToast.timer = setTimeout(() => toast.classList.remove("show"), Math.min(7000, Math.max(1800, 1200 + message.length * 55)));
     }
 
     function openModal(id) {
@@ -6921,6 +6923,15 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
       const em = u => u.toLowerCase() + "@spill.cpgshs.app", pw = (p, u) => `spill-${p}-${u.toLowerCase()}`;
       const rows = async q => { const r = await q; if (r.error) throw r.error; return r.data || []; };
       const page = async mk => { let out = [], from = 0; for (;;) { const d = await rows(mk().range(from, from + 999)); out = out.concat(d); if (d.length < 1000) return out; from += 1000; } };
+      // Turn whatever the backend sends back (Edge Function JSON, Supabase gateway JSON, plain text)
+      // into one readable sentence. The old code only looked at `.error`, so gateway/Auth errors
+      // (which use `message` / `msg`) were replaced by a generic "non-2xx" message.
+      const errText = v => {
+        if (v == null) return "";
+        if (typeof v === "string") return v.trim();
+        if (typeof v === "object") return errText(v.error_description) || errText(v.message) || errText(v.msg) || errText(v.error) || "";
+        return "";
+      };
       const call = async (action, body) => {
         try {
           const { data, error } = await sb.functions.invoke("spill", {
@@ -6930,29 +6941,33 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
           if (!error && data) return data;
 
           if (error) {
-            let message = error.message || "Server error.";
+            let message = "", status = 0;
 
-            // Supabase FunctionsHttpError can contain the Edge Function response.
-            // Read that response so the website shows the real backend error
-            // instead of incorrectly saying "Server unreachable" for every 4xx/5xx.
+            // FunctionsHttpError carries the Edge Function / gateway response in error.context.
             try {
               const ctx = error.context;
+              if (ctx && typeof ctx.status === "number") status = ctx.status;
               if (ctx && typeof ctx.text === "function") {
                 const raw = await ctx.text();
                 if (raw) {
-                  try {
-                    const parsed = JSON.parse(raw);
-                    if (parsed && typeof parsed.error === "string" && parsed.error.trim()) {
-                      message = parsed.error.trim();
-                    }
-                  } catch (_) {
-                    if (raw.trim()) message = raw.trim().slice(0, 300);
-                  }
+                  try { message = errText(JSON.parse(raw)); }
+                  catch (_) { message = raw.trim().slice(0, 300); }
                 }
               }
             } catch (_) {}
 
-            return { ok: false, error: message };
+            if (!message) message = error.message || "Server error.";
+            console.error("[SPILL] Edge Function 'spill' failed:", { action, status, message, error });
+
+            // 401 "Invalid JWT" is produced by Supabase's gateway BEFORE the function runs. Sign-up has no
+            // user session yet, so supabase-js sends the sb_publishable_... key as the bearer token, and the
+            // platform's "Verify JWT" check cannot accept that key type.
+            if (action === "signup" && status === 401 && /jwt|authorization/i.test(message)) {
+              console.error("[SPILL] FIX: Supabase Dashboard > Edge Functions > spill > turn OFF \"Verify JWT\" (or redeploy with --no-verify-jwt). The function must then check the caller's token itself for every action except signup.");
+              message = "Server rejected sign-up (401 " + message + "). Admin: turn off “Verify JWT” for the spill Edge Function.";
+            }
+
+            return { ok: false, error: message, status };
           }
 
           return { ok: false, error: "Server returned no response." };
@@ -7053,9 +7068,9 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
         pch.subscribe(st => { if (st === "SUBSCRIBED") pch.track({ t: Date.now() }); });
       };
       const teardown = () => { try { sb.removeAllChannels(); } catch (e) {} chan = pch = null; live = false; window.__online = new Set(); };
-      const adopt = async session => {
+      const adopt = async (session, loud) => {
         const { data: prof, error } = await sb.from("profiles").select("id,username,banned,must_change_pin").eq("id", session.user.id).single();
-        if (error || !prof) { if (error && !/PGRST116|no rows|0 rows/i.test((error.code || "") + " " + (error.message || ""))) throw error; await sb.auth.signOut({ scope: "local" }).catch(() => {}); return false; }
+        if (error || !prof) { if (error && !/PGRST116|no rows|0 rows/i.test((error.code || "") + " " + (error.message || ""))) throw error; await sb.auth.signOut({ scope: "local" }).catch(() => {}); if (loud) showToast("Signed in, but no profile was found for this account. Please contact the site admin."); return false; }
         if (prof.banned) { await sb.auth.signOut({ scope: "local" }).catch(() => {}); Dev.del(prof.id); showToast("This account is suspended."); return false; }
         teardown(); wipe(); ready = false; pulling = false; currentUser = { id: prof.id, username: prof.username, sv: 0 };
         await pull(true); ready = true; subscribe(); Dev.put(session, prof.username);
@@ -7104,14 +7119,26 @@ html[data-skin=clear][data-glass="1"][data-theme] .topbar,html[data-skin=clear][
         if (!validateUsername(username)) return showToast("Username: 3-20 letters, numbers, or _ only."); if (!validatePin(pin)) return showToast("Your PIN must be exactly 6 numbers.");
         busy = true;
         try {
-          if (authMode === "register") {
+          const registering = authMode === "register";
+          if (registering) {
             const grade = $("authGrade").value.trim(), section = $("authSection").value.trim();
             if (!["Grade 11", "Grade 12"].includes(grade)) return showToast("Please select your grade."); if (pin !== conf) return showToast("PINs do not match.");
-            const r = await call("signup", { username, pin, grade, section }); if (!r.ok) return showToast(r.error);
+            const r = await call("signup", { username, pin, grade, section }); if (!r.ok) return showToast(r.error || "Couldn't create the account. Please try again.");
           }
           const { data, error } = await sb.auth.signInWithPassword({ email: em(username), password: pw(pin, username) });
-          if (error || !data || !data.session) { L.n++; if (L.n % 5 === 0) L.until = Date.now() + 30000 * Math.min(2 ** (L.n / 5 - 1), 30); localStorage.setItem(LK, JSON.stringify(L)); return showToast("Incorrect username or 6-digit PIN."); }
-          localStorage.removeItem(LK); if (!(await adopt(data.session))) return;
+          if (error || !data || !data.session) {
+            if (registering) {
+              // The account was just created, so this is not a wrong-PIN attempt (e.g. email confirmation is required).
+              console.error("[SPILL] Sign-in right after sign-up failed:", error);
+              return showToast("Account created, but sign-in failed" + (error && error.message ? ": " + error.message : "") + ". Try signing in.");
+            }
+            L.n++; if (L.n % 5 === 0) L.until = Date.now() + 30000 * Math.min(2 ** (L.n / 5 - 1), 30); localStorage.setItem(LK, JSON.stringify(L)); return showToast("Incorrect username or 6-digit PIN.");
+          }
+          localStorage.removeItem(LK);
+          let adopted = false;
+          try { adopted = await adopt(data.session, true); }
+          catch (e) { console.error("[SPILL] Couldn't load the profile after sign-in:", e); return showToast("Signed in, but your profile couldn't be loaded" + (e && e.message ? ": " + e.message : "") + "."); }
+          if (!adopted) return;
           closeModal("authModal"); updateUI(); scrollTo({ top: 0 }); showToast(authMode === "register" ? "Welcome to SPILL!" : "Welcome back, " + username + "!");
         } finally { busy = false; }
       });
